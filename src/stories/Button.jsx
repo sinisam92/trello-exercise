@@ -1,17 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './button.css';
+import { twMerge } from 'tailwind-merge';
+
 
 /**
  * Primary UI component for user interaction
  */
-export const Button = ({ primary, backgroundColor, size, label, ...props }) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
+export const Button = ({ variation, size, label, extraClasses, ...props }) => {
+/**
+   * The mode of the button based on the primary prop
+   * swithces the color of the button and hover effect
+   */
+const mode = {
+  primary: "text-white bg-primary cursor-pointer hover:bg-primaryHover",
+  disabled: "bg-disabled border-0 text-white cursor-not-allowed",
+  white: "border border-black text-primary cursor-pointer hover:bg-primary hover:text-white",
+};
+
+/**
+ * The size of the button based on the size prop
+ */
+const sizeClasses = {
+  xs: "text-xs px-2 py-1 w-fit",
+  s: "text-base px-6 py-4 w-fit",
+  m: "text-md px-12 py-4",
+  full: "text-lg px-32 py-8 w-full",
+};
+
+/**
+ * This make classes overridable easier and more readable and easily maintainable
+ */
+const classes = twMerge(
+  "font-bold rounded-lg inline-block leading-3 tracking-wider transition-colors duration-300",
+  sizeClasses[size],
+  mode[variation],
+  extraClasses
+);
   return (
     <button
       type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      style={backgroundColor && { backgroundColor }}
+      className={classes}
       {...props}
     >
       {label}
@@ -20,31 +48,14 @@ export const Button = ({ primary, backgroundColor, size, label, ...props }) => {
 };
 
 Button.propTypes = {
-  /**
-   * Is this the principal call to action on the page?
-   */
-  primary: PropTypes.bool,
-  /**
-   * What background color to use
-   */
-  backgroundColor: PropTypes.string,
-  /**
-   * How large should the button be?
-   */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  /**
-   * Button contents
-   */
+  variation: PropTypes.oneOf(["primary", "disabled", "white"]),
+  size: PropTypes.oneOf(['xs', 's', 'm', 'full']),
   label: PropTypes.string.isRequired,
-  /**
-   * Optional click handler
-   */
   onClick: PropTypes.func,
 };
 
-Button.defaultProps = {
-  backgroundColor: null,
-  primary: false,
-  size: 'medium',
-  onClick: undefined,
-};
+// Button.defaultProps = {
+//   primary: "primary",
+//   size: 'm',
+//   onClick: undefined,
+// };
