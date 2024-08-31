@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../../stories/Button";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -42,9 +42,11 @@ const Register = () => {
             <input
               className="shadow appearance-none border rounded w-full h-12 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
+              id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your username"
+              autoComplete="username"
             />
           </div>
           <div className="flex flex-col gap-y-6 items-center justify-between mt-10">
@@ -54,6 +56,12 @@ const Register = () => {
               label="Sign Up"
               onClick={handleRegister}
             />
+             <Link
+              href="login"
+              className="inline-block align-baseline font-bold text-sm text-primary hover:text-primaryHover"
+            >
+            <small>Already have an account? - </small>  Sign In
+            </Link>
           </div>
         </form>
       </div>

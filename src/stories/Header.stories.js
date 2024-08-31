@@ -2,7 +2,7 @@ import { Header } from './Header';
 import { fn } from '@storybook/test';
 
 export default {
-  title: 'Example/Header',
+  title: 'Components/Header',
   component: Header,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
@@ -11,18 +11,29 @@ export default {
     layout: 'fullscreen',
   },
   args: {
-    onLogin: fn(),
-    onLogout: fn(),
-    onCreateAccount: fn(),
+    onClick: fn(),
+    onMenuClick: fn(),
+    onBellClick: fn(),
+    onSearchClick: fn(),
   },
 };
 
-export const LoggedIn = {
+// export const LoggedIn = {
+//   args: {
+//     username: 'Jane Doe'
+     
+//   },
+// };
+
+// export const LoggedOut = {};
+export const Default = {
   args: {
-    user: {
-      name: 'Jane Doe',
-    },
+    hasNotification: false,
   },
 };
 
-export const LoggedOut = {};
+export const hasNotification = {
+  args: {
+    hasNotification: true,
+  },
+};
