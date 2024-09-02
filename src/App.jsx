@@ -12,6 +12,8 @@ const App = () => {
   const { isAuthenticated } = useAuth(); 
 
   const [username, setUsername] = useState("");
+  const [isChildMenuOpen, setIsChildMenuOpen] = useState(false);
+
 
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
@@ -24,15 +26,15 @@ const App = () => {
         setUsername("");
       }
     }
-  }, []);
+  }, [username]);
   
   return (
     <>
-      {isAuthenticated && <Header username={username} />}
+      {isAuthenticated && <Header username={username} setIsChildMenuOpen={setIsChildMenuOpen} />}
       <Switch>
         <Route path="login" component={Login} />
         <Route path="register" component={Register} />
-        <ProtectedRoute path="projects" component={Projects} />
+        <ProtectedRoute path="projects" component={() => <Projects isChildMenuOpen={isChildMenuOpen} />} />
         <ProtectedRoute path="projects/:id" component={ProjectDetails} />
         <Route path="*">
           <Redirect to={isAuthenticated ? "/projects" : "/login"} />

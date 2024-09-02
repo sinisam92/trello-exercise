@@ -3,15 +3,15 @@ import presentationData from "../../data/presentationData";
 import { Link } from "wouter";
 import { useAuth } from "../../contexts/AuthContext";
 
-const Projects = () => {
-  const {logout} = useAuth();
+const Projects = ({ isChildMenuOpen }) => {
+  const { logout } = useAuth();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   return (
-    <div>
+    <div className={isChildMenuOpen ? 'blur-sm' : ''}>
       {presentationData.map((project) => {
         return (
-          <div key={project.id} className="max-h-20 h-20">
+          <div key={project.id} className={`${isChildMenuOpen ? 'blur-sm' : ''} max-h-24 h-24 mt-4 `}>
             <Link href={`projects/${project.id}`}>
               <div className="relative h-full">
                 <img
@@ -30,7 +30,7 @@ const Projects = () => {
       {/* <Header username={currentUser.username} />  */}
       <h2>Hello,{currentUser.username} </h2>
       <button onClick={() => logout()}>Logout</button>
-    </div>
+      </div>
   );
 };
 

@@ -5,20 +5,34 @@ import BellFilled from "./assets/icons/bell-filled.svg";
 import Menu from "./assets/icons/menu.svg";
 import Return from "./assets/icons/return.svg";
 import Search from "./assets/icons/search.svg";
+import Close from "./assets/icons/close.svg";
+import Info from "./assets/icons/info.svg";
+import Logout from "./assets/icons/logout.svg";
+import Settings from "./assets/icons/settings.svg";
+import Cards from "./assets/icons/cards.svg";
+import profilImage from "../stories/assets/images/profile.jpg";
 import { Button } from "./Button";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import presentationData from "../data/presentationData";
 import { dynamicFontForLongStrings } from "../utils/helperFunctions";
+import { motion } from "framer-motion";
+import { useAuth } from "../contexts/AuthContext";
 
-export const Header = ({ username, hasNotification }) => {
+export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [id, setId] = useState(null);
 
-  const [location] = useLocation();
- 
+  const [location, navigate] = useLocation();
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const username = currentUser.username;
+  const usernameForAt = username.toLowerCase().replace(" ", "-");
+
+  const { logout } = useAuth();
+
   useEffect(() => {
     const pathParts = location.split("/");
     const idFromUrl = pathParts[pathParts.length - 1];
@@ -37,7 +51,13 @@ export const Header = ({ username, hasNotification }) => {
   }, [location]);
 
   const onMenuClick = () => {
-    setIsMenuOpen((prevState) => !prevState);
+    setIsMenuOpen(true);
+    setIsChildMenuOpen(true);
+  };
+
+  const handleCloseSidebar = () => {
+    setIsMenuOpen(false);
+    setIsChildMenuOpen(false);
   };
 
   const onBellClick = () => {
@@ -48,70 +68,172 @@ export const Header = ({ username, hasNotification }) => {
     setIsSearchOpen((prevState) => !prevState);
   };
 
+  const handleReturn = () => {
+    navigate("/projects");
+  };
+
+  const handleLogout = () => {
+    setIsMenuOpen(false);
+    setIsChildMenuOpen(false);
+    logout();
+  };
+  const openSidebarVariant = {
+    open: {
+      opacity: 1,
+      x: 1,
+      transition: {
+        ease: "easeOut",
+        duration: 0.2,
+      },
+    },
+    closed: {
+      opacity: 0,
+      x: "100%",
+    },
+  };
+
   return (
-    <header className="border-b px-2 py-5 h-[104px] relative">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-x-4 flex-grow">
-          <div>
-            <button>
-              <img
-                onClick={onBellClick}
-                src={hasNotification ? BellFilled : Bell}
-                alt="Notification Bell"
-              />
-            </button>
+    <>
+      <header className="relative border-b px-2 py-5 h-[104px]">
+        <div
+          className={`flex justify-between items-center ${isMenuOpen ? " blur-sm" : ""}`}
+        >
+          <div className="flex items-center gap-x-4 flex-grow">
+            {location === "/projects" ? (
+              <>
+                <div>
+                  <button>
+                    <img
+                      onClick={onBellClick}
+                      src={hasNotification ? BellFilled : Bell}
+                      alt="Notification Bell"
+                    />
+                  </button>
+                </div>
+                <div>
+                  <button onClick={onSearchClick}>
+                    <img src={Search} alt="Search Icon" />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div>
+                <button>
+                  <img onClick={handleReturn} src={Return} alt="Return" />
+                </button>
+              </div>
+            )}
           </div>
-          <div>
-            <button onClick={onSearchClick}>
-              <img src={Search} alt="Search Icon" />
-            </button>
+          <div className="flex-grow-[2] w-1/2 text-center">
+            {isSearchOpen ? (
+              <div>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="border border-disabled w-full h-5 py-5 rounded-md px-4 focus:border-primary focus:outline-none"
+                />
+              </div>
+            ) : (
+              <h1
+                className={`${dynamicFontForLongStrings(title, 20, 15)} absolute left-1/2 bottom-1/2 transform -translate-x-1/2 translate-y-1/2 `}
+              >
+                {title}
+              </h1>
+            )}
+          </div>
+          <div className={`flex-grow flex-end text-right `}>
+            {location === "/projects" ? (
+              <button onClick={onMenuClick}>
+                <img src={Menu} alt="Menu Icon" />
+              </button>
+            ) : (
+              <div>
+                <button>
+                  <img
+                    onClick={onBellClick}
+                    src={hasNotification ? BellFilled : Bell}
+                    alt="Notification Bell"
+                  />
+                </button>
+              </div>
+            )}
           </div>
         </div>
-        <div className="flex-grow-[2] w-1/2 text-center">
-          {isSearchOpen ? (
-            <div>
-              <input
-                type="text"
-                placeholder="Search"
-                className="border border-disabled w-full h-5 py-5 rounded-md px-4 focus:border-primary focus:outline-none"
-              />
+        <div
+          className={
+            isMenuOpen ? "absolute top-0 left-0 h-screen w-screen z-20" : ""
+          }
+          onClick={handleCloseSidebar}
+        ></div>
+        <motion.section
+          className={`${!isMenuOpen && 'hidden'} absolute z-40 right-0 top-0 w-[330px] h-screen bg-white border-l border-primary`}
+          animate={isMenuOpen ? "open" : "closed"}
+          variants={openSidebarVariant}
+          style={{ overflow: 'hidden' }}
+        >
+          <aside className="">
+            <div className="bg-primaryHover pb-5">
+              <div className="flex justify-between pt-11 px-1 items-start ">
+                <div className="pb-[22px]">
+                  <img
+                    src={profilImage}
+                    alt="Avatar"
+                    className="rounded-full w-20 h-20 object-cover "
+                  />
+                </div>
+                <button onClick={handleCloseSidebar}>
+                  <img src={Close} alt="close button" />
+                </button>
+              </div>
+              <div className="px-1">
+                <h3>{username}</h3>
+                <h3>@{usernameForAt}</h3>
+              </div>
             </div>
-          ) : (
-            <h1
-              className={`${dynamicFontForLongStrings(title, 20, 15)} absolute left-1/2 bottom-1/2 transform -translate-x-1/2 translate-y-1/2 `}
-            >
-              {title}
-            </h1>
-          )}
-        </div>
-        <div className="flex-grow flex-end text-right">
-          <button onClick={onMenuClick}>
-            <img src={Menu} alt="Menu Icon" />
-          </button>
-        </div>
-      </div>
-      {/* <section>
-        <aside>
-          <nav>
-            <ul>
-              <li>
-                <a href="#">Home</a>
-              </li>
-              <li>
-                <a href="#">About</a>
-              </li>
-              <li>
-                <a href="#">Contact</a>
-              </li>
-            </ul>
-          </nav>
-        </aside>
-      </section> */}
-    </header>
+            <nav className="px-1 ">
+              <ul className="flex flex-col gap-y-2">
+                <li>
+                  <Link href="#">
+                    <div className="flex items-center gap-x-2">
+                      <img src={Cards} alt="cards" />
+                      <span>My Cards</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#">
+                    <div className="flex items-center gap-x-2">
+                      <img src={Settings} alt="setting" />
+                      <span>Settings</span>
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#">
+                    <div className="flex items-center gap-x-2">
+                      <img src={Info} alt="info" />
+                      <span>Info</span>
+                    </div>
+                  </Link>
+                </li>
+                <li className="py-1">
+                  <Link href="#" onClick={handleLogout} >
+                    <div className="flex items-center gap-x-2">
+                      <img src={Logout} alt="logout" />
+                      <span>Logout</span>
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </aside>
+        </motion.section>
+      </header>
+    </>
   );
 };
 Header.propTypes = {
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
   hasNotification: PropTypes.bool,
   onClick: PropTypes.func,
 };
