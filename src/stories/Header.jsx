@@ -12,7 +12,7 @@ import Settings from "./assets/icons/settings.svg";
 import Cards from "./assets/icons/cards.svg";
 import profilImage from "../stories/assets/images/profile.jpg";
 import { Button } from "./Button";
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
 import presentationData from "../data/presentationData";
 import { dynamicFontForLongStrings } from "../utils/helperFunctions";
 import { motion } from "framer-motion";
@@ -76,6 +76,12 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
     setIsMenuOpen(false);
     setIsChildMenuOpen(false);
     logout();
+    navigate(path);
+  };
+
+  const handleLinkClick = (path) => {
+    handleCloseSidebar(); 
+    navigate(path); 
   };
   const openSidebarVariant = {
     open: {
@@ -166,13 +172,13 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
           onClick={handleCloseSidebar}
         ></div>
         <motion.section
-          className={`${!isMenuOpen && 'hidden'} absolute z-40 right-0 top-0 w-[330px] h-screen bg-white border-l border-primary`}
+          className={`${!isMenuOpen && "hidden"} absolute z-40 right-0 top-0 w-[330px] h-screen bg-white border-l border-primary`}
           animate={isMenuOpen ? "open" : "closed"}
           variants={openSidebarVariant}
-          style={{ overflow: 'hidden' }}
+          style={{ overflow: "hidden" }}
         >
           <aside className="">
-            <div className="bg-primaryHover pb-5">
+            <div className="bg-[#2A9D8F] pb-5">
               <div className="flex justify-between pt-11 px-1 items-start ">
                 <div className="pb-[22px]">
                   <img
@@ -193,36 +199,36 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
             <nav className="px-1 ">
               <ul className="flex flex-col gap-y-2">
                 <li>
-                  <Link href="#">
+                  <button onClick={() => handleLinkClick("#")}>
                     <div className="flex items-center gap-x-2">
                       <img src={Cards} alt="cards" />
                       <span>My Cards</span>
                     </div>
-                  </Link>
+                  </button>
                 </li>
                 <li>
-                  <Link href="#">
+                  <button onClick={() => handleLinkClick("/settings")}>
                     <div className="flex items-center gap-x-2">
                       <img src={Settings} alt="setting" />
                       <span>Settings</span>
                     </div>
-                  </Link>
+                  </button>
                 </li>
                 <li>
-                  <Link href="#">
+                  <button onClick={() => handleLinkClick("#")}>
                     <div className="flex items-center gap-x-2">
                       <img src={Info} alt="info" />
                       <span>Info</span>
                     </div>
-                  </Link>
+                  </button>
                 </li>
                 <li className="py-1">
-                  <Link href="#" onClick={handleLogout} >
+                  <button onClick={handleLogout}>
                     <div className="flex items-center gap-x-2">
                       <img src={Logout} alt="logout" />
                       <span>Logout</span>
                     </div>
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </nav>

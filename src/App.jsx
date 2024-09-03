@@ -7,6 +7,7 @@ import Projects from "./components/pages/Projects";
 import ProjectDetails from "./components/pages/ProjectDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Header } from "./stories/Header";
+import Settings from "./components/pages/Settings";
 
 const App = () => {
   const { isAuthenticated } = useAuth(); 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="register" component={Register} />
         <ProtectedRoute path="projects" component={() => <Projects isChildMenuOpen={isChildMenuOpen} />} />
         <ProtectedRoute path="projects/:id" component={ProjectDetails} />
+        <ProtectedRoute path="settings" component={Settings} />
         <Route path="*">
           <Redirect to={isAuthenticated ? "/projects" : "/login"} />
           // TODO: Deal with this when you decide what to do with it
