@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../stories/Button";
 import { useLocation, Link } from "wouter";
+import { v4 as uuidv4 } from "uuid";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -17,7 +18,12 @@ const Register = () => {
     } else if (username.length < 2) {
       setError("Username must be at least 2 characters");
     } else {
-      const newUser = { username };
+      const newUser = { 
+        id: uuidv4(),
+        username: username,
+        defaultAvatar: username.charAt(0).toUpperCase(),
+        avatarUrl: "",
+      };
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
       setError("");

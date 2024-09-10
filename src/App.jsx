@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Switch, Route, Redirect } from "wouter";
 import Login from "./components/pages/Login";
 import Register from "./components/pages/Register";
@@ -8,41 +8,39 @@ import ProjectDetails from "./components/pages/ProjectDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Header } from "./stories/Header";
 import Settings from "./components/pages/Settings";
+import CardDetails from "./components/pages/CardDetails";
 
 const App = () => {
-  const { isAuthenticated } = useAuth(); 
+  const { isAuthenticated } = useAuth();
 
-  const [username, setUsername] = useState("");
   const [isChildMenuOpen, setIsChildMenuOpen] = useState(false);
 
-
-  useEffect(() => {
-    const currentUser = localStorage.getItem("currentUser");
-    if (currentUser) {
-      try {
-        const parsedUser = JSON.parse(currentUser);
-        setUsername(parsedUser.username);
-      } catch (error) {
-        console.error("Error parsing user data from localStorage", error);
-        setUsername("");
-      }
-    }
-  }, [username]);
-  
   return (
     <>
-      {isAuthenticated && <Header username={username} setIsChildMenuOpen={setIsChildMenuOpen} />}
+      {isAuthenticated && (
+        <div className="sticky top-0 h-[130px] w-full z-50 bg-white">
+          <Header setIsChildMenuOpen={setIsChildMenuOpen} />
+        </div>
+      )}
       <Switch>
         <Route path="login" component={Login} />
         <Route path="register" component={Register} />
-        <ProtectedRoute path="projects" component={() => <Projects isChildMenuOpen={isChildMenuOpen} />} />
+        <ProtectedRoute
+          path="projects"
+          component={() => <Projects isChildMenuOpen={isChildMenuOpen} />}
+        />
         <ProtectedRoute path="projects/:id" component={ProjectDetails} />
+        <ProtectedRoute
+          path="projects/:projectId/card/:cardId"
+          component={CardDetails}
+        />
         <ProtectedRoute path="settings" component={Settings} />
         <Route path="*">
           <Redirect to={isAuthenticated ? "/projects" : "/login"} />
-          // TODO: Deal with this when you decide what to do with it
-          // this is here just to remind me if I change my mind and want to pass compoenent insted of redirect...
-          {/* {(params) => `404, Sorry the page ${params["*"]} does not exist!`} */} 
+          // TODO: Deal with this when you decide what to do with it // this is
+          here just to remind me if I change my mind and want to pass component
+          insted of redirect...
+          {/* {(params) => `404, Sorry the page ${params["*"]} does not exist!`} */}
         </Route>
       </Switch>
     </>

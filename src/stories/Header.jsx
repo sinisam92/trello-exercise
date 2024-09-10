@@ -5,48 +5,37 @@ import BellFilled from "./assets/icons/bell-filled.svg";
 import Menu from "./assets/icons/menu.svg";
 import Return from "./assets/icons/return.svg";
 import Search from "./assets/icons/search.svg";
-import Close from "./assets/icons/close.svg";
-import Info from "./assets/icons/info.svg";
-import Logout from "./assets/icons/logout.svg";
-import Settings from "./assets/icons/settings.svg";
-import Cards from "./assets/icons/cards.svg";
-import profilImage from "../stories/assets/images/profile.jpg";
-import { Button } from "./Button";
 import { useLocation } from "wouter";
 import presentationData from "../data/presentationData";
 import { dynamicFontForLongStrings } from "../utils/helperFunctions";
 import { motion } from "framer-motion";
-import { useAuth } from "../contexts/AuthContext";
+import Sidebar from "../components/Sidebar";
 
 export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [id, setId] = useState(null);
-
   const [location, navigate] = useLocation();
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const username = currentUser.username;
-  const usernameForAt = username.toLowerCase().replace(" ", "-");
+  const getParamsFromUrl = () => {
+    const parts = location.split("/");
+    const projectId = parts[2];
+    const cardId = parts[4];
+    return { projectId, cardId };
+  };
+  const { projectId, cardId } = getParamsFromUrl();
 
-  const { logout } = useAuth();
+  const projects =
+    JSON.parse(localStorage.getItem("projects")) || presentationData;
 
   useEffect(() => {
-    const pathParts = location.split("/");
-    const idFromUrl = pathParts[pathParts.length - 1];
-    setId(idFromUrl);
+    const project = projects.find((project) => project.id === projectId);
 
-    const project = presentationData.find(
-      (project) => project.id === parseInt(idFromUrl, 10)
-    );
     if (project) {
       setTitle(project.name);
     } else {
-      const formattedTitle =
-        location.replace("/", "").charAt(0).toUpperCase() + location.slice(2);
-      setTitle(formattedTitle);
+      setTitle("Projects");
     }
   }, [location]);
 
@@ -69,20 +58,13 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   };
 
   const handleReturn = () => {
-    navigate("/projects");
+    if (!cardId) {
+      navigate("/projects");
+    } else {
+      navigate(`/projects/${projectId}`);
+    }
   };
 
-  const handleLogout = () => {
-    setIsMenuOpen(false);
-    setIsChildMenuOpen(false);
-    logout();
-    navigate(path);
-  };
-
-  const handleLinkClick = (path) => {
-    handleCloseSidebar(); 
-    navigate(path); 
-  };
   const openSidebarVariant = {
     open: {
       opacity: 1,
@@ -177,73 +159,18 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
           variants={openSidebarVariant}
           style={{ overflow: "hidden" }}
         >
-          <aside className="">
-            <div className="bg-[#2A9D8F] pb-5">
-              <div className="flex justify-between pt-11 px-1 items-start ">
-                <div className="pb-[22px]">
-                  <img
-                    src={profilImage}
-                    alt="Avatar"
-                    className="rounded-full w-20 h-20 object-cover "
-                  />
-                </div>
-                <button onClick={handleCloseSidebar}>
-                  <img src={Close} alt="close button" />
-                </button>
-              </div>
-              <div className="px-1">
-                <h3>{username}</h3>
-                <h3>@{usernameForAt}</h3>
-              </div>
-            </div>
-            <nav className="px-1 ">
-              <ul className="flex flex-col gap-y-2">
-                <li>
-                  <button onClick={() => handleLinkClick("#")}>
-                    <div className="flex items-center gap-x-2">
-                      <img src={Cards} alt="cards" />
-                      <span>My Cards</span>
-                    </div>
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handleLinkClick("/settings")}>
-                    <div className="flex items-center gap-x-2">
-                      <img src={Settings} alt="setting" />
-                      <span>Settings</span>
-                    </div>
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handleLinkClick("#")}>
-                    <div className="flex items-center gap-x-2">
-                      <img src={Info} alt="info" />
-                      <span>Info</span>
-                    </div>
-                  </button>
-                </li>
-                <li className="py-1">
-                  <button onClick={handleLogout}>
-                    <div className="flex items-center gap-x-2">
-                      <img src={Logout} alt="logout" />
-                      <span>Logout</span>
-                    </div>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </aside>
+          <Sidebar
+            setIsChildMenuOpen={setIsChildMenuOpen}
+            setIsMenuOpen={setIsMenuOpen}
+            handleCloseSidebar={handleCloseSidebar}
+          />
         </motion.section>
       </header>
     </>
   );
 };
+
 Header.propTypes = {
-  username: PropTypes.string,
   hasNotification: PropTypes.bool,
   onClick: PropTypes.func,
 };
-
-// Header.defaultProps = {
-//   user: null,
-// };

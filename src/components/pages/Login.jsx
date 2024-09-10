@@ -19,8 +19,10 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    if (users.some((user) => user.username === username)) {
-      localStorage.setItem("currentUser", JSON.stringify({ username }));
+    const foundUser = users.find((user) => user.username === username);
+
+    if (foundUser) {
+      localStorage.setItem("currentUser", JSON.stringify(foundUser));
       login();
       navigate("/projects");
     } else {
@@ -31,11 +33,9 @@ const Login = () => {
   const handleEnterPress = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-       handleLogin(e);
-    } 
+      handleLogin(e);
+    }
   };
-
- 
 
   return (
     <div className="flex justify-center items-center h-screen">
