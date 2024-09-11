@@ -16,7 +16,11 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [title, setTitle] = useState("");
+  
   const [location, navigate] = useLocation();
+  
+
+
 
   const getParamsFromUrl = () => {
     const parts = location.split("/");
@@ -28,12 +32,15 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
 
   const projects =
     JSON.parse(localStorage.getItem("projects")) || presentationData;
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
     const project = projects.find((project) => project.id === projectId);
 
     if (project) {
       setTitle(project.name);
+    } else if (location === `/user/${currentUser.id}/cards`) {
+      setTitle(`${currentUser.username}'s Cards`);
     } else {
       setTitle("Projects");
     }

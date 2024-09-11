@@ -33,7 +33,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen sm:w-3/4 sm:mx-auto">
       <div className="flex flex-col items-center bg-white w-full rounded px-8 pt-6 pb-8 mb-4 md:shadow-md ">
         <h1 className="text-4xl text-primary font-bold mb-4">Sign Up</h1>
         {error && <p className="text-danger text-xl my-2">{error}</p>}

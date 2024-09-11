@@ -6,7 +6,7 @@ export default [
     name: "Task Management",
     slug: "task-management",
     description: "A simple task management app",
-    coverImage: "src/assets/images/project2.jpg",
+    coverImage: "src/assets/images/project3.jpg",
     technologies: ["React", "Tailwind CSS"],
     dateAdded: "2024-09-01",
     lists: [

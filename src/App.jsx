@@ -17,6 +17,8 @@ const App = () => {
 
   const [isChildMenuOpen, setIsChildMenuOpen] = useState(false);
 
+  
+
   return (
     <>
       {isAuthenticated && (

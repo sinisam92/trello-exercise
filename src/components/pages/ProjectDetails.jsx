@@ -3,6 +3,8 @@ import { Link, useParams } from "wouter";
 import presentationData from "../../data/presentationData";
 import Dots from "../../assets/icons/dots.svg";
 import Plus from "../../assets/icons/plus.svg";
+import ZoomIn from "../../assets/icons/zoomIn.svg";
+import ZoomOut from "../../assets/icons/zoomOut.svg";
 import AddNewCard from "../AddNewCard";
 import { v4 as uuidv4 } from "uuid";
 import AddCardModal from "../AddCardModal";
@@ -26,17 +28,27 @@ const ProjectDetails = () => {
   const [smallTags, setSmallTags] = useState(false);
   const [isCardEditing, setIsCardEditing] = useState(false);
 
+  const [zoom, setZoom] = useState(false);
+
   const listMenuRef = useRef(null);
   const listMenuIconRef = useRef(null);
+  const zoomAreaRef = useRef(null);
 
   const { projectId } = useParams();
   const project = projects.find((p) => p.id === projectId);
 
+  /**
+   * Handles closing the modal
+   */
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedList(null);
   };
 
+  /**
+   * Handles closing the dropdown menu when clicking outside of it
+   *
+   */
   const handleClickOutside = (event) => {
     if (
       listMenuRef.current &&
@@ -49,16 +61,42 @@ const ProjectDetails = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem("projects", JSON.stringify(projects));
-  }, [projects]);
-
-  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
+  /**
+   * Scroll to top when component mounts, this fixed the problem with scroll beheviour
+   * when navigating form CardDetails page back to ProjectDetails page
+   */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  /**
+   * Save the projects to local storage when the projects state changes
+   */
+  useEffect(() => {
+    localStorage.setItem("projects", JSON.stringify(projects));
+  }, [projects]);
+
+  /**
+   * Handles zooming in and out of the secific area 
+   */
+  useEffect(() => {
+    const areaToZoom = zoomAreaRef.current;
+    areaToZoom.style.zoom = zoom ? "50%" : "100%";
+
+    return () => {
+      areaToZoom.style.zoom = "100%";
+    };
+  }, [zoom]);
+
+  /**
+   * Handles adding a new list to the project
+   */
   const handleAddNewList = () => {
     if (newListName) {
       setProjects((prevProjects) => {
@@ -88,6 +126,11 @@ const ProjectDetails = () => {
     }
   };
 
+  /**
+   * Handles selecting the list that is to be edited
+   *
+   * @param {string} listId - The id of the list to edit
+   */
   const handleEditList = (listId) => {
     const listToEdit = project.lists.find((list) => list.id === listId);
     if (listToEdit) {
@@ -98,6 +141,11 @@ const ProjectDetails = () => {
     }
   };
 
+  /**
+   *
+   * Handles saving the new name of the list
+   * @param {string} listId - The id of the list to save the new name to
+   */
   const handleSaveListName = (listId) => {
     const updatedProjects = projects.map((proj) =>
       proj.id === projectId
@@ -113,6 +161,7 @@ const ProjectDetails = () => {
     setProjects(updatedProjects);
     setIsEditing(false);
     setOpenListId(null);
+    setNewListName("");
   };
 
   const handleKeyPress = (event, listId) => {
@@ -121,6 +170,9 @@ const ProjectDetails = () => {
     }
   };
 
+  /**
+   * Handles cancelling the editing or adding of the list
+   */
   const handleCancel = () => {
     setNewListName("");
     setIsAdding(false);
@@ -128,6 +180,11 @@ const ProjectDetails = () => {
     setOpenListId(null);
   };
 
+  /**
+   *
+   * Handles deleting a list from the project
+   * @param {string} listId - The id of the list to delete
+   */
   const handleDeleteList = (listId) => {
     setProjects((prevProjects) =>
       prevProjects.map((proj) =>
@@ -149,145 +206,156 @@ const ProjectDetails = () => {
   };
 
   return (
-    <div className="flex overflow-x-auto overscroll-y-none h-screen">
-      {project.lists.map((list, index) => {
-        return (
-          <section
-            key={list.id}
-            className="bg-primaryDark min-w-[340px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
-          >
-            <div className="relative flex justify-between rounded-t-lg">
-              {isEditing && openListId === list.id ? (
-                <form onSubmit={(e) => e.preventDefault()}>
-                  <input
-                    type="text"
-                    value={newListName}
-                    onChange={handleInputChange}
-                    onKeyDown={(event) => handleKeyPress(event, list.id)}
-                    placeholder="Enter list name"
-                    className="p-2 ml-4 bg-primaryDark border-0 border-b-2 border-white text-white text-2xl focus:outline-none focus:ring-0"
-                    autoFocus
+    <div>
+      <div
+        ref={zoomAreaRef}
+        className="flex overflow-x-auto overscroll-y-none  h-screen"
+      >
+        {project.lists.map((list, index) => {
+          return (
+            <section
+              key={list.id}
+              className="bg-primaryDark min-w-[300px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
+            >
+              <div className="relative flex justify-between rounded-t-lg">
+                {isEditing && openListId === list.id ? (
+                  <form onSubmit={(e) => e.preventDefault()}>
+                    <input
+                      type="text"
+                      value={newListName}
+                      onChange={handleInputChange}
+                      onKeyDown={(event) => handleKeyPress(event, list.id)}
+                      placeholder="Enter list name"
+                      className="p-2 ml-4 bg-primaryDark border-0 border-b-2 border-white text-white text-2xl focus:outline-none focus:ring-0"
+                      autoFocus
+                    />
+                  </form>
+                ) : (
+                  <h1 className="text-white text-2xl tracking-wider p-4">
+                    {list.name}
+                  </h1>
+                )}
+
+                <button onClick={() => toggleDropdown(list.id)}>
+                  <img
+                    src={Dots}
+                    alt="option dots"
+                    ref={listMenuIconRef}
+                    className="pr-3"
                   />
-                </form>
-              ) : (
-                <h1 className="text-white text-2xl tracking-wider p-4">
-                  {list.name}
-                </h1>
-              )}
+                </button>
 
-              <button onClick={() => toggleDropdown(list.id)}>
-                <img
-                  src={Dots}
-                  alt="option dots"
-                  ref={listMenuIconRef}
-                  className="pr-3"
-                />
-              </button>
-
-              {dropdownListId === list.id && (
-                <div
-                  ref={listMenuRef}
-                  className="absolute right-12 top-12 w-40 h-28 bg-primaryHover rounded-lg z-40"
-                >
-                  <ul className="py-2 px-2 text-white text-lg">
-                    <li
-                      onClick={() => handleEditList(list.id)}
-                      className="flex items-center py-2 hover:bg-primary cursor-pointer"
-                    >
-                      Edit
-                    </li>
-                    <li
-                      onClick={() => handleDeleteList(list.id)}
-                      className="flex items-center py-2 hover:bg-primary cursor-pointer"
-                    >
-                      Delete
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="overflow-y-auto  flex-1">
-              {list.cards.map((card) => {
-                return (
-                  <Link
-                    key={card.id}
-                    to={`/projects/${projectId}/card/${card.id}`}
+                {dropdownListId === list.id && (
+                  <div
+                    ref={listMenuRef}
+                    className="absolute right-12 top-12 w-40 h-28 bg-primaryHover rounded-lg z-40"
                   >
-                    <div className="relative">
-                      <Card
-                        card={card}
-                        assigned={card.assigned}
-                        list={list}
-                        project={project}
-                        setProjects={setProjects}
-                        setSmallTags={setSmallTags}
-                        smallTags={smallTags}
-                        setSelectedList={setSelectedList}
-                        setIsModalOpen={setIsModalOpen}
-                        setIsCardEditing={setIsCardEditing}
-                        setSelectedCard={setSelectedCard}
-                        className="overflow-visible"
-                      />
-                    </div>
-                  </Link>
-                );
-              })}
+                    <ul className="py-2 px-2 text-white text-lg">
+                      <li
+                        onClick={() => handleEditList(list.id)}
+                        className="flex items-center py-2 hover:bg-primary cursor-pointer"
+                      >
+                        Edit
+                      </li>
+                      <li
+                        onClick={() => handleDeleteList(list.id)}
+                        className="flex items-center py-2 hover:bg-primary cursor-pointer"
+                      >
+                        Delete
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              <div className="overflow-y-auto  flex-1">
+                {list.cards.map((card) => {
+                  return (
+                    <Link
+                      key={card.id}
+                      to={`/projects/${projectId}/card/${card.id}`}
+                    >
+                      <div className="relative">
+                        <Card
+                          card={card}
+                          users={users}
+                          assigned={card.assigned}
+                          list={list}
+                          project={project}
+                          setProjects={setProjects}
+                          setSmallTags={setSmallTags}
+                          smallTags={smallTags}
+                          setSelectedList={setSelectedList}
+                          setIsModalOpen={setIsModalOpen}
+                          setIsCardEditing={setIsCardEditing}
+                          setSelectedCard={setSelectedCard}
+                          className="overflow-visible"
+                        />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+              <AddNewCard
+                setSelectedList={setSelectedList}
+                setIsModalOpen={setIsModalOpen}
+                setIsCardEditing={setIsCardEditing}
+                setSelectedCard={setSelectedCard}
+                list={list}
+              />
+            </section>
+          );
+        })}
+        <AddCardModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          users={users}
+          list={selectedList}
+          projects={projects}
+          setProjects={setProjects}
+          projectId={project.id}
+          isCardEditing={isCardEditing}
+          selectedCard={selectedCard}
+          setIsCardEditing={setIsCardEditing}
+        />
+        <div>
+          {!isAdding ? (
+            <button
+              className="flex justify-center items-center gap-x-2 bg-primary min-w-[340px] p-4 rounded-[12px] text-white ml-4 cursor-pointer hover:bg-primaryHover"
+              onClick={() => setIsAdding(true)}
+            >
+              <img src={Plus} alt="add list" className="w-6" />
+              Add new list
+            </button>
+          ) : (
+            <div className="flex justify-center items-center gap-x-2 bg-primary min-w-[340px] p-4 rounded-[12px] m-4 mt-0">
+              <input
+                type="text"
+                value={newListName}
+                onChange={handleInputChange}
+                placeholder="Enter list name"
+                className="border p-2 rounded mr-2"
+              />
+              <button
+                onClick={handleAddNewList}
+                className="bg-success text-white px-4 py-2 rounded"
+              >
+                Add
+              </button>
+              <button
+                onClick={handleCancel}
+                className="bg-danger text-white px-4 py-2 rounded ml-2"
+              >
+                Cancel
+              </button>
             </div>
-            <AddNewCard
-              setSelectedList={setSelectedList}
-              setIsModalOpen={setIsModalOpen}
-              setIsCardEditing={setIsCardEditing}
-              setSelectedCard={setSelectedCard}
-              list={list}
-            />
-          </section>
-        );
-      })}
-      <AddCardModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        users={users}
-        list={selectedList}
-        projects={projects}
-        setProjects={setProjects}
-        projectId={project.id}
-        isCardEditing={isCardEditing}
-        selectedCard={selectedCard}
-        setIsCardEditing={setIsCardEditing}
-      />
-      <div>
-        {!isAdding ? (
-          <button
-            className="flex justify-center items-center gap-x-2 bg-primary min-w-[340px] p-4 rounded-[12px] text-white ml-4 cursor-pointer hover:bg-primaryHover"
-            onClick={() => setIsAdding(true)}
-          >
-            <img src={Plus} alt="add list" className="w-6" />
-            Add new list
-          </button>
-        ) : (
-          <div className="flex justify-center items-center gap-x-2 bg-primary min-w-[340px] p-4 rounded-[12px] m-4 mt-9">
-            <input
-              type="text"
-              value={newListName}
-              onChange={handleInputChange}
-              placeholder="Enter list name"
-              className="border p-2 rounded mr-2"
-            />
-            <button
-              onClick={handleAddNewList}
-              className="bg-success text-white px-4 py-2 rounded"
-            >
-              Add
-            </button>
-            <button
-              onClick={handleCancel}
-              className="bg-danger text-white px-4 py-2 rounded ml-2"
-            >
-              Cancel
-            </button>
-          </div>
-        )}
+          )}
+        </div>
+      </div>
+      <div className="fixed bottom-6 right-12">
+        <button onClick={() => setZoom(!zoom)}>
+          <img src={zoom ? ZoomOut : ZoomIn} alt="zoom" className="w-10" />
+        </button>
       </div>
     </div>
   );

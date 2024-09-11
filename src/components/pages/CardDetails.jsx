@@ -29,7 +29,8 @@ const CardDetails = () => {
   const allCards = projects.flatMap((project) =>
     project.lists.flatMap((list) => list.cards)
   );
-  const thisCard = allCards.find((card) => card.id === cardId);  const project = projects.find((project) =>
+  const thisCard = allCards.find((card) => card.id === cardId);
+  const project = projects.find((project) =>
     project.lists.some((list) => list.cards.includes(thisCard))
   );
   const list = project.lists.find((list) => list.cards.includes(thisCard));
@@ -109,14 +110,18 @@ const CardDetails = () => {
     };
   }, []);
 
-  const handleDeleteComment = (projectId, listId, cardId, commentId) => {
+  const handleDeleteComment = (cardId, commentId) => {
     const updatedProjects = projects.map((project) => {
       const updatedLists = project.lists.map((list) => {
         const updatedCards = list.cards.map((card) => {
           if (card.id === cardId) {
-            const updatedComments = card.comments.filter(
-              (comment) => comment.id !== commentId
-            );
+            const updatedComments = card.comments.filter((comment) => {
+              // Check if the comment was created by the current user
+              if (comment.user === currentUser.username) {
+                return comment.id !== commentId;
+              }
+              return true;
+            });
             return { ...card, comments: updatedComments };
           }
           return card;
@@ -140,12 +145,12 @@ const CardDetails = () => {
   };
 
   return (
-    <div>
-      <section className="relative h-[150px] text-4xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center pl-3">
+    <div className="md:w-1/2 md:mx-auto border border-primary bg-[#EDEADE] my-10 drop-shadow-lg shadow-lg">
+      <section className="relative h-[150px] text-4xl bg-gradient-to-r from-gray-300 via-gray-500 to-gray-700 flex items-center pl-3 ">
         {thisCard.title}
         <div className="absolute bottom-2">
           <h3 className="text-sm">
-            Project <span className="text-white">{project.name}</span> in list{" "}
+            Project <span className="text-white">{project.name}</span> in list
             <span className="text-white">{list.name}</span>
           </h3>
         </div>
@@ -258,7 +263,7 @@ const CardDetails = () => {
                       />
                     ) : (
                       <div className="bg-[#F4A261] rounded-full w-12 h-12 flex items-center justify-center mr-4">
-                        <span className="text-white text-2xl font-bold">
+                        <span className="text-white text-2xl font-bold w-[50px] h-[50px] flex items-center justify-center">
                           {commentUser.defaultAvatar}
                         </span>
                       </div>
@@ -278,25 +283,37 @@ const CardDetails = () => {
                           {comment.text}
                         </p>
                       </div>
-                      <div className="flex flex-shrink-0 mt-8">
-                        <button
-                          onClick={(e) => toggleOptions(e, comment.id)}
-                          className="cursor-pointer"
-                        >
-                          <img
-                            ref={commentsIconRef}
-                            src={DotsSmall}
-                            alt="small dots icon"
-                          />
-                        </button>
-                      </div>
+                      {currentUser.username === comment.user && (
+                        <div className="flex flex-shrink-0 mt-8">
+                          <button
+                            onClick={(e) => toggleOptions(e, comment.id)}
+                            className="cursor-pointer"
+                          >
+                            <img
+                              ref={commentsIconRef}
+                              src={DotsSmall}
+                              alt="small dots icon"
+                            />
+                          </button>
+                        </div>
+                      )}
                       {openOptions === comment.id && (
                         <div
                           ref={commentsOptionsRef}
                           className="absolute right-12 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10"
                         >
                           <ul>
-                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleDeleteComment(project.id, list.id, thisCard.id, comment.id)}>
+                            <li
+                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                              onClick={() =>
+                                handleDeleteComment(
+                                  project.id,
+                                  list.id,
+                                  thisCard.id,
+                                  comment.id
+                                )
+                              }
+                            >
                               Delete
                             </li>
                           </ul>
@@ -319,8 +336,8 @@ const CardDetails = () => {
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
           ) : (
-            <div className="bg-[#F4A261] rounded-full w-12 h-12 flex items-center justify-center mr-4">
-              <span className="text-white text-2xl font-bold">
+            <div className="bg-[#F4A261] rounded-full  flex items-center justify-center mr-4">
+              <span className="text-white text-2xl font-bold w-[50px] h-[50px] flex items-center justify-center">
                 {currentUser.defaultAvatar}
               </span>
             </div>

@@ -16,6 +16,7 @@ const Projects = ({ isChildMenuOpen }) => {
   const [openProjectMenuId, setOpenProjectMenuId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState(null);
+  const [error, setError] = useState("");
 
 
 
@@ -55,11 +56,15 @@ const Projects = ({ isChildMenuOpen }) => {
   };
 
   const addNewProject = () => {
+    if (projects.some(project => project.name === newProjectName)) {
+      setError("Project name already exists");
+      return;
+    }
     if (newProjectName !== "") {
       const newProject = {
         id: uuidv4(),
         name: newProjectName,
-        coverImage: coverImageUrl || "/src/assets/images/project2.jpg",
+        coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
         lists: [dummyData],
         slug: newProjectName.toLowerCase().replace(/\s/g, "-"),
       };
@@ -68,11 +73,15 @@ const Projects = ({ isChildMenuOpen }) => {
       localStorage.setItem("projects", JSON.stringify(updatedProjects));
       setIsAdding(false);
     }
+    setCoverImageUrl("");
+    setNewProjectName("");
+    setError("");
   };
 
   const handleCancel = () => {
     setNewProjectName("");
     setIsAdding(false);
+    setError("");
   };
 
   const toggleProjectMenu = (e, projectId) => {
@@ -105,7 +114,7 @@ const Projects = ({ isChildMenuOpen }) => {
           ? {
               ...project,
               name: newProjectName,
-              coverImage: coverImageUrl || "/src/assets/images/project2.jpg",
+              coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
             }
           : project
       );
@@ -175,7 +184,7 @@ const Projects = ({ isChildMenuOpen }) => {
         </button>
       </div>
       {isAdding && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 h-24 min-h-24 flex justify-center items-center bg-primaryHover px-20 py-32 rounded-lg">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 h-24 min-h-24 flex justify-center items-center bg-primaryHover px-20 py-32 rounded-lg">
           <ProjectForm
             newProjectName={newProjectName}
             coverImageUrl={coverImageUrl}
@@ -185,6 +194,7 @@ const Projects = ({ isChildMenuOpen }) => {
             handleCancel={handleCancel}
             addNewProject={addNewProject}
             isEditing={editingProjectId !== null}
+            error={error}
           />
         </div>
       )}

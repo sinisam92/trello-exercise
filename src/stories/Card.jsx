@@ -8,6 +8,7 @@ import moment from "moment";
 
 const Card = ({
   card,
+  users,
   list,
   setProjects,
   project,
@@ -19,9 +20,9 @@ const Card = ({
   setSelectedCard,
 }) => {
   const [openCardOptionsId, setOpenCardOptionsId] = useState(null);
-  const [users, setUsers] = useState(
-    JSON.parse(localStorage.getItem("users")) || []
-  );
+  // const [users, setUsers] = useState(
+  //   JSON.parse(localStorage.getItem("users")) || []
+  // );
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
@@ -177,7 +178,7 @@ const Card = ({
   return (
     <div
       key={card.id}
-      className=" bg-primary min-w-[300px] text-white p-4 rounded-lg m-4 "
+      className=" bg-primary min-w-[260px] max-w-[260px] text-white p-4 rounded-lg m-4 "
     >
       <div className=" flex justify-between items-center">
         <div>
@@ -216,15 +217,16 @@ const Card = ({
           <div className="flex gap-x-2 mt-6">
             {card.assigned &&
               card.assigned.map((username) => {
+                console.log('username', username);
                 const assignedUser = users.find(
                   (user) => user.username === username
                 );
-
+                console.log('assignedUser', assignedUser);
                 if (!assignedUser) {
                   console.warn(`No user found for username: ${username}`);
                   return null;
                 }
-
+                console.log('assignedUser avatar', assignedUser.avatarUrl);
                 return assignedUser.avatarUrl ? (
                   <img
                     key={assignedUser.id}
@@ -260,14 +262,14 @@ const Card = ({
               />
             </button>
             <button
-              className="absolute -bottom-14"
+              className="absolute -bottom-12"
               onClick={(e) => handleOpenMoveMenu(e, card.id)}
             >
               <img
                 ref={moveIconRef}
                 src={Move}
                 alt="move dots"
-                className=" mb-2"
+                className="mb-2"
               />
             </button>
           </div>
@@ -294,7 +296,7 @@ const Card = ({
         {openCardOptionsId === card.id && (
           <div
             ref={cardOptionsRef}
-            className="absolute top-10 right-0 w-24 bg-primaryHover rounded-lg z-50"
+            className="absolute top-10 right-[80px] w-24 bg-primaryHover rounded-lg z-50"
           >
             <ul className="py-2 text-white text-lg">
               <li
@@ -328,13 +330,4 @@ Card.propTypes = {
     dueDate: PropTypes.string,
     assigned: PropTypes.array,
   }),
-  assigned: PropTypes.array,
-  list: PropTypes.object,
-  setProjects: PropTypes.func,
-  setSmallTags: PropTypes.func,
-  smallTags: PropTypes.bool,
-  setSelectedList: PropTypes.func,
-  setIsModalOpen: PropTypes.func,
-  setIsCardEditing: PropTypes.func,
-  setSelectedCard: PropTypes.func,
 };

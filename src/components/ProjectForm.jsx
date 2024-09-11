@@ -8,6 +8,7 @@ const ProjectForm = ({
   handleCancel, 
   isEditing,
   addNewProject, 
+  error,
 
 }) => {
   return (
@@ -17,9 +18,11 @@ const ProjectForm = ({
         value={newProjectName}
         onChange={handleProjectNameInputChange}
         placeholder="Enter project name"
-        className="border p-2 rounded placeholder:text-sm"
+        className={`border p-2 rounded placeholder:text-sm ${error ? "border-danger" : ""}`}
         required
       />
+      {error && <div className="text-danger">{error}</div>}
+      
       <input
         type="text"
         value={coverImageUrl}

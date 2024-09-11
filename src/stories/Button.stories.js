@@ -30,7 +30,7 @@ export const Secondary = {
 
 export const Large = {
   args: {
-    size: "l",
+    size: "full",
     label: "Button",
     variation: "primary",
   },

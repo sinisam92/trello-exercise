@@ -19,7 +19,7 @@ const users = [
     username: "Sinisa",
   },
 ];
-export const Primary = {
+export const WithAllArgs = {
   args: {
     card: {
       title: "Task 1",
@@ -34,15 +34,29 @@ export const Primary = {
   },
 };
 
-export const Secondary = {
+export const WithoutAvatar = {
   args: {
     card: {
       title: "Task 2",
       description: "Description of task 2",
       dueDate: "",
       status: "in progress",
-      assigned: ["Sinisa"],
+      assigned: [],
       tags: ["urgent"],
+      comments: [],
+    },
+    users: users,
+  },
+};
+export const WithoutTagsAndAvatar = {
+  args: {
+    card: {
+      title: "Task 2",
+      description: "Description of task 2",
+      dueDate: "",
+      status: "in progress",
+      assigned: [],
+      tags: [],
       comments: [],
     },
     users: users,
