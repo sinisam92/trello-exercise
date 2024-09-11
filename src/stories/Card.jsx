@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useParams } from "wouter";
 import PropTypes from "prop-types";
 import Dots from "../assets/icons/dots.svg";
+import Move from "../assets/icons/move.svg";
 import Comment from "../assets/icons/comment.svg";
 import moment from "moment";
 
@@ -9,6 +10,7 @@ const Card = ({
   card,
   list,
   setProjects,
+  project,
   setSmallTags,
   smallTags,
   setSelectedList,
@@ -20,15 +22,23 @@ const Card = ({
   const [users, setUsers] = useState(
     JSON.parse(localStorage.getItem("users")) || []
   );
+  const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
+  const [selectedCardId, setSelectedCardId] = useState(null);
 
   const assigned = card.assigned;
-  const assignedUsers = users.filter((user) =>
-    assigned.includes(user.username)
-  );
+  // const assignedUsers = users.filter((user) =>
+  //   assigned.includes(user.username)
+  // );
 
   const { id } = useParams();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
+  const moveIconRef = useRef(null);
+  const moveMenuRef = useRef(null);
+
+  // const handleStatusChange = (newStatus) => {
+  //   updateCardStatus(card.id, newStatus);
+  // };
 
   const handleClickOutside = (event) => {
     if (
@@ -40,11 +50,23 @@ const Card = ({
       setOpenCardOptionsId(null);
     }
   };
+  const handleMoveMenuClickOutside = (event) => {
+    if (
+      moveMenuRef.current &&
+      !moveMenuRef.current.contains(event.target) &&
+      moveIconRef.current &&
+      !moveIconRef.current.contains(event.target)
+    ) {
+      setIsMoveMenuOpen(false);
+    }
+  };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleMoveMenuClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleMoveMenuClickOutside);
     };
   }, []);
 
@@ -100,6 +122,52 @@ const Card = ({
   const handleSmallThingsToggle = (e) => {
     e.preventDefault();
     setSmallTags((prev) => !prev);
+  };
+
+  const handleOpenMoveMenu = (e, cardId) => {
+    e.preventDefault();
+    setSelectedCardId(cardId);
+    setIsMoveMenuOpen(true);
+    console.log("Move card", cardId);
+  };
+
+  const handleMoveCard = (e, listId) => {
+    e.preventDefault();
+    if (selectedCardId) {
+      setProjects((prevProjects) => {
+        return prevProjects.map((proj) => {
+          if (proj.id === id) {
+            let cardToMove;
+            let sourceListId;
+
+            const updatedLists = proj.lists.map((list) => {
+              const cardIndex = list.cards.findIndex(
+                (card) => card.id === selectedCardId
+              );
+              if (cardIndex !== -1) {
+                cardToMove = list.cards[cardIndex];
+                sourceListId = list.id;
+                return {
+                  ...list,
+                  cards: list.cards.filter((_, index) => index !== cardIndex),
+                };
+              }
+              return list;
+            });
+
+            const targetList = updatedLists.find((list) => list.id === listId);
+            if (targetList) {
+              targetList.cards.push({ ...cardToMove, status: targetList.name });
+            }
+
+            return { ...proj, lists: updatedLists };
+          }
+          return proj;
+        });
+      });
+      setIsMoveMenuOpen(false);
+      setSelectedCardId(null);
+    }
   };
 
   const isPastDue = moment(card.dueDate).isBefore(moment(), "day");
@@ -175,17 +243,40 @@ const Card = ({
               })}
           </div>
         </div>
-        <button
-          onClick={(e) => handleCardOptions(e, card.id)}
-          className="flex flex-shrink-0"
-        >
-          <img
-            ref={optionsIconRef}
-            src={Dots}
-            alt="option dots"
-            className="w-7"
-          />
-        </button>
+        <div className="relative h-full flex flex-col justify-between">
+          <button
+            onClick={(e) => handleCardOptions(e, card.id)}
+            className="flex flex-shrink-0"
+          >
+            <img
+              ref={optionsIconRef}
+              src={Dots}
+              alt="option dots"
+              className="w-7"
+            />
+          </button>
+          <button
+            className="absolute -bottom-14"
+            onClick={(e) => handleOpenMoveMenu(e, card.id)}
+          >
+            <img ref={moveIconRef} src={Move} alt="move dots" className=" mb-2" />
+          </button>
+        </div>
+        {isMoveMenuOpen && (
+          <div ref={moveMenuRef} className="absolute top-0 right-10 bg-white text-black border rounded ">
+            <ul className="list-none p-2">
+              {project.lists.map((list) => (
+                  <li
+                    key={list.id}
+                    className="p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={(e) => handleMoveCard(e, list.id)}
+                  >
+                    {list.name}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
 
         {openCardOptionsId === card.id && (
           <div
@@ -216,14 +307,14 @@ const Card = ({
 export default Card;
 
 Card.propTypes = {
-  // card: PropTypes.shape({
-  //   id: PropTypes.string,
-  //   title: PropTypes.string,
-  //   tags: PropTypes.array,
-  //   comments: PropTypes.array,
-  //   dueDate: PropTypes.string,
-  //   assigned: PropTypes.array,
-  // }),
+  card: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    tags: PropTypes.array,
+    comments: PropTypes.array,
+    dueDate: PropTypes.string,
+    assigned: PropTypes.array,
+  }),
   assigned: PropTypes.array,
   list: PropTypes.object,
   setProjects: PropTypes.func,

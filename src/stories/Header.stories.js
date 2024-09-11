@@ -24,20 +24,20 @@ export const Default = {
   parameters: {
     reactContext: {
       context: AuthProvider,
-      contextValue: {   },
+      contextValue: {  isAuthenticated: true, login: () => {}, logout: () => {} },
     }},
   args: {
     hasNotification: false,
   },
 };
 
-export const hasNotification = {
-  parameters: {
-  reactContext: {
-    context: AuthProvider,
-    contextValue: {  },
-  }},
-  args: {
-    hasNotification: true,
-  },
-};
+// export const hasNotification = {
+//   parameters: {
+//   reactContext: {
+//     context: AuthProvider,
+//     contextValue: { isAuthenticated: true },
+//   }},
+//   args: {
+//     hasNotification: true,
+//   },
+// };

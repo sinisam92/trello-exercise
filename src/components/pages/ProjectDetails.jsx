@@ -215,6 +215,7 @@ const ProjectDetails = () => {
                       card={card}
                       assigned={card.assigned}
                       list={list}
+                      project={project}
                       setProjects={setProjects}
                       setSmallTags={setSmallTags}
                       smallTags={smallTags}
