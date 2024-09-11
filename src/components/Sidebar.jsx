@@ -5,7 +5,7 @@ import Logout from "../stories/assets/icons/logout.svg";
 import Settings from "../stories/assets/icons/settings.svg";
 import Cards from "../stories/assets/icons/cards.svg";
 import { useAuth } from "../contexts/AuthContext";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 
 
 const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
@@ -64,9 +64,18 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
     navigate(path);
   };
 
+  const handleMyCardsClick = (path) => {
+    handleCloseSidebar();
+    navigate(path);
+  };
+  const handleInfoClick = (path) => {
+    handleCloseSidebar();
+    navigate(path);
+  };
+
   return (
     <aside className="">
-      <div className="bg-[#2A9D8F] pb-5">
+      <div className="bg-[#2A9D8F] pb-5"> 
         <div className="flex justify-between pt-11 px-1 items-start ">
           <div className="pb-[22px]">
             {avatarUrl ? (
@@ -129,7 +138,7 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
       <nav className="px-1 ">
         <ul className="flex flex-col gap-y-2">
           <li>
-            <button onClick={() => handleLinkClick("#")}>
+            <button onClick={() => handleMyCardsClick(`/user/${currentUser.id}/cards`)}>
               <div className="flex items-center gap-x-2">
                 <img src={Cards} alt="cards" />
                 <span>My Cards</span>
@@ -145,7 +154,7 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
             </button>
           </li>
           <li>
-            <button onClick={() => handleLinkClick("#")}>
+            <button onClick={() => handleInfoClick("/info")}>
               <div className="flex items-center gap-x-2">
                 <img src={Info} alt="info" />
                 <span>Info</span>

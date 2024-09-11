@@ -9,6 +9,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { Header } from "./stories/Header";
 import Settings from "./components/pages/Settings";
 import CardDetails from "./components/pages/CardDetails";
+import UserCards from "./components/pages/UserCards";
+import Info from "./components/pages/Info";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -29,12 +31,14 @@ const App = () => {
           path="projects"
           component={() => <Projects isChildMenuOpen={isChildMenuOpen} />}
         />
-        <ProtectedRoute path="projects/:id" component={ProjectDetails} />
+        <ProtectedRoute path="projects/:projectId" component={ProjectDetails} />
         <ProtectedRoute
           path="projects/:projectId/card/:cardId"
           component={CardDetails}
         />
         <ProtectedRoute path="settings" component={Settings} />
+        <ProtectedRoute path="info" component={Info} />
+        <ProtectedRoute path="user/:userId/cards" component={UserCards} />
         <Route path="*">
           <Redirect to={isAuthenticated ? "/projects" : "/login"} />
           // TODO: Deal with this when you decide what to do with it // this is

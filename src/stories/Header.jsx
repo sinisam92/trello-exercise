@@ -154,7 +154,7 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
           onClick={handleCloseSidebar}
         ></div>
         <motion.section
-          className={`${!isMenuOpen && "hidden"} absolute z-40 right-0 top-0 w-[330px] h-screen bg-white border-l border-primary`}
+          className={`${!isMenuOpen && "hidden"} absolute z-40 right-0 top-0 w-[320px] h-screen bg-white border-l border-primary`}
           animate={isMenuOpen ? "open" : "closed"}
           variants={openSidebarVariant}
           style={{ overflow: "hidden" }}

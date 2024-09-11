@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import PropTypes from "prop-types";
 import Dots from "../assets/icons/dots.svg";
 import Move from "../assets/icons/move.svg";
@@ -30,7 +30,10 @@ const Card = ({
   //   assigned.includes(user.username)
   // );
 
-  const { id } = useParams();
+  const { projectId, userId } = useParams();
+  const [location, navigation] = useLocation();
+  console.log(useParams());
+  console.log(projectId);
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);
@@ -97,7 +100,7 @@ const Card = ({
     e.preventDefault();
     setProjects((prevProjects) => {
       const updatedProjects = prevProjects.map((project) => {
-        if (project.id === id) {
+        if (project.id === projectId) {
           return {
             ...project,
             lists: project.lists.map((list) => {
@@ -136,7 +139,7 @@ const Card = ({
     if (selectedCardId) {
       setProjects((prevProjects) => {
         return prevProjects.map((proj) => {
-          if (proj.id === id) {
+          if (proj.id === projectId) {
             let cardToMove;
             let sourceListId;
 
@@ -174,9 +177,9 @@ const Card = ({
   return (
     <div
       key={card.id}
-      className="bg-primary min-w-[300px] text-white p-4 rounded-lg m-4"
+      className=" bg-primary min-w-[300px] text-white p-4 rounded-lg m-4 "
     >
-      <div className="relative flex justify-between items-center">
+      <div className=" flex justify-between items-center">
         <div>
           {card.tags && (
             <div className="flex gap-2 flex-wrap">
@@ -243,37 +246,47 @@ const Card = ({
               })}
           </div>
         </div>
-        <div className="relative h-full flex flex-col justify-between">
-          <button
-            onClick={(e) => handleCardOptions(e, card.id)}
-            className="flex flex-shrink-0"
-          >
-            <img
-              ref={optionsIconRef}
-              src={Dots}
-              alt="option dots"
-              className="w-7"
-            />
-          </button>
-          <button
-            className="absolute -bottom-14"
-            onClick={(e) => handleOpenMoveMenu(e, card.id)}
-          >
-            <img ref={moveIconRef} src={Move} alt="move dots" className=" mb-2" />
-          </button>
-        </div>
+        {location === `/user/${userId}/cards` ? null : (
+          <div className="relative h-full flex flex-col justify-between">
+            <button
+              onClick={(e) => handleCardOptions(e, card.id)}
+              className="flex flex-shrink-0"
+            >
+              <img
+                ref={optionsIconRef}
+                src={Dots}
+                alt="option dots"
+                className="w-7"
+              />
+            </button>
+            <button
+              className="absolute -bottom-14"
+              onClick={(e) => handleOpenMoveMenu(e, card.id)}
+            >
+              <img
+                ref={moveIconRef}
+                src={Move}
+                alt="move dots"
+                className=" mb-2"
+              />
+            </button>
+          </div>
+        )}
         {isMoveMenuOpen && (
-          <div ref={moveMenuRef} className="absolute top-0 right-10 bg-white text-black border rounded ">
-            <ul className="list-none p-2">
+          <div
+            ref={moveMenuRef}
+            className="absolute top-0 right-10 bg-white text-black border rounded "
+          >
+            <ul className="list-none px-2">
               {project.lists.map((list) => (
-                  <li
-                    key={list.id}
-                    className="p-2 cursor-pointer hover:bg-gray-200"
-                    onClick={(e) => handleMoveCard(e, list.id)}
-                  >
-                    {list.name}
-                  </li>
-                ))}
+                <li
+                  key={list.id}
+                  className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                  onClick={(e) => handleMoveCard(e, list.id)}
+                >
+                  {list.name}
+                </li>
+              ))}
             </ul>
           </div>
         )}

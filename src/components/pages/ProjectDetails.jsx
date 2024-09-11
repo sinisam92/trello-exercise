@@ -29,8 +29,8 @@ const ProjectDetails = () => {
   const listMenuRef = useRef(null);
   const listMenuIconRef = useRef(null);
 
-  const { id } = useParams();
-  const project = projects.find((p) => p.id === id);
+  const { projectId } = useParams();
+  const project = projects.find((p) => p.id === projectId);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -63,7 +63,7 @@ const ProjectDetails = () => {
     if (newListName) {
       setProjects((prevProjects) => {
         const updatedProjects = prevProjects.map((project) =>
-          project.id === id
+          project.id === projectId
             ? {
                 ...project,
                 lists: [
@@ -100,7 +100,7 @@ const ProjectDetails = () => {
 
   const handleSaveListName = (listId) => {
     const updatedProjects = projects.map((proj) =>
-      proj.id === id
+      proj.id === projectId
         ? {
             ...proj,
             lists: proj.lists.map((list) =>
@@ -131,7 +131,7 @@ const ProjectDetails = () => {
   const handleDeleteList = (listId) => {
     setProjects((prevProjects) =>
       prevProjects.map((proj) =>
-        proj.id === id
+        proj.id === projectId
           ? { ...proj, lists: proj.lists.filter((list) => list.id !== listId) }
           : proj
       )
@@ -207,23 +207,29 @@ const ProjectDetails = () => {
               )}
             </div>
 
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto  flex-1">
               {list.cards.map((card) => {
                 return (
-                  <Link key={card.id} to={`/projects/${id}/card/${card.id}`}>
-                    <Card
-                      card={card}
-                      assigned={card.assigned}
-                      list={list}
-                      project={project}
-                      setProjects={setProjects}
-                      setSmallTags={setSmallTags}
-                      smallTags={smallTags}
-                      setSelectedList={setSelectedList}
-                      setIsModalOpen={setIsModalOpen}
-                      setIsCardEditing={setIsCardEditing}
-                      setSelectedCard={setSelectedCard}
-                    />
+                  <Link
+                    key={card.id}
+                    to={`/projects/${projectId}/card/${card.id}`}
+                  >
+                    <div className="relative">
+                      <Card
+                        card={card}
+                        assigned={card.assigned}
+                        list={list}
+                        project={project}
+                        setProjects={setProjects}
+                        setSmallTags={setSmallTags}
+                        smallTags={smallTags}
+                        setSelectedList={setSelectedList}
+                        setIsModalOpen={setIsModalOpen}
+                        setIsCardEditing={setIsCardEditing}
+                        setSelectedCard={setSelectedCard}
+                        className="overflow-visible"
+                      />
+                    </div>
                   </Link>
                 );
               })}
