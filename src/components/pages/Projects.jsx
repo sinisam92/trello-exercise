@@ -36,6 +36,9 @@ const Projects = ({ isChildMenuOpen }) => {
     (project) => project.name.toLowerCase().includes(searchTerm.toLowerCase()) // {{ edit_3 }}
   );
 
+  /**
+   *  Dummy data when new list is added
+   */
   const dummyData = {
     id: uuidv4(),
     name: "Testing",
@@ -63,13 +66,27 @@ const Projects = ({ isChildMenuOpen }) => {
       },
     ],
   };
+
+  /**
+   * Handles the input change for the project name
+   *
+   */
   const handleProjectNameInputChange = (event) => {
     setNewProjectName(event.target.value);
   };
 
+  /**
+   * Handles the input change for the image URL
+   *
+   */
   const handleImageUrlInputChange = (event) => {
     setCoverImageUrl(event.target.value);
   };
+
+  /**
+   * Handles the change in the members of the project
+   *
+   */
 
   const handleMemberChange = (event) => {
     const selectedMembers = Array.from(
@@ -84,8 +101,12 @@ const Projects = ({ isChildMenuOpen }) => {
 
     setMembers(updatedMembers);
   };
-  const addNewProject = () => {
 
+  /**
+   * Handles the addition of a new project
+   *
+   */
+  const addNewProject = () => {
     if (projects.some((project) => project.name === newProjectName)) {
       setError("Project name already exists");
       return;
@@ -116,11 +137,21 @@ const Projects = ({ isChildMenuOpen }) => {
     setError("");
   };
 
+  /**
+   *  Toggles the project menu(edit, delete)
+   * @param {Event} e
+   * @param {number} projectId
+   */
   const toggleProjectMenu = (e, projectId) => {
     e.preventDefault();
     setOpenProjectMenuId((prev) => (prev === projectId ? null : projectId));
   };
 
+  /**
+   *
+   * Sents all nessesary data to the form for editing
+   * @param {Number} projectId
+   */
   const handleProjectEdit = (e, projectId) => {
     e.preventDefault();
     const projectToEdit = projects.find((project) => project.id === projectId);
@@ -136,6 +167,10 @@ const Projects = ({ isChildMenuOpen }) => {
     }
   };
 
+  /**
+   * Handles the saving of the edited(updated) project
+   *
+   */
   const handleSaveEditedProject = (e) => {
     e.preventDefault();
 
@@ -211,20 +246,24 @@ const Projects = ({ isChildMenuOpen }) => {
   return (
     <div className="flex flex-col">
       <div className={`relative ${isChildMenuOpen ? "blur-sm" : ""}`}>
-        { filteredProjects.length > 0 ? (filteredProjects.map((project) => {
-          return (
-            <ProjectItem
-              key={project.id}
-              project={project}
-              isChildMenuOpen={isChildMenuOpen}
-              openProjectMenuId={openProjectMenuId}
-              toggleProjectMenu={toggleProjectMenu}
-              handleProjectEdit={handleProjectEdit}
-              handleProjectDelete={handleProjectDelete}
-              setOpenProjectMenuId={setOpenProjectMenuId}
-            />
-          );
-        })) : (
+        
+        {/* Hndles filtering of projects based on search term and then shows the projects */}
+        {filteredProjects.length > 0 ? (
+          filteredProjects.map((project) => {
+            return (
+              <ProjectItem
+                key={project.id}
+                project={project}
+                isChildMenuOpen={isChildMenuOpen}
+                openProjectMenuId={openProjectMenuId}
+                toggleProjectMenu={toggleProjectMenu}
+                handleProjectEdit={handleProjectEdit}
+                handleProjectDelete={handleProjectDelete}
+                setOpenProjectMenuId={setOpenProjectMenuId}
+              />
+            );
+          })
+        ) : (
           <div className="flex justify-center">
             <h3>No Project with this name!</h3>
           </div>

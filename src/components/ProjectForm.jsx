@@ -14,13 +14,10 @@ const ProjectForm = ({
   users,
   handleMemberChange,
 }) => {
-  console.log(projects);
-  console.log(editingProjectId);
   const currentProject = projects.find(
     (project) => project.id === editingProjectId
   );
 
-  console.log("curr", currentProject);
   return (
     <div className=" flex flex-col gap-y-2 justify-center">
       <input

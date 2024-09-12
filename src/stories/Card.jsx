@@ -33,8 +33,6 @@ const Card = ({
 
   const { projectId, userId } = useParams();
   const [location, navigation] = useLocation();
-  console.log(useParams());
-  console.log(projectId);
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);
@@ -132,7 +130,6 @@ const Card = ({
     e.preventDefault();
     setSelectedCardId(cardId);
     setIsMoveMenuOpen(true);
-    console.log("Move card", cardId);
   };
 
   const handleMoveCard = (e, listId) => {
@@ -217,16 +214,13 @@ const Card = ({
           <div className="flex gap-x-2 mt-6">
             {card.assigned &&
               card.assigned.map((username) => {
-                console.log('username', username);
                 const assignedUser = users.find(
                   (user) => user.username === username
                 );
-                console.log('assignedUser', assignedUser);
                 if (!assignedUser) {
                   console.warn(`No user found for username: ${username}`);
                   return null;
                 }
-                console.log('assignedUser avatar', assignedUser.avatarUrl);
                 return assignedUser.avatarUrl ? (
                   <img
                     key={assignedUser.id}

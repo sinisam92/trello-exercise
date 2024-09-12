@@ -11,7 +11,6 @@ const Settings = () => {
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
-    console.log(`Theme changed to: ${newTheme}`);
     closeModal();
   };
   return (
