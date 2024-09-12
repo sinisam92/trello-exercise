@@ -1,7 +1,7 @@
 # Task/Projects Management App
 
 ## Overview
-This is a Projects Management application built with React. It allows users to create, edit, and delete projects, manage project members, and organize tasks within each project.
+This is a Task/Projects Management application built with React. It allows users to create, edit, and delete projects, manage project members, and organize tasks within each project.
 
 ## Features
 - Create new projects
