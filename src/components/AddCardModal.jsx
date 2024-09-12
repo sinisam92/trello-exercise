@@ -31,6 +31,8 @@ const AddCardModal = ({
     "default",
   ];
 
+  const currentProject = projects.find((proj) => proj.id === projectId);
+
   const handleAddOrEditCard = () => {
     if (!title) {
       setError("Title is required!");
@@ -48,25 +50,29 @@ const AddCardModal = ({
       dateAdded: selectedCard?.dateAdded || moment().toISOString(),
       dueDate: dueDate || "",
     };
-    const updatedProjects = projects.map((proj) => 
-    proj.id === projectId
-      ? {
-          ...proj,
-          lists: proj.lists.map((lst) =>
-            lst.id === list.id
-              ? {
-                  ...lst,
-                  cards: lst.cards.some((card) => isCardEditing && card.id === selectedCard?.id)
-                    ? lst.cards.map((card) =>
-                        card.id === selectedCard?.id ? { ...card, ...newCard } : card
-                      )
-                    : [...lst.cards, newCard] 
-                }
-              : lst
-          ),
-        }
-      : proj
-  );
+    const updatedProjects = projects.map((proj) =>
+      proj.id === projectId
+        ? {
+            ...proj,
+            lists: proj.lists.map((lst) =>
+              lst.id === list.id
+                ? {
+                    ...lst,
+                    cards: lst.cards.some(
+                      (card) => isCardEditing && card.id === selectedCard?.id
+                    )
+                      ? lst.cards.map((card) =>
+                          card.id === selectedCard?.id
+                            ? { ...card, ...newCard }
+                            : card
+                        )
+                      : [...lst.cards, newCard],
+                  }
+                : lst
+            ),
+          }
+        : proj
+    );
     localStorage.setItem("projects", JSON.stringify(updatedProjects));
     setProjects(updatedProjects);
     setTitle("");
@@ -79,6 +85,17 @@ const AddCardModal = ({
     setIsCardEditing(null);
     onClose();
     setError("");
+  };
+
+  const handleCLose = () => {
+    setError("");
+    setTitle("");
+    setDescription("");
+    setTags([]);
+    setSelectedTags([]);
+    setAssigned([]);
+    setDueDate("");
+    onClose();
   };
 
   useEffect(() => {
@@ -165,17 +182,19 @@ const AddCardModal = ({
                 onChange={handleAssignedChange}
                 className="w-full p-2 border border-gray-300 rounded mt-1 text-black"
               >
-                {users.map((user) => {
-                  return (
-                    <option
-                      key={user.username}
-                      value={user.username}
-                      className="text-black"
-                    >
-                      {user.username}
-                    </option>
-                  );
-                })}
+                {currentProject?.members &&
+                  currentProject.members.map((member) => {
+                    const user = users.find((user) => user.username === member); 
+                    return user ? ( 
+                      <option
+                        key={user.username}
+                        value={user.username}
+                        className="text-black"
+                      >
+                        {user.username}
+                      </option>
+                    ) : null; 
+                  })}
               </select>
             </label>
           </div>
@@ -191,7 +210,7 @@ const AddCardModal = ({
           <div className="flex justify-end">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleCLose}
               className="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded mr-2"
             >
               Cancel

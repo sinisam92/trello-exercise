@@ -3,22 +3,33 @@ import presentationData from "../../data/presentationData";
 import Plus from "../../assets/icons/plus.svg";
 import ProjectForm from "../ProjectForm";
 import ProjectItem from "../ProjectItem";
-import { v4 as uuidv4 } from 'uuid';
-
+import AlertModal from "../AlertModal";
+import { v4 as uuidv4 } from "uuid";
 
 const Projects = ({ isChildMenuOpen }) => {
   const [projects, setProjects] = useState(
     JSON.parse(localStorage.getItem("projects")) || presentationData
   );
+  const [users, setUsers] = useState(
+    JSON.parse(localStorage.getItem("users")) || []
+  );
+
   const [isAdding, setIsAdding] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
   const [openProjectMenuId, setOpenProjectMenuId] = useState(null);
+  const [members, setMembers] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState(null);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
-
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const userProjects = projects.filter(
+    (project) =>
+      project.members && project.members.includes(currentUser.username)
+  );
 
   const dummyData = {
     id: uuidv4(),
@@ -55,8 +66,21 @@ const Projects = ({ isChildMenuOpen }) => {
     setCoverImageUrl(event.target.value);
   };
 
+  const handleMemberChange = (event) => {
+    const selectedMembers = Array.from(
+      event.target.selectedOptions,
+      (option) => option.value
+    );
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const updatedMembers = Array.from(
+      new Set([currentUser.username, ...selectedMembers])
+    );
+
+    setMembers(updatedMembers);
+  };
   const addNewProject = () => {
-    if (projects.some(project => project.name === newProjectName)) {
+    if (projects.some((project) => project.name === newProjectName)) {
       setError("Project name already exists");
       return;
     }
@@ -66,6 +90,8 @@ const Projects = ({ isChildMenuOpen }) => {
         name: newProjectName,
         coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
         lists: [dummyData],
+        members: members,
+        createdBy: currentUser.username,
         slug: newProjectName.toLowerCase().replace(/\s/g, "-"),
       };
       const updatedProjects = [...projects, newProject];
@@ -92,7 +118,6 @@ const Projects = ({ isChildMenuOpen }) => {
   const handleProjectEdit = (e, projectId) => {
     e.preventDefault();
     const projectToEdit = projects.find((project) => project.id === projectId);
-
     if (projectToEdit) {
       setIsEditing(true);
       setNewProjectName(projectToEdit.name);
@@ -115,6 +140,7 @@ const Projects = ({ isChildMenuOpen }) => {
               ...project,
               name: newProjectName,
               coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
+              members: members,
             }
           : project
       );
@@ -139,24 +165,47 @@ const Projects = ({ isChildMenuOpen }) => {
     setCoverImageUrl("");
   };
 
+  /**
+   * Handles the deletion of a project
+   *
+   * @param {Event} e - The event object
+   * @param {string} projectId - The ID of the project to delete
+   */
   const handleProjectDelete = (e, projectId) => {
     e.preventDefault();
-    const deleteProject = (projectId) => {
-      const updatedProjects = projects.filter(
-        (project) => project.id !== projectId
-      );
-      setProjects(updatedProjects);
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
-    };
+    const project = projects.find((project) => project.id === projectId);
 
-    deleteProject(projectId);
+    if (project.createdBy === currentUser.username) {
+      let confirmeText = `Are you sure you want to delete project ${project.name}`;
+      if (confirm(confirmeText) === true) {
+        const deleteProject = (projectId) => {
+          const updatedProjects = projects.filter(
+            (project) => project.id !== projectId
+          );
+          setProjects(updatedProjects);
+          localStorage.setItem("projects", JSON.stringify(updatedProjects));
+        };
+        deleteProject(projectId);
+      } else {
+        setOpenProjectMenuId(null);
+        return;
+      }
+    } else {
+      setModalMessage(
+        `You do not have permission to delete this project! Contact the project creator ${project.createdBy} for more information.`
+      );
+      setIsModalOpen(true);
+    }
     setOpenProjectMenuId(null);
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false); 
+  };
   return (
     <div className="flex flex-col">
       <div className={`relative ${isChildMenuOpen ? "blur-sm" : ""}`}>
-        {projects.map((project) => {
+        {userProjects.map((project) => {
           return (
             <ProjectItem
               key={project.id}
@@ -170,6 +219,12 @@ const Projects = ({ isChildMenuOpen }) => {
             />
           );
         })}
+        <AlertModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          title="Permission Denied"
+          message={modalMessage}
+        />
       </div>
       <div className="fixed bottom-32 right-10 z-40">
         <button
@@ -184,10 +239,15 @@ const Projects = ({ isChildMenuOpen }) => {
         </button>
       </div>
       {isAdding && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 h-24 min-h-24 flex justify-center items-center bg-primaryHover px-20 py-32 rounded-lg">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 flex justify-center items-center bg-primaryHover px-20 py-10 rounded-lg">
           <ProjectForm
             newProjectName={newProjectName}
             coverImageUrl={coverImageUrl}
+            members={members}
+            handleMemberChange={handleMemberChange}
+            users={users}
+            projects={projects}
+            editingProjectId={editingProjectId}
             handleProjectNameInputChange={handleProjectNameInputChange}
             handleImageUrlInputChange={handleImageUrlInputChange}
             handleSaveEditedProject={handleSaveEditedProject}
