@@ -10,17 +10,17 @@ import presentationData from "../data/presentationData";
 import { dynamicFontForLongStrings } from "../utils/helperFunctions";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
+import { useSearch } from "../contexts/SearchContext";
 
 export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [title, setTitle] = useState("");
-  
+
   const [location, navigate] = useLocation();
-  
 
-
+  const { searchTerm, setSearchTerm } = useSearch();
 
   const getParamsFromUrl = () => {
     const parts = location.split("/");
@@ -32,7 +32,7 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
 
   const projects =
     JSON.parse(localStorage.getItem("projects")) || presentationData;
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
     const project = projects.find((project) => project.id === projectId);
@@ -70,6 +70,10 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
     } else {
       navigate(`/projects/${projectId}`);
     }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const openSidebarVariant = {
@@ -126,6 +130,8 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
                   type="text"
                   placeholder="Search"
                   className="border border-disabled w-full h-5 py-5 rounded-md px-4 focus:border-primary focus:outline-none"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                 />
               </div>
             ) : (

@@ -5,6 +5,7 @@ import ProjectForm from "../ProjectForm";
 import ProjectItem from "../ProjectItem";
 import AlertModal from "../AlertModal";
 import { v4 as uuidv4 } from "uuid";
+import { useSearch } from "../../contexts/SearchContext";
 
 const Projects = ({ isChildMenuOpen }) => {
   const [projects, setProjects] = useState(
@@ -25,10 +26,14 @@ const Projects = ({ isChildMenuOpen }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
+  const { searchTerm } = useSearch();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const userProjects = projects.filter(
     (project) =>
       project.members && project.members.includes(currentUser.username)
+  );
+  const filteredProjects = userProjects.filter(
+    (project) => project.name.toLowerCase().includes(searchTerm.toLowerCase()) // {{ edit_3 }}
   );
 
   const dummyData = {
@@ -80,6 +85,7 @@ const Projects = ({ isChildMenuOpen }) => {
     setMembers(updatedMembers);
   };
   const addNewProject = () => {
+
     if (projects.some((project) => project.name === newProjectName)) {
       setError("Project name already exists");
       return;
@@ -200,12 +206,12 @@ const Projects = ({ isChildMenuOpen }) => {
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
   };
   return (
     <div className="flex flex-col">
       <div className={`relative ${isChildMenuOpen ? "blur-sm" : ""}`}>
-        {userProjects.map((project) => {
+        { filteredProjects.length > 0 ? (filteredProjects.map((project) => {
           return (
             <ProjectItem
               key={project.id}
@@ -218,7 +224,11 @@ const Projects = ({ isChildMenuOpen }) => {
               setOpenProjectMenuId={setOpenProjectMenuId}
             />
           );
-        })}
+        })) : (
+          <div className="flex justify-center">
+            <h3>No Project with this name!</h3>
+          </div>
+        )}
         <AlertModal
           isOpen={isModalOpen}
           onClose={closeModal}

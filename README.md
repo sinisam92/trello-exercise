@@ -1,8 +1,48 @@
-# React + Vite
+# Projects Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+This is a Projects Management application built with React. It allows users to create, edit, and delete projects, manage project members, and organize tasks within each project.
 
-Currently, two official plugins are available:
+## Features
+- Create new projects
+- Edit existing projects
+- Delete projects
+- Manage project members
+- Add tasks to projects
+- Responsive design
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technologies Used
+- React
+- Tailwind
+- Local Storage for data persistence
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/BEAM-WD-0323/task-management.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd task-managment
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the development server:
+   ```bash
+   npm start
+   ```
+
+## Usage
+- Open your browser and go to `http://localhost:3000`.
+- Use the interface to create, edit, and manage your projects.
+
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+- Thanks to the contributors and the open-source community for their support.

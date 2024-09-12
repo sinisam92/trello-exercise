@@ -14,9 +14,13 @@ const ProjectForm = ({
   users,
   handleMemberChange,
 }) => {
+  console.log(projects);
+  console.log(editingProjectId);
   const currentProject = projects.find(
     (project) => project.id === editingProjectId
   );
+
+  console.log("curr", currentProject);
   return (
     <div className=" flex flex-col gap-y-2 justify-center">
       <input
@@ -43,7 +47,7 @@ const ProjectForm = ({
         className="border p-2 rounded"
       >
         {users
-          .filter((user) => user.username !== currentProject.createdBy)
+          // .filter((user) => user.username !== currentProject.createdBy)
           .map((user) => (
             <option key={user.id} value={user.username}>
               {user.username}

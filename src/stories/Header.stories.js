@@ -24,7 +24,7 @@ export const Default = {
   parameters: {
     reactContext: {
       context: AuthProvider,
-      contextValue: {  isAuthenticated: true, login: () => {}, logout: () => {} },
+      contextValue: {  isAuthenticated: true },
     }},
   args: {
     hasNotification: false,
