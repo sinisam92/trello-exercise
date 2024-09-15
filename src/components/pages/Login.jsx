@@ -58,7 +58,7 @@ const Login = () => {
               type="username"
               placeholder="Enter your username"
               onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
+              autoComplete="off"
             />
             {error && <p className="text-danger mt-2">{error}</p>}
           </div>

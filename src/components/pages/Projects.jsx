@@ -33,7 +33,7 @@ const Projects = ({ isChildMenuOpen }) => {
       project.members && project.members.includes(currentUser.username)
   );
   const filteredProjects = userProjects.filter(
-    (project) => project.name.toLowerCase().includes(searchTerm.toLowerCase()) // {{ edit_3 }}
+    (project) => project.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   /**
@@ -246,7 +246,7 @@ const Projects = ({ isChildMenuOpen }) => {
   return (
     <div className="flex flex-col">
       <div className={`relative ${isChildMenuOpen ? "blur-sm" : ""}`}>
-        
+
         {/* Hndles filtering of projects based on search term and then shows the projects */}
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => {

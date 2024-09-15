@@ -52,7 +52,7 @@ const Register = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter your username"
-              autoComplete="username"
+              autoComplete="off"
             />
           </div>
           <div className="flex flex-col gap-y-6 items-center justify-between mt-10">
