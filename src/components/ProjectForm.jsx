@@ -9,15 +9,9 @@ const ProjectForm = ({
   addNewProject,
   error,
   members,
-  projects,
-  editingProjectId,
   users,
   handleMemberChange,
 }) => {
-  const currentProject = projects.find(
-    (project) => project.id === editingProjectId
-  );
-
   return (
     <div className=" flex flex-col gap-y-2 justify-center">
       <input
@@ -43,13 +37,11 @@ const ProjectForm = ({
         onChange={handleMemberChange}
         className="border p-2 rounded"
       >
-        {users
-          // .filter((user) => user.username !== currentProject.createdBy)
-          .map((user) => (
-            <option key={user.id} value={user.username}>
-              {user.username}
-            </option>
-          ))}
+        {users.map((user) => (
+          <option key={user.id} value={user.username}>
+            {user.username}
+          </option>
+        ))}
       </select>
 
       <button

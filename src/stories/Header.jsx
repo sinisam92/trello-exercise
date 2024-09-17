@@ -11,6 +11,7 @@ import { dynamicFontForLongStrings } from "../utils/helperFunctions";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import { useSearch } from "../contexts/SearchContext";
+import useProjects from "../hooks/useProjects";
 
 export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,6 +22,7 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   const [location, navigate] = useLocation();
 
   const { searchTerm, setSearchTerm } = useSearch();
+  const { projects } = useProjects();
 
   const getParamsFromUrl = () => {
     const parts = location.split("/");
@@ -30,8 +32,8 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   };
   const { projectId, cardId } = getParamsFromUrl();
 
-  const projects =
-    JSON.parse(localStorage.getItem("projects")) || presentationData;
+  // const projects =
+  //   JSON.parse(localStorage.getItem("projects")) || presentationData;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {

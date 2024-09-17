@@ -1,6 +1,7 @@
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import useProjects from "../hooks/useProjects";
 
 const AddCardModal = ({
   isOpen,
@@ -31,7 +32,7 @@ const AddCardModal = ({
     "default",
   ];
 
-  const currentProject = projects.find((proj) => proj.id === projectId);
+  const { currentProject } = useProjects(projectId);
 
   const handleAddOrEditCard = () => {
     if (!title) {
@@ -41,7 +42,7 @@ const AddCardModal = ({
 
     const newCard = {
       id: selectedCard?.id || uuidv4(),
-      title: title,
+      title,
       description: description || "",
       tags: selectedTags,
       assigned,
@@ -50,31 +51,33 @@ const AddCardModal = ({
       dateAdded: selectedCard?.dateAdded || moment().toISOString(),
       dueDate: dueDate || "",
     };
-    const updatedProjects = projects.map((proj) =>
-      proj.id === projectId
+
+    const updateListCards = (lst) => {
+      return lst.id === list.id
         ? {
-            ...proj,
-            lists: proj.lists.map((lst) =>
-              lst.id === list.id
-                ? {
-                    ...lst,
-                    cards: lst.cards.some(
-                      (card) => isCardEditing && card.id === selectedCard?.id
-                    )
-                      ? lst.cards.map((card) =>
-                          card.id === selectedCard?.id
-                            ? { ...card, ...newCard }
-                            : card
-                        )
-                      : [...lst.cards, newCard],
-                  }
-                : lst
-            ),
+            ...lst,
+            cards: isCardEditing
+              ? lst.cards.map((card) =>
+                  card.id === selectedCard?.id ? { ...card, ...newCard } : card
+                )
+              : [...lst.cards, newCard],
           }
-        : proj
+        : lst;
+    };
+
+    const updatedProjects = projects.map((project) =>
+      project.id === projectId
+        ? { ...project, lists: project.lists.map(updateListCards) }
+        : project
     );
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+
+    // Save changes and reset form state
     setProjects(updatedProjects);
+    resetForm();
+    onClose();
+  };
+
+  const resetForm = () => {
     setTitle("");
     setDescription("");
     setTags([]);
@@ -82,19 +85,11 @@ const AddCardModal = ({
     setAssigned([]);
     setDueDate("");
     setIsCardEditing(false);
-    setIsCardEditing(null);
-    onClose();
     setError("");
   };
 
   const handleCLose = () => {
-    setError("");
-    setTitle("");
-    setDescription("");
-    setTags([]);
-    setSelectedTags([]);
-    setAssigned([]);
-    setDueDate("");
+    resetForm();
     onClose();
   };
 
@@ -184,8 +179,8 @@ const AddCardModal = ({
               >
                 {currentProject?.members &&
                   currentProject.members.map((member) => {
-                    const user = users.find((user) => user.username === member); 
-                    return user ? ( 
+                    const user = users.find((user) => user.username === member);
+                    return user ? (
                       <option
                         key={user.username}
                         value={user.username}
@@ -193,7 +188,7 @@ const AddCardModal = ({
                       >
                         {user.username}
                       </option>
-                    ) : null; 
+                    ) : null;
                   })}
               </select>
             </label>

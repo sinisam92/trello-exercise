@@ -1,10 +1,13 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useParams, useLocation } from "wouter";
 import PropTypes from "prop-types";
 import Dots from "../assets/icons/dots.svg";
 import Move from "../assets/icons/move.svg";
 import Comment from "../assets/icons/comment.svg";
 import moment from "moment";
+import useClickOutside from "../hooks/useClickOutside";
+import Tag from "../components/Tag";
+import ListItem from "../components/ListItem";
 
 const Card = ({
   card,
@@ -20,16 +23,8 @@ const Card = ({
   setSelectedCard,
 }) => {
   const [openCardOptionsId, setOpenCardOptionsId] = useState(null);
-  // const [users, setUsers] = useState(
-  //   JSON.parse(localStorage.getItem("users")) || []
-  // );
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
-
-  const assigned = card.assigned;
-  // const assignedUsers = users.filter((user) =>
-  //   assigned.includes(user.username)
-  // );
 
   const { projectId, userId } = useParams();
   const [location, navigation] = useLocation();
@@ -38,48 +33,12 @@ const Card = ({
   const moveIconRef = useRef(null);
   const moveMenuRef = useRef(null);
 
-  // const handleStatusChange = (newStatus) => {
-  //   updateCardStatus(card.id, newStatus);
-  // };
+  useClickOutside([cardOptionsRef, optionsIconRef], () =>
+    setOpenCardOptionsId(null)
+  );
+  useClickOutside([moveMenuRef, moveIconRef], () => setIsMoveMenuOpen(false));
 
-  const handleClickOutside = (event) => {
-    if (
-      cardOptionsRef.current &&
-      !cardOptionsRef.current.contains(event.target) &&
-      optionsIconRef.current &&
-      !optionsIconRef.current.contains(event.target)
-    ) {
-      setOpenCardOptionsId(null);
-    }
-  };
-  const handleMoveMenuClickOutside = (event) => {
-    if (
-      moveMenuRef.current &&
-      !moveMenuRef.current.contains(event.target) &&
-      moveIconRef.current &&
-      !moveIconRef.current.contains(event.target)
-    ) {
-      setIsMoveMenuOpen(false);
-    }
-  };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("mousedown", handleMoveMenuClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("mousedown", handleMoveMenuClickOutside);
-    };
-  }, []);
-
-  const colors = {
-    urgent: "bg-myOrange",
-    critical: "bg-danger",
-    bug: "bg-myBlue",
-    feature: "bg-success",
-    important: "bg-myPurple",
-    default: "bg-disabled",
-  };
 
   const openModal = (e, card, list) => {
     e.preventDefault();
@@ -97,27 +56,25 @@ const Card = ({
 
   const handleDeleteCard = (e, listId, cardId) => {
     e.preventDefault();
-    setProjects((prevProjects) => {
-      const updatedProjects = prevProjects.map((project) => {
-        if (project.id === projectId) {
-          return {
-            ...project,
-            lists: project.lists.map((list) => {
-              if (list.id === listId) {
-                return {
-                  ...list,
-                  cards: list.cards.filter((card) => card.id !== cardId),
-                };
-              }
-              return list;
-            }),
-          };
-        }
-        return project;
-      });
 
-      return updatedProjects;
-    });
+    setProjects((prevProjects) =>
+      prevProjects.map((project) =>
+        project.id === projectId
+          ? {
+              ...project,
+              lists: project.lists.map((list) =>
+                list.id === listId
+                  ? {
+                      ...list,
+                      cards: list.cards.filter((card) => card.id !== cardId),
+                    }
+                  : list
+              ),
+            }
+          : project
+      )
+    );
+
     setOpenCardOptionsId(null);
   };
 
@@ -125,7 +82,6 @@ const Card = ({
     e.preventDefault();
     setSmallTags((prev) => !prev);
   };
-
   const handleOpenMoveMenu = (e, cardId) => {
     e.preventDefault();
     setSelectedCardId(cardId);
@@ -183,13 +139,12 @@ const Card = ({
             <div className="flex gap-2 flex-wrap">
               {card.tags.map((tag) => {
                 return (
-                  <span
+                  <Tag
                     key={tag}
-                    onClick={(e) => handleSmallThingsToggle(e)}
-                    className={`text-white transition-transform duration-300 ease-in-out transform ${smallTags ? "scale-90 px-4 py-2" : "px-2 py-1"}  rounded-md text-xs mb-2 ${colors[tag]}`}
-                  >
-                    {smallTags ? null : tag}
-                  </span>
+                    tag={tag}
+                    smallTags={smallTags}
+                    handleSmallThingsToggle={handleSmallThingsToggle}
+                  />
                 );
               })}
             </div>
@@ -275,13 +230,12 @@ const Card = ({
           >
             <ul className="list-none px-2">
               {project.lists.map((list) => (
-                <li
+                <ListItem
                   key={list.id}
-                  className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                  text={list.name}
                   onClick={(e) => handleMoveCard(e, list.id)}
-                >
-                  {list.name}
-                </li>
+                  className="px-2 py-1 cursor-pointer hover:bg-gray-200"
+                />
               ))}
             </ul>
           </div>
@@ -293,18 +247,11 @@ const Card = ({
             className="absolute top-10 right-[80px] w-24 bg-primaryHover rounded-lg z-50"
           >
             <ul className="py-2 text-white text-lg">
-              <li
-                onClick={(e) => openModal(e, card, list)}
-                className="flex items-center hover:bg-primary p-2 rounded"
-              >
-                Edit
-              </li>
-              <li
+              <ListItem onClick={(e) => openModal(e, card, list)} text="Edit" />
+              <ListItem
                 onClick={(e) => handleDeleteCard(e, list.id, card.id)}
-                className="flex items-center hover:bg-primary p-2 rounded"
-              >
-                Delete
-              </li>
+                text="Delete"
+              />
             </ul>
           </div>
         )}

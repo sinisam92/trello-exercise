@@ -1,19 +1,16 @@
 import { useState } from "react";
-import presentationData from "../../data/presentationData";
 import Plus from "../../assets/icons/plus.svg";
 import ProjectForm from "../ProjectForm";
 import ProjectItem from "../ProjectItem";
 import AlertModal from "../AlertModal";
 import { v4 as uuidv4 } from "uuid";
 import { useSearch } from "../../contexts/SearchContext";
+import useProjects from "../../hooks/useProjects";
+import useUsers from "../../hooks/useUsers";
 
 const Projects = ({ isChildMenuOpen }) => {
-  const [projects, setProjects] = useState(
-    JSON.parse(localStorage.getItem("projects")) || presentationData
-  );
-  const [users, setUsers] = useState(
-    JSON.parse(localStorage.getItem("users")) || []
-  );
+  const { projects, setProjects } = useProjects();
+  const { users, currentUser } = useUsers();
 
   const [isAdding, setIsAdding] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
@@ -27,13 +24,13 @@ const Projects = ({ isChildMenuOpen }) => {
   const [modalMessage, setModalMessage] = useState("");
 
   const { searchTerm } = useSearch();
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
   const userProjects = projects.filter(
     (project) =>
       project.members && project.members.includes(currentUser.username)
   );
-  const filteredProjects = userProjects.filter(
-    (project) => project.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProjects = userProjects.filter((project) =>
+    project.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   /**
@@ -94,7 +91,7 @@ const Projects = ({ isChildMenuOpen }) => {
       (option) => option.value
     );
 
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const updatedMembers = Array.from(
       new Set([currentUser.username, ...selectedMembers])
     );
@@ -123,7 +120,6 @@ const Projects = ({ isChildMenuOpen }) => {
       };
       const updatedProjects = [...projects, newProject];
       setProjects(updatedProjects);
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
       setIsAdding(false);
     }
     setCoverImageUrl("");
@@ -224,7 +220,6 @@ const Projects = ({ isChildMenuOpen }) => {
             (project) => project.id !== projectId
           );
           setProjects(updatedProjects);
-          localStorage.setItem("projects", JSON.stringify(updatedProjects));
         };
         deleteProject(projectId);
       } else {
@@ -246,7 +241,6 @@ const Projects = ({ isChildMenuOpen }) => {
   return (
     <div className="flex flex-col">
       <div className={`relative ${isChildMenuOpen ? "blur-sm" : ""}`}>
-
         {/* Hndles filtering of projects based on search term and then shows the projects */}
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => {
@@ -292,9 +286,11 @@ const Projects = ({ isChildMenuOpen }) => {
           <ProjectForm
             newProjectName={newProjectName}
             coverImageUrl={coverImageUrl}
+            currentProject
             members={members}
             handleMemberChange={handleMemberChange}
             users={users}
+            currentUser={currentUser}
             projects={projects}
             editingProjectId={editingProjectId}
             handleProjectNameInputChange={handleProjectNameInputChange}

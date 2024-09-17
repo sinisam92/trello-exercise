@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import Card from "../../stories/Card";
+import useProjects from "../../hooks/useProjects";
+import useUsers from "../../hooks/useUsers";
 
 const UsersCards = () => {
   const [cards, setCards] = useState([]);
+
+  const { users, currentUser } = useUsers();
+  const { projects } = useProjects();
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const projects = JSON.parse(localStorage.getItem("projects")) || [];
 
     const getAllCards = projects
       .filter((project) => project.lists)
@@ -23,7 +26,7 @@ const UsersCards = () => {
       {cards.length > 0 ? (
         <div className="grid place-content-center w-[85%] mx-auto md:grid-cols-2 lg:w-[90%] lg:grid-cols-3 lg:gap-4 xl:w-3/4 xl:max-w-3/4">
           {cards.map((card) => (
-            <Card key={card.id} card={card} />
+            <Card key={card.id} card={card} users={users} />
           ))}
         </div>
       ) : (

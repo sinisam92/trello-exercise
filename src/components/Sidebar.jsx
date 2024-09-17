@@ -1,26 +1,24 @@
 import { useState } from "react";
 import Close from "../stories/assets/icons/close.svg";
-import Info from "../stories/assets/icons/info.svg";
-import Logout from "../stories/assets/icons/logout.svg";
-import Settings from "../stories/assets/icons/settings.svg";
-import Cards from "../stories/assets/icons/cards.svg";
 import { useAuth } from "../contexts/AuthContext";
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
+import useUsers from "../hooks/useUsers";
+import ListItem from "./ListItem";
+import SidebarMenu from "./SidebarMenu";
 
-
-const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
+const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const username = currentUser ? currentUser.username : "Guest";
-  const defaultAvatar = currentUser ? currentUser.defaultAvatar : "👤";
+  const { users, currentUser } = useUsers();
+
+  const username = currentUser && currentUser.username;
+  const defaultAvatar = currentUser && currentUser.defaultAvatar;
   const avatarUrl = currentUser ? currentUser.avatarUrl : "";
   const usernameForAt = username.toLowerCase().replace(" ", "-");
   const [location, navigate] = useLocation();
 
   const { logout } = useAuth();
-
 
   const openAvatarModal = () => {
     setIsAvatarModalOpen(true);
@@ -40,7 +38,6 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
       const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
-      const users = JSON.parse(localStorage.getItem("users")) || [];
       const updatedUsers = users.map((user) =>
         user.id === userId ? updatedUser : user
       );
@@ -59,23 +56,9 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
     navigate("/login");
   };
 
-  const handleLinkClick = (path) => {
-    handleCloseSidebar();
-    navigate(path);
-  };
-
-  const handleMyCardsClick = (path) => {
-    handleCloseSidebar();
-    navigate(path);
-  };
-  const handleInfoClick = (path) => {
-    handleCloseSidebar();
-    navigate(path);
-  };
-
   return (
     <aside className="">
-      <div className="bg-[#2A9D8F] pb-5"> 
+      <div className="bg-[#2A9D8F] pb-5">
         <div className="flex justify-between pt-11 px-1 items-start ">
           <div className="pb-[22px]">
             {avatarUrl ? (
@@ -108,20 +91,18 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
                     placeholder="Enter new avatar URL"
                     className="border p-2 w-full mb-4"
                   />
-                  <div className="flex justify-end gap-4">
-                    <button
+                  <ul className="flex justify-end gap-4">
+                    <ListItem
+                      text="Save"
                       onClick={() => handleAvatarSubmit(currentUser.id)}
                       className="bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                      Save
-                    </button>
-                    <button
+                    />
+                    <ListItem
+                      text="Cancel"
                       onClick={closeAvatarModal}
                       className="bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                    />
+                  </ul>
                 </div>
               </div>
             )}
@@ -136,40 +117,11 @@ const Sidebar = ({setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
         </div>
       </div>
       <nav className="px-1 ">
-        <ul className="flex flex-col gap-y-2">
-          <li>
-            <button onClick={() => handleMyCardsClick(`/user/${currentUser.id}/cards`)}>
-              <div className="flex items-center gap-x-2">
-                <img src={Cards} alt="cards" />
-                <span>My Cards</span>
-              </div>
-            </button>
-          </li>
-          <li>
-            <button onClick={() => handleLinkClick("/settings")}>
-              <div className="flex items-center gap-x-2">
-                <img src={Settings} alt="setting" />
-                <span>Settings</span>
-              </div>
-            </button>
-          </li>
-          <li>
-            <button onClick={() => handleInfoClick("/info")}>
-              <div className="flex items-center gap-x-2">
-                <img src={Info} alt="info" />
-                <span>Info</span>
-              </div>
-            </button>
-          </li>
-          <li className="py-1">
-            <button onClick={handleLogout}>
-              <div className="flex items-center gap-x-2">
-                <img src={Logout} alt="logout" />
-                <span>Logout</span>
-              </div>
-            </button>
-          </li>
-        </ul>
+        <SidebarMenu
+          currentUser={currentUser}
+          handleLogout={handleLogout}
+          handleCloseSidebar={handleCloseSidebar}
+        />
       </nav>
     </aside>
   );

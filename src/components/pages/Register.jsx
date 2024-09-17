@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Button } from "../../stories/Button";
 import { useLocation, Link } from "wouter";
 import { v4 as uuidv4 } from "uuid";
+import useUsers from "../../hooks/useUsers";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [location, navigate] = useLocation();
+  const { users } = useUsers();
 
   const handleRegister = () => {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
 
     if (users.some((user) => user.username === username)) {
       setError("Username is already taken");
@@ -18,7 +19,7 @@ const Register = () => {
     } else if (username.length < 2) {
       setError("Username must be at least 2 characters");
     } else {
-      const newUser = { 
+      const newUser = {
         id: uuidv4(),
         username: username,
         defaultAvatar: username.charAt(0).toUpperCase(),
@@ -62,11 +63,11 @@ const Register = () => {
               label="Sign Up"
               onClick={handleRegister}
             />
-             <Link
+            <Link
               href="login"
               className="inline-block align-baseline font-bold text-sm text-primary hover:text-primaryHover"
             >
-            <small>Already have an account? - </small>  Sign In
+              <small>Already have an account? - </small> Sign In
             </Link>
           </div>
         </form>

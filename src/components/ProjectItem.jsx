@@ -1,6 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { Link } from "wouter";
 import DotsTiel from "../assets/icons/menu-tile.svg";
+import useClickOutside from "../hooks/useClickOutside";
+import ListItem from "./ListItem";
 
 const ProjectItem = ({
   project,
@@ -14,28 +16,11 @@ const ProjectItem = ({
   const iconRef = useRef(null);
   const optionsRef = useRef(null);
 
-
   /**
    * Handles closing the project menu when clicking outside of it
    * @param {Event} event
    */
-  const handleClickOutside = (event) => {
-    if (
-      optionsRef.current &&
-      !optionsRef.current.contains(event.target) &&
-      iconRef.current &&
-      !iconRef.current.contains(event.target)
-    ) {
-      setOpenProjectMenuId(null);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useClickOutside([optionsRef, iconRef], () => setOpenProjectMenuId(null));
 
   return (
     <div
@@ -55,37 +40,27 @@ const ProjectItem = ({
             </h1>
             <div className="w-10 h-full z-30 flex items-center mr-4">
               <button onClick={(e) => toggleProjectMenu(e, project.id)}>
-                <img
-                  ref={iconRef}
-                  src={DotsTiel}
-                  alt="menu icon"
-                />
+                <img ref={iconRef} src={DotsTiel} alt="menu icon" />
               </button>
             </div>
 
             {openProjectMenuId === project.id && (
               <div
                 ref={optionsRef}
-                className="absolute right-10 top-14 py-6 rounded-lg shadow-lg bg-primaryHover z-40"
+                className="absolute right-10 top-14 py-6 rounded-lg shadow-lg bg-primaryHover z-50"
               >
                 <div>
                   <ul className="py-2  text-white text-lg">
-                    <li className="hover:bg-primary w-full px-8 ">
-                      <button
-                        onClick={(e) => handleProjectEdit(e, project.id)}
-                        className="text-white"
-                      >
-                        Edit
-                      </button>
-                    </li>
-                    <li className="hover:bg-primary w-full px-8 ">
-                      <button
-                        onClick={(e) => handleProjectDelete(e, project.id)}
-                        className="text-danger"
-                      >
-                        Delete
-                      </button>
-                    </li>
+                    <ListItem
+                      text="Edit"
+                      onClick={(e) => handleProjectEdit(e, project.id)}
+                      className="hover:bg-primary w-full px-8"
+                    />
+                    <ListItem
+                      text="Delete"
+                      onClick={(e) => handleProjectDelete(e, project.id)}
+                      className="hover:bg-primary w-full px-8"
+                    />
                   </ul>
                 </div>
               </div>

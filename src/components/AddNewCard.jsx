@@ -1,6 +1,7 @@
 import Plus from "../assets/icons/plus.svg";
 
 const AddNewCard = ({setSelectedList, setIsModalOpen, list, setIsCardEditing}) => {
+  
   const openModal = (list) => {
     setSelectedList(list);
     setIsCardEditing(false);

@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import presentationData from "../../data/presentationData";
+import { useState, useRef } from "react";
 import { useParams } from "wouter";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
@@ -10,26 +9,29 @@ import Clock from "../../assets/icons/clock2.svg";
 import Comment from "../../assets/icons/comment.svg";
 import Post from "../../assets/icons/post.svg";
 import DotsSmall from "../../assets/icons/dots-small.svg";
+import useProjects from "../../hooks/useProjects";
+import useUsers from "../../hooks/useUsers";
+import useClickOutside from "../../hooks/useClickOutside";
+import Tag from "../Tag";
 
 const CardDetails = () => {
-  const [projects, setProjects] = useState(
-    JSON.parse(localStorage.getItem("projects")) || presentationData
-  );
-  const [users, setUsers] = useState(
-    JSON.parse(localStorage.getItem("users")) || []
-  );
   const [commentText, setCommentText] = useState("");
   const [openOptions, setOpenOptions] = useState(null);
 
   const commentsOptionsRef = useRef(null);
   const commentsIconRef = useRef(null);
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const { projects, setProjects } = useProjects();
+  const { users, currentUser } = useUsers();
+
   const { cardId, projectId } = useParams();
+
   const allCards = projects.flatMap((project) =>
     project.lists.flatMap((list) => list.cards)
   );
   const thisCard = allCards.find((card) => card.id === cardId);
+
   const project = projects.find((project) =>
     project.lists.some((list) => list.cards.includes(thisCard))
   );
@@ -48,39 +50,33 @@ const CardDetails = () => {
   };
 
   const handleAddComment = (projectId, listId, cardId, commentText) => {
-    const updatedProjects = projects.map((project) => {
-      if (project.id === projectId) {
-        return {
-          ...project,
-          lists: project.lists.map((list) => {
-            if (list.id === listId) {
-              return {
-                ...list,
-                cards: list.cards.map((card) => {
-                  if (card.id === cardId) {
-                    const newComment = {
-                      id: uuidv4(),
-                      text: commentText,
-                      user: currentUser.username,
-                      dateAdded: moment().toISOString(),
-                    };
+    const updatedProjects = projects.map((project) => ({
+      ...project,
+      lists: project.lists.map((list) => ({
+        ...list,
+        cards: list.cards.map((card) => {
+          if (
+            project.id === projectId &&
+            list.id === listId &&
+            card.id === cardId
+          ) {
+            const newComment = {
+              id: uuidv4(),
+              text: commentText,
+              user: currentUser.username,
+              dateAdded: moment().toISOString(),
+            };
 
-                    return {
-                      ...card,
-                      comments: [...(card.comments || []), newComment],
-                    };
-                  }
-                  return card;
-                }),
-              };
-            }
-            return list;
-          }),
-        };
-      }
-      return project;
-    });
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+            return {
+              ...card,
+              comments: [...(card.comments || []), newComment],
+            };
+          }
+          return card;
+        }),
+      })),
+    }));
+
     setProjects(updatedProjects);
   };
 
@@ -92,57 +88,41 @@ const CardDetails = () => {
     window.scrollTo(0, document.body.scrollHeight);
   };
 
-  const handleClickOutside = (event) => {
-    if (
-      commentsOptionsRef.current &&
-      !commentsOptionsRef.current.contains(event.target) &&
-      commentsIconRef.current &&
-      !commentsIconRef.current.contains(event.target)
-    ) {
-      setOpenOptions(null);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useClickOutside([commentsOptionsRef, commentsIconRef], () =>
+    setOpenOptions(null)
+  );
 
   const handleDeleteComment = (cardId, commentId) => {
-    const updatedProjects = projects.map((project) => {
-      const updatedLists = project.lists.map((list) => {
-        const updatedCards = list.cards.map((card) => {
-          if (card.id === cardId) {
-            const updatedComments = card.comments.filter((comment) => {
-              // Check if the comment was created by the current user
-              if (comment.user === currentUser.username) {
-                return comment.id !== commentId;
-              }
-              return true;
-            });
-            return { ...card, comments: updatedComments };
-          }
-          return card;
-        });
-        return { ...list, cards: updatedCards };
-      });
-      return { ...project, lists: updatedLists };
-    });
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    const updatedProjects = projects.map((project) => ({
+      ...project,
+      lists: project.lists.map((list) => ({
+        ...list,
+        cards: list.cards.map((card) => {
+          if (card.id !== cardId) return card;
+
+          const updatedComments = card.comments.filter(
+            (comment) =>
+              !(
+                comment.user === currentUser.username &&
+                comment.id === commentId
+              )
+          );
+          return { ...card, comments: updatedComments };
+        }),
+      })),
+    }));
+
     setProjects(updatedProjects);
   };
 
-  // Usage example
-  const colors = {
-    urgent: "bg-myOrange",
-    critical: "bg-danger",
-    bug: "bg-myBlue",
-    feature: "bg-success",
-    important: "bg-myPurple",
-    default: "bg-disabled",
-  };
+  // const colors = {
+  //   urgent: "bg-myOrange",
+  //   critical: "bg-danger",
+  //   bug: "bg-myBlue",
+  //   feature: "bg-success",
+  //   important: "bg-myPurple",
+  //   default: "bg-disabled",
+  // };
 
   return (
     <div className="md:w-1/2 md:mx-auto border border-primary bg-[#EDEADE] my-10 drop-shadow-lg shadow-lg">
@@ -180,12 +160,13 @@ const CardDetails = () => {
             <div className="flex flex-wrap gap-y-2">
               {thisCard.tags.map((tag) => {
                 return (
-                  <span
-                    key={tag}
-                    className={`text-white ${colors[tag]} p-2 rounded-lg mr-2 `}
-                  >
-                    {tag}
-                  </span>
+                  // <span
+                  //   key={tag}
+                  //   className={`text-white ${colors[tag]} p-2 rounded-lg mr-2 `}
+                  // >
+                  //   {tag}
+                  // </span>
+                  <Tag key={tag} tag={tag} className="p-2 rounded-lg mr-2" />
                 );
               })}
             </div>
@@ -269,7 +250,7 @@ const CardDetails = () => {
                       </div>
                     )}
                     <div className="flex w-full justify-between items-start">
-                      <div>
+                      <div className="break-words">
                         <h3>{commentUser.username}</h3>
 
                         {comment.dateAdded && (
@@ -306,12 +287,7 @@ const CardDetails = () => {
                             <li
                               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                               onClick={() =>
-                                handleDeleteComment(
-                                  project.id,
-                                  list.id,
-                                  thisCard.id,
-                                  comment.id
-                                )
+                                handleDeleteComment(thisCard.id, comment.id)
                               }
                             >
                               Delete
@@ -347,7 +323,7 @@ const CardDetails = () => {
             className="flex items-center w-full h-[50px] border border-black rounded-full p-4"
           >
             <textarea
-              className="w-full h-[25px] focus:outline-none"
+              className="w-full h-[25px] focus:outline-none resize-none"
               placeholder="Write your comment here..."
               onChange={(e) => setCommentText(e.target.value)}
             ></textarea>
