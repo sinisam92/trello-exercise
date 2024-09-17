@@ -22,6 +22,7 @@ const AddCardModal = ({
   const [dueDate, setDueDate] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [error, setError] = useState("");
+  console.log('users details modal add card', users);
 
   const predefinedTags = [
     "critical",
@@ -33,7 +34,7 @@ const AddCardModal = ({
   ];
 
   const { currentProject } = useProjects(projectId);
-
+  
   const handleAddOrEditCard = () => {
     if (!title) {
       setError("Title is required!");
@@ -127,7 +128,6 @@ const AddCardModal = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-        <h2 className="text-xl mb-4">Add New Card</h2>
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="mb-4">
             <label className="block text-gray-700">Title</label>
@@ -179,7 +179,9 @@ const AddCardModal = ({
               >
                 {currentProject?.members &&
                   currentProject.members.map((member) => {
+                    console.log('member add card modal', member);
                     const user = users.find((user) => user.username === member);
+                    console.log('member user', user);
                     return user ? (
                       <option
                         key={user.username}

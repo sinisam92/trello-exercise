@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useSearch } from "../../contexts/SearchContext";
 import useProjects from "../../hooks/useProjects";
 import useUsers from "../../hooks/useUsers";
+import AddNewProject from "../AddNewProject";
 
 const Projects = ({ isChildMenuOpen }) => {
   const { projects, setProjects } = useProjects();
@@ -34,6 +35,7 @@ const Projects = ({ isChildMenuOpen }) => {
   const filteredProjects = userProjects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   /**
    *  Dummy data when new list is added
@@ -89,16 +91,13 @@ const Projects = ({ isChildMenuOpen }) => {
 
   const handleMemberChange = (event) => {
     const selectedMembers = event
-      ? Array.from(event.target.selectedOptions, (option) => option.value)
+      ? Array.from(event.target?.selectedOptions, (option) => option.value)
       : [];
 
-    const updatedMembers = Array.from(
-      new Set([currentUser.username, ...selectedMembers])
-    );
-
+    const updatedMembers = [selectedMembers]
     setMembers(updatedMembers);
   };
-  console.log(members);
+  
   /**
    * Handles the addition of a new project
    *
@@ -109,13 +108,12 @@ const Projects = ({ isChildMenuOpen }) => {
       return;
     }
     if (newProjectName !== "") {
-      handleMemberChange();
       const newProject = {
         id: uuidv4(),
         name: newProjectName,
         coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
         lists: [dummyData],
-        members: members,
+        members: [...new Set([currentUser.username, ...members])],
         createdBy: currentUser.username,
         slug: newProjectName.toLowerCase().replace(/\s/g, "-"),
       };
@@ -271,18 +269,7 @@ const Projects = ({ isChildMenuOpen }) => {
           message={modalMessage}
         />
       </div>
-      <div className="fixed bottom-32 right-10 z-40">
-        <button
-          onClick={() => setIsAdding((prevState) => !prevState)}
-          className=" text-white p-3 rounded-full h-[100px] w-[100px] flex justify-center items-center bg-success"
-        >
-          <img
-            src={Plus}
-            alt="add project"
-            className={`w-[50px] ${isAdding ? "rotate-45 duration-150 delay-100 ease-in " : "rotate-0 duration-150 delay-100 ease-in"}`}
-          />
-        </button>
-      </div>
+      <AddNewProject isAdding={isAdding} setIsAdding={setIsAdding} />
       {isAdding && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 flex justify-center items-center bg-primaryHover px-20 py-10 rounded-lg">
           <ProjectForm

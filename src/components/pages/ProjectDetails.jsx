@@ -82,7 +82,7 @@ const ProjectDetails = () => {
     }
   };
   
-  /**
+ /*
    * Handles cancelling the editing or adding of the list
    */
   const handleCancel = () => {
@@ -106,7 +106,7 @@ const ProjectDetails = () => {
         ref={zoomAreaRef}
         className="flex overflow-x-auto overscroll-y-none  h-screen"
       >
-        {currentProject.lists.map((list, index) => {
+        {currentProject.lists.map((list) => {
           return (
             <List
               key={list.id}

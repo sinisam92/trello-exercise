@@ -27,8 +27,11 @@ const CardDetails = () => {
 
   const { cardId } = useParams();
 
-  const allCards = projects.flatMap((project) =>
-    project.lists.flatMap((list) => list.cards)
+  console.log('projects', projects);
+  const allCards = projects.flatMap((project) => {
+    console.log(project.lists);
+    return project.lists.flatMap((list) => list.cards)
+  }
   );
   const thisCard = allCards.find((card) => card.id === cardId);
 
