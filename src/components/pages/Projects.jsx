@@ -27,8 +27,10 @@ const Projects = ({ isChildMenuOpen }) => {
 
   const userProjects = projects.filter(
     (project) =>
-      project.members && project.members.includes(currentUser.username)
+      project.members.includes(currentUser.username) ||
+      project.createdBy === currentUser.username
   );
+
   const filteredProjects = userProjects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -86,10 +88,9 @@ const Projects = ({ isChildMenuOpen }) => {
    */
 
   const handleMemberChange = (event) => {
-    const selectedMembers = Array.from(
-      event.target.selectedOptions,
-      (option) => option.value
-    );
+    const selectedMembers = event
+      ? Array.from(event.target.selectedOptions, (option) => option.value)
+      : [];
 
     const updatedMembers = Array.from(
       new Set([currentUser.username, ...selectedMembers])
@@ -97,7 +98,7 @@ const Projects = ({ isChildMenuOpen }) => {
 
     setMembers(updatedMembers);
   };
-
+  console.log(members);
   /**
    * Handles the addition of a new project
    *
@@ -108,6 +109,7 @@ const Projects = ({ isChildMenuOpen }) => {
       return;
     }
     if (newProjectName !== "") {
+      handleMemberChange();
       const newProject = {
         id: uuidv4(),
         name: newProjectName,
@@ -117,6 +119,7 @@ const Projects = ({ isChildMenuOpen }) => {
         createdBy: currentUser.username,
         slug: newProjectName.toLowerCase().replace(/\s/g, "-"),
       };
+
       const updatedProjects = [...projects, newProject];
       setProjects(updatedProjects);
       setIsAdding(false);

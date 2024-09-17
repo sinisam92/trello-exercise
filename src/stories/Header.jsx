@@ -6,14 +6,15 @@ import Menu from "./assets/icons/menu.svg";
 import Return from "./assets/icons/return.svg";
 import Search from "./assets/icons/search.svg";
 import { useLocation } from "wouter";
-import presentationData from "../data/presentationData";
 import { dynamicFontForLongStrings } from "../utils/helperFunctions";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import { useSearch } from "../contexts/SearchContext";
 import useProjects from "../hooks/useProjects";
 
-export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
+//TODO: move this to components folder
+
+export const Header = ({ setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -32,8 +33,6 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
   };
   const { projectId, cardId } = getParamsFromUrl();
 
-  // const projects =
-  //   JSON.parse(localStorage.getItem("projects")) || presentationData;
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
@@ -106,7 +105,8 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
                   <button>
                     <img
                       onClick={onBellClick}
-                      src={hasNotification ? BellFilled : Bell}
+                      // src={hasNotification ? BellFilled : Bell}
+                      src={Bell}
                       alt="Notification Bell"
                     />
                   </button>
@@ -154,7 +154,8 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
                 <button>
                   <img
                     onClick={onBellClick}
-                    src={hasNotification ? BellFilled : Bell}
+                    src={Bell}
+                    // src={hasNotification ? BellFilled : Bell}
                     alt="Notification Bell"
                   />
                 </button>
@@ -187,5 +188,5 @@ export const Header = ({ hasNotification, setIsChildMenuOpen }) => {
 
 Header.propTypes = {
   hasNotification: PropTypes.bool,
-  onClick: PropTypes.func,
+  setIsChildMenuOpen: PropTypes.func,
 };

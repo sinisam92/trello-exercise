@@ -9,6 +9,8 @@ import useClickOutside from "../hooks/useClickOutside";
 import Tag from "../components/Tag";
 import ListItem from "../components/ListItem";
 
+//TODO: move this to components folder
+
 const Card = ({
   card,
   users,

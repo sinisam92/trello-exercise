@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { twMerge } from 'tailwind-merge';
 
-
+//TODO: move this to components folder
 /**
  * Primary UI component for user interaction
  */

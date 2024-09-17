@@ -31,12 +31,9 @@ This is a Task/Projects Management application built with React. It allows users
    ```
 4. Start the development server:
    ```bash
-   npm start
+   npm run dev
    ```
 
-## Usage
-- Open your browser and go to `http://localhost:3000`.
-- Use the interface to create, edit, and manage your projects.
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
