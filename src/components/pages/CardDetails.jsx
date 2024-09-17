@@ -13,6 +13,7 @@ import useProjects from "../../hooks/useProjects";
 import useUsers from "../../hooks/useUsers";
 import useClickOutside from "../../hooks/useClickOutside";
 import Tag from "../Tag";
+import ListItem from "../ListItem";
 
 const CardDetails = () => {
   const [commentText, setCommentText] = useState("");
@@ -21,11 +22,10 @@ const CardDetails = () => {
   const commentsOptionsRef = useRef(null);
   const commentsIconRef = useRef(null);
 
-  // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const { projects, setProjects } = useProjects();
   const { users, currentUser } = useUsers();
 
-  const { cardId, projectId } = useParams();
+  const { cardId } = useParams();
 
   const allCards = projects.flatMap((project) =>
     project.lists.flatMap((list) => list.cards)
@@ -115,15 +115,6 @@ const CardDetails = () => {
     setProjects(updatedProjects);
   };
 
-  // const colors = {
-  //   urgent: "bg-myOrange",
-  //   critical: "bg-danger",
-  //   bug: "bg-myBlue",
-  //   feature: "bg-success",
-  //   important: "bg-myPurple",
-  //   default: "bg-disabled",
-  // };
-
   return (
     <div className="md:w-1/2 md:mx-auto border border-primary bg-[#EDEADE] my-10 drop-shadow-lg shadow-lg">
       <section className="relative h-[150px] text-4xl bg-gradient-to-r from-gray-300 via-gray-500 to-gray-700 flex items-center pl-3 ">
@@ -160,12 +151,6 @@ const CardDetails = () => {
             <div className="flex flex-wrap gap-y-2">
               {thisCard.tags.map((tag) => {
                 return (
-                  // <span
-                  //   key={tag}
-                  //   className={`text-white ${colors[tag]} p-2 rounded-lg mr-2 `}
-                  // >
-                  //   {tag}
-                  // </span>
                   <Tag key={tag} tag={tag} className="p-2 rounded-lg mr-2" />
                 );
               })}
@@ -284,14 +269,11 @@ const CardDetails = () => {
                           className="absolute right-12 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10"
                         >
                           <ul>
-                            <li
+                            <ListItem 
+                              text="Delete"
                               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                              onClick={() =>
-                                handleDeleteComment(thisCard.id, comment.id)
-                              }
-                            >
-                              Delete
-                            </li>
+                              onClick={() => handleDeleteComment(thisCard.id, comment.id)}
+                            />
                           </ul>
                         </div>
                       )}

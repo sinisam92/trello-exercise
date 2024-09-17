@@ -91,7 +91,6 @@ const Projects = ({ isChildMenuOpen }) => {
       (option) => option.value
     );
 
-    // const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const updatedMembers = Array.from(
       new Set([currentUser.username, ...selectedMembers])
     );
