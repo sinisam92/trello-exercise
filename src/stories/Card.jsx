@@ -8,6 +8,8 @@ import moment from "moment";
 import useClickOutside from "../hooks/useClickOutside";
 import Tag from "../components/Tag";
 import ListItem from "../components/ListItem";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from '@dnd-kit/utilities';
 
 //TODO: move this to components folder
 
@@ -35,12 +37,19 @@ const Card = ({
   const moveIconRef = useRef(null);
   const moveMenuRef = useRef(null);
 
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: card.id,
+  });
+
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+  };
+
   useClickOutside([cardOptionsRef, optionsIconRef], () =>
     setOpenCardOptionsId(null)
   );
   useClickOutside([moveMenuRef, moveIconRef], () => setIsMoveMenuOpen(false));
-
-
 
   const openModal = (e, card, list) => {
     e.preventDefault();
@@ -133,7 +142,12 @@ const Card = ({
   return (
     <div
       key={card.id}
-      className=" bg-primary min-w-[260px] max-w-[260px] text-white p-4 rounded-lg m-4 "
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      id={card.id}
+      className=" bg-primary min-w-[260px] max-w-[260px] text-white p-4 rounded-lg m-4"
     >
       <div className=" flex justify-between items-center">
         <div>

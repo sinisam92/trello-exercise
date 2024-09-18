@@ -27,9 +27,7 @@ const CardDetails = () => {
 
   const { cardId } = useParams();
 
-  console.log('projects', projects);
   const allCards = projects.flatMap((project) => {
-    console.log(project.lists);
     return project.lists.flatMap((list) => list.cards)
   }
   );

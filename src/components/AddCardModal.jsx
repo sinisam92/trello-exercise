@@ -22,7 +22,6 @@ const AddCardModal = ({
   const [dueDate, setDueDate] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [error, setError] = useState("");
-  console.log('users details modal add card', users);
 
   const predefinedTags = [
     "critical",
@@ -179,9 +178,7 @@ const AddCardModal = ({
               >
                 {currentProject?.members &&
                   currentProject.members.map((member) => {
-                    console.log('member add card modal', member);
                     const user = users.find((user) => user.username === member);
-                    console.log('member user', user);
                     return user ? (
                       <option
                         key={user.username}

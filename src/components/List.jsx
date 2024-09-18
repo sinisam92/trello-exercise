@@ -4,6 +4,11 @@ import Card from "../stories/Card";
 import Dots from "../assets/icons/dots.svg";
 import { Link } from "wouter";
 import ListItem from "./ListItem";
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 const ListSection = ({
   list,
@@ -32,6 +37,10 @@ const ListSection = ({
   handleInputChange,
   setDropdownListId,
 }) => {
+  const { setNodeRef } = useDroppable({
+    id: list.id,
+  });
+
   /**
    *
    * Handles saving the new name of the list
@@ -84,7 +93,7 @@ const ListSection = ({
   return (
     <section
       key={list.id}
-      className="bg-primaryDark min-w-[300px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
+      className="bg-primaryDark min-w-[300px] max-w-[300px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
     >
       <div className="relative flex justify-between rounded-t-lg">
         {isEditing && openListId === list.id ? (
@@ -135,28 +144,35 @@ const ListSection = ({
         )}
       </div>
 
-      <div className="overflow-y-auto flex-1">
-        {list.cards.map((card) => (
-          <Link key={card.id} to={`/projects/${projectId}/card/${card.id}`}>
-            <div className="relative">
-              <Card
-                card={card}
-                users={users}
-                assigned={card.assigned}
-                list={list}
-                project={currentProject}
-                setProjects={setProjects}
-                setSmallTags={setSmallTags}
-                smallTags={smallTags}
-                setSelectedList={setSelectedList}
-                setIsModalOpen={setIsModalOpen}
-                setIsCardEditing={setIsCardEditing}
-                setSelectedCard={setSelectedCard}
-                className="overflow-visible"
-              />
+      <div
+        ref={setNodeRef}
+        className="overflow-y-auto overflow-x-clip overscroll-x-none flex-1 max-w-[300px]"
+      >
+        <SortableContext items={list.cards.map((card) => card.id)} strategy={verticalListSortingStrategy}>
+          {list.cards.map((card) => (
+            <div key={card.id}>
+              <Link to={`/projects/${projectId}/card/${card.id}`}>
+                <div className="relative">
+                  <Card
+                    card={card}
+                    users={users}
+                    assigned={card.assigned}
+                    list={list}
+                    project={currentProject}
+                    setProjects={setProjects}
+                    setSmallTags={setSmallTags}
+                    smallTags={smallTags}
+                    setSelectedList={setSelectedList}
+                    setIsModalOpen={setIsModalOpen}
+                    setIsCardEditing={setIsCardEditing}
+                    setSelectedCard={setSelectedCard}
+                    className="overflow-visible"
+                  />
+                </div>
+              </Link>
             </div>
-          </Link>
-        ))}
+          ))}
+        </SortableContext>
       </div>
       <AddNewCard
         setSelectedList={setSelectedList}
