@@ -1,13 +1,3 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams } from "wouter";
-import ZoomIn from "../../assets/icons/zoomIn.svg";
-import ZoomOut from "../../assets/icons/zoomOut.svg";
-import AddCardModal from "../AddCardModal";
-import useProjects from "../../hooks/useProjects";
-import useUsers from "../../hooks/useUsers";
-import useClickOutside from "../../hooks/useClickOutside";
-import List from "../List";
-import AddNewList from "../AddNewList";
 import {
   DndContext,
   KeyboardSensor,
@@ -21,6 +11,16 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "wouter";
+import ZoomIn from "../../assets/icons/zoomIn.svg";
+import ZoomOut from "../../assets/icons/zoomOut.svg";
+import useClickOutside from "../../hooks/useClickOutside";
+import useProjects from "../../hooks/useProjects";
+import useUsers from "../../hooks/useUsers";
+import AddCardModal from "../AddCardModal";
+import AddNewList from "../AddNewList";
+import List from "../List";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -56,6 +56,7 @@ const ProjectDetails = () => {
 
   const handleDragOver = (event) => {
     const { active, over, delta } = event;
+    console.log("dragOver");
     console.log('active', active);
     console.log('over', over);
     console.log('delta', delta);
@@ -73,11 +74,11 @@ const ProjectDetails = () => {
     }
 
     setProjects((prevProjects) => {
+
       const activeItems = activeList.cards;
       const overItems = overList.cards;
       const activeIndex = activeItems.findIndex((i) => i.id === activeId);
       const overIndex = overItems.findIndex((i) => i.id === overId);
-
       const newIndex = () => {
         const putOnBelowLastItem =
           overIndex === overItems.length - 1 && delta.y > 0;
@@ -122,14 +123,15 @@ const ProjectDetails = () => {
 
     const activeId = String(active.id);
     const overId = String(over.id);
-
     if (activeId !== overId) {
+
       setProjects((prevProjects) => {
         const activeList = currentProject.lists.find((list) =>
           list.cards.some((card) => card.id === activeId)
         );
+
         const overList = currentProject.lists.find((list) =>
-          list.cards.some((card) => card.id === overId)
+          list.id === overId
         );
 
         if (!activeList || !overList) return prevProjects;

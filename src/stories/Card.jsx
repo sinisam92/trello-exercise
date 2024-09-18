@@ -1,15 +1,15 @@
-import { useState, useRef } from "react";
-import { useParams, useLocation } from "wouter";
-import PropTypes from "prop-types";
-import Dots from "../assets/icons/dots.svg";
-import Move from "../assets/icons/move.svg";
-import Comment from "../assets/icons/comment.svg";
-import moment from "moment";
-import useClickOutside from "../hooks/useClickOutside";
-import Tag from "../components/Tag";
-import ListItem from "../components/ListItem";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from '@dnd-kit/utilities';
+import moment from "moment";
+import PropTypes from "prop-types";
+import { useRef, useState } from "react";
+import { useLocation, useParams } from "wouter";
+import Comment from "../assets/icons/comment.svg";
+import Dots from "../assets/icons/dots.svg";
+import Move from "../assets/icons/move.svg";
+import ListItem from "../components/ListItem";
+import Tag from "../components/Tag";
+import useClickOutside from "../hooks/useClickOutside";
 
 //TODO: move this to components folder
 
@@ -40,7 +40,6 @@ const Card = ({
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: card.id,
   });
-
 
   const style = {
     transform: CSS.Translate.toString(transform),
