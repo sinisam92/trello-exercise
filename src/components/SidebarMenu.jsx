@@ -1,7 +1,7 @@
-import Cards from "../stories/assets/icons/cards.svg";
-import Settings from "../stories/assets/icons/settings.svg";
-import Info from "../stories/assets/icons/info.svg";
-import Logout from "../stories/assets/icons/logout.svg";
+import Cards from "../assets/icons/cards.svg";
+import Settings from "../assets/icons/settings.svg";
+import Info from "../assets/icons/info.svg";
+import Logout from "../assets/icons/logout.svg";
 import { useLocation } from "wouter";
 
 

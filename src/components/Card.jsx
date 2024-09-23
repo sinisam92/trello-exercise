@@ -8,8 +8,8 @@ import { useLocation, useParams } from "wouter";
 import Comment from "../assets/icons/comment.svg";
 import Dots from "../assets/icons/dots.svg";
 import Move from "../assets/icons/move.svg";
-import ListItem from "../components/ListItem";
-import Tag from "../components/Tag";
+import ListItem from "./ListItem";
+import Tag from "./Tag";
 import useClickOutside from "../hooks/useClickOutside";
 
 //TODO: move this to components folder

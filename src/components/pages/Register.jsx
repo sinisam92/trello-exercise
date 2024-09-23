@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../stories/Button";
+import { Button } from "../Button";
 import { useLocation, Link } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import useUsers from "../../hooks/useUsers";

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Bell from "./assets/icons/bell.svg";
-import BellFilled from "./assets/icons/bell-filled.svg";
-import Menu from "./assets/icons/menu.svg";
-import Return from "./assets/icons/return.svg";
-import Search from "./assets/icons/search.svg";
+import Bell from "../assets/icons/bell.svg";
+import BellFilled from "../assets/icons/bell-filled.svg";
+import Menu from "../assets/icons/menu.svg";
+import Return from "../assets/icons/return.svg";
+import Search from "../assets/icons/search.svg";
 import { useLocation } from "wouter";
 import { dynamicFontForLongStrings } from "../utils/helperFunctions";
 import { motion } from "framer-motion";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Close from "../stories/assets/icons/close.svg";
+import Close from "../assets/icons/close.svg";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocation } from "wouter";
 import useUsers from "../hooks/useUsers";

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Card from "../../stories/Card";
+import Card from "../Card";
 import useProjects from "../../hooks/useProjects";
 import useUsers from "../../hooks/useUsers";
 

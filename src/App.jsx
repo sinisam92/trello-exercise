@@ -6,7 +6,7 @@ import { useAuth } from "./contexts/AuthContext";
 import Projects from "./components/pages/Projects";
 import ProjectDetails from "./components/pages/ProjectDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Header } from "./stories/Header";
+import { Header } from "./components/Header";
 import Settings from "./components/pages/Settings";
 import CardDetails from "./components/pages/CardDetails";
 import UserCards from "./components/pages/UserCards";

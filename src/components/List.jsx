@@ -1,4 +1,4 @@
-import { useDroppable, DragOverlay } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   rectSortingStrategy,
@@ -6,7 +6,7 @@ import {
 import React from "react";
 import { Link } from "wouter";
 import Dots from "../assets/icons/dots.svg";
-import Card from "../stories/Card";
+import Card from "./Card";
 import AddNewCard from "./AddNewCard";
 import ListItem from "./ListItem";
 

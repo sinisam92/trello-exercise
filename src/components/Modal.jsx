@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Close from '../stories/assets/icons/close.svg';
+import Close from '../assets/icons/close.svg';
 
 const Modal = ({ isOpen, onClose, title, children, onThemeChange }) => {
   if (!isOpen) return null;

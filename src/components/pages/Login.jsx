@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Button } from "../../stories/Button";
+import { Button } from "../Button";
 import { Link } from "wouter";
 import { useAuth } from "../../contexts/AuthContext";
 

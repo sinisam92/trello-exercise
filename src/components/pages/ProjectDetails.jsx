@@ -24,7 +24,7 @@ import useUsers from "../../hooks/useUsers";
 import AddCardModal from "../AddCardModal";
 import AddNewList from "../AddNewList";
 import List from "../List";
-import Card from "../../stories/Card";
+import Card from "../Card";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
