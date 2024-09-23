@@ -1,17 +1,16 @@
-import { useState } from "react";
-import Plus from "../../assets/icons/plus.svg";
+import { useState, useContext } from "react";
 import ProjectForm from "../ProjectForm";
 import ProjectItem from "../ProjectItem";
 import AlertModal from "../AlertModal";
 import { v4 as uuidv4 } from "uuid";
 import { useSearch } from "../../contexts/SearchContext";
 import useProjects from "../../hooks/useProjects";
-import useUsers from "../../hooks/useUsers";
 import AddNewProject from "../AddNewProject";
+import { UsersContext } from "../../contexts/UsersContext";
 
 const Projects = ({ isChildMenuOpen }) => {
   const { projects, setProjects } = useProjects();
-  const { users, currentUser } = useUsers();
+  const { users, currentUser } = useContext(UsersContext);
 
   const [isAdding, setIsAdding] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Bell from "../assets/icons/bell.svg";
-import BellFilled from "../assets/icons/bell-filled.svg";
 import Menu from "../assets/icons/menu.svg";
 import Return from "../assets/icons/return.svg";
 import Search from "../assets/icons/search.svg";
@@ -12,7 +11,6 @@ import Sidebar from "../components/Sidebar";
 import { useSearch } from "../contexts/SearchContext";
 import useProjects from "../hooks/useProjects";
 
-//TODO: move this to components folder
 
 export const Header = ({ setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -105,7 +103,6 @@ export const Header = ({ setIsChildMenuOpen }) => {
                   <button>
                     <img
                       onClick={onBellClick}
-                      // src={hasNotification ? BellFilled : Bell}
                       src={Bell}
                       alt="Notification Bell"
                     />
@@ -155,7 +152,6 @@ export const Header = ({ setIsChildMenuOpen }) => {
                   <img
                     onClick={onBellClick}
                     src={Bell}
-                    // src={hasNotification ? BellFilled : Bell}
                     alt="Notification Bell"
                   />
                 </button>

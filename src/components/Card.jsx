@@ -1,13 +1,12 @@
 // import { useDraggable } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from '@dnd-kit/utilities';
+import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { useLocation, useParams } from "wouter";
 import Comment from "../assets/icons/comment.svg";
 import Dots from "../assets/icons/dots.svg";
-import Move from "../assets/icons/move.svg";
 import ListItem from "./ListItem";
 import Tag from "./Tag";
 import useClickOutside from "../hooks/useClickOutside";
@@ -227,17 +226,6 @@ const Card = ({
                 className="w-7"
               />
             </button>
-            {/* <button
-              className="absolute -bottom-12"
-              onClick={(e) => handleOpenMoveMenu(e, card.id)}
-            >
-              <img
-                ref={moveIconRef}
-                src={Move}
-                alt="move dots"
-                className="mb-2"
-              />
-            </button> */}
           </div>
         )}
         {isMoveMenuOpen && (

@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Card from "../Card";
 import useProjects from "../../hooks/useProjects";
-import useUsers from "../../hooks/useUsers";
+import { UsersContext } from "../../contexts/UsersContext";
 
 const UsersCards = () => {
   const [cards, setCards] = useState([]);
 
-  const { users, currentUser } = useUsers();
+  const { users, currentUser } = useContext(UsersContext);
   const { projects } = useProjects();
   useEffect(() => {
 

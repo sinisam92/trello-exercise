@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { useParams } from "wouter";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
@@ -10,10 +10,10 @@ import Comment from "../../assets/icons/comment.svg";
 import Post from "../../assets/icons/post.svg";
 import DotsSmall from "../../assets/icons/dots-small.svg";
 import useProjects from "../../hooks/useProjects";
-import useUsers from "../../hooks/useUsers";
 import useClickOutside from "../../hooks/useClickOutside";
 import Tag from "../Tag";
 import ListItem from "../ListItem";
+import { UsersContext } from "../../contexts/UsersContext";
 
 const CardDetails = () => {
   const [commentText, setCommentText] = useState("");
@@ -23,7 +23,7 @@ const CardDetails = () => {
   const commentsIconRef = useRef(null);
 
   const { projects, setProjects } = useProjects();
-  const { users, currentUser } = useUsers();
+  const { users, currentUser } = useContext(UsersContext);
 
   const { cardId } = useParams();
 

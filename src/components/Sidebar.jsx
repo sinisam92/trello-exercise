@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Close from "../assets/icons/close.svg";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocation } from "wouter";
-import useUsers from "../hooks/useUsers";
 import ListItem from "./ListItem";
 import SidebarMenu from "./SidebarMenu";
+import { UsersContext } from "../contexts/UsersContext";
 
 const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
 
-  const { users, currentUser } = useUsers();
+  const { users, currentUser } = useContext(UsersContext);
 
   const username = currentUser && currentUser.username;
   const defaultAvatar = currentUser && currentUser.defaultAvatar;

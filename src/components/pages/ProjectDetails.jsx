@@ -14,17 +14,17 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useParams } from "wouter";
 import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
 import useClickOutside from "../../hooks/useClickOutside";
 import useProjects from "../../hooks/useProjects";
-import useUsers from "../../hooks/useUsers";
 import AddCardModal from "../AddCardModal";
 import AddNewList from "../AddNewList";
 import List from "../List";
 import Card from "../Card";
+import { UsersContext } from "../../contexts/UsersContext";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -41,7 +41,7 @@ const ProjectDetails = () => {
   const [activeId, setActiveId] = useState(null);
 
   const { projectId } = useParams();
-  const { users } = useUsers();
+  const { users } = useContext(UsersContext);
   const { projects, currentProject, setProjects } = useProjects(projectId);
 
   const listMenuRef = useRef(null);
