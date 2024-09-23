@@ -1,4 +1,5 @@
-import { useDraggable } from "@dnd-kit/core";
+// import { useDraggable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities';
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -37,7 +38,7 @@ const Card = ({
   const moveIconRef = useRef(null);
   const moveMenuRef = useRef(null);
 
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useSortable({
     id: card.id,
   });
 
@@ -61,6 +62,7 @@ const Card = ({
 
   const handleCardOptions = (e, cardId) => {
     e.preventDefault();
+    e.stopPropagation();
     setOpenCardOptionsId((prev) => (prev === cardId ? null : cardId));
   };
 
@@ -225,7 +227,7 @@ const Card = ({
                 className="w-7"
               />
             </button>
-            <button
+            {/* <button
               className="absolute -bottom-12"
               onClick={(e) => handleOpenMoveMenu(e, card.id)}
             >
@@ -235,7 +237,7 @@ const Card = ({
                 alt="move dots"
                 className="mb-2"
               />
-            </button>
+            </button> */}
           </div>
         )}
         {isMoveMenuOpen && (

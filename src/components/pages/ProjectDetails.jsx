@@ -4,6 +4,9 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragOverlay,
+  defaultDropAnimation,
+  closestCorners,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -21,6 +24,7 @@ import useUsers from "../../hooks/useUsers";
 import AddCardModal from "../AddCardModal";
 import AddNewList from "../AddNewList";
 import List from "../List";
+import Card from "../../stories/Card";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -34,7 +38,7 @@ const ProjectDetails = () => {
   const [smallTags, setSmallTags] = useState(false);
   const [isCardEditing, setIsCardEditing] = useState(false);
   const [zoom, setZoom] = useState(false);
-  const [isDropped, setIsDropped] = useState(false);
+  const [activeId, setActiveId] = useState(null);
 
   const { projectId } = useParams();
   const { users } = useUsers();
@@ -44,22 +48,25 @@ const ProjectDetails = () => {
   const listMenuIconRef = useRef(null);
   const zoomAreaRef = useRef(null);
 
-  
-  console.log("projects", projects);
+  const dropAnimation = {
+    ...defaultDropAnimation,
+  };
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: { delay: 500 }
+  }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
+
   const handleDragOver = (event) => {
     const { active, over, delta } = event;
-    console.log("dragOver");
-    console.log('active', active);
-    console.log('over', over);
-    console.log('delta', delta);
     const activeId = String(active.id);
     const overId = over ? String(over.id) : null;
     const activeList = currentProject.lists.find((list) =>
@@ -74,7 +81,6 @@ const ProjectDetails = () => {
     }
 
     setProjects((prevProjects) => {
-
       const activeItems = activeList.cards;
       const overItems = overList.cards;
       const activeIndex = activeItems.findIndex((i) => i.id === activeId);
@@ -118,20 +124,20 @@ const ProjectDetails = () => {
   };
 
   const handleDragEnd = (event) => {
+    setActiveId(null);
     const { active, over } = event;
     if (!over) return;
 
     const activeId = String(active.id);
     const overId = String(over.id);
     if (activeId !== overId) {
-
       setProjects((prevProjects) => {
         const activeList = currentProject.lists.find((list) =>
           list.cards.some((card) => card.id === activeId)
         );
 
-        const overList = currentProject.lists.find((list) =>
-          list.id === overId
+        const overList = currentProject.lists.find(
+          (list) => list.id === overId
         );
 
         if (!activeList || !overList) return prevProjects;
@@ -192,6 +198,10 @@ const ProjectDetails = () => {
         }
       });
     }
+  };
+
+  const handleDragCancel = () => {
+    setActiveId(null);
   };
 
   /**
@@ -277,11 +287,42 @@ const ProjectDetails = () => {
     setDropdownListId((prevId) => (prevId === listId ? null : listId));
   };
 
+  const renderCard = (cardId) => {
+    const card = currentProject.lists
+      .flatMap((list) => list.cards)
+      .find((card) => card.id === cardId);
+
+    if (!card) return null;
+
+    return (
+      <Card
+        card={card}
+        users={users}
+        assigned={card.assigned}
+        list={currentProject.lists.find((list) =>
+          list.cards.some((c) => c.id === cardId)
+        )}
+        project={currentProject}
+        setProjects={setProjects}
+        setSmallTags={setSmallTags}
+        smallTags={smallTags}
+        setSelectedList={setSelectedList}
+        setIsModalOpen={setIsModalOpen}
+        setIsCardEditing={setIsCardEditing}
+        setSelectedCard={setSelectedCard}
+        className="overflow-visible"
+      />
+    );
+  };
+
   return (
     <DndContext
       sensors={sensors}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      onDragCancel={handleDragCancel}
+      collisionDetection={closestCorners}
     >
       <div>
         <div
@@ -321,9 +362,11 @@ const ProjectDetails = () => {
                 newListName={newListName}
                 setNewListName={setNewListName}
                 handleInputChange={handleInputChange}
+                activeId={activeId} 
               />
             </SortableContext>
           ))}
+          <DragOverlay dropAnimation={dropAnimation}>{activeId ? renderCard(activeId) : null}</DragOverlay>
 
           <AddCardModal
             isOpen={isModalOpen}

@@ -1,11 +1,14 @@
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import React from 'react';
-import { Link } from 'wouter';
-import Dots from '../assets/icons/dots.svg';
-import Card from '../stories/Card';
-import AddNewCard from './AddNewCard';
-import ListItem from './ListItem';
+import { useDroppable, DragOverlay } from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import React from "react";
+import { Link } from "wouter";
+import Dots from "../assets/icons/dots.svg";
+import Card from "../stories/Card";
+import AddNewCard from "./AddNewCard";
+import ListItem from "./ListItem";
 
 const ListSection = ({
   list,
@@ -33,13 +36,13 @@ const ListSection = ({
   setNewListName,
   handleInputChange,
   setDropdownListId,
+  activeId 
 }) => {
   const { setNodeRef } = useDroppable({
     id: list.id,
   });
 
-  console.log(`List ${list.name} has cards ${list.cards.length}`);
-  
+
   /**
    *
    * Handles saving the new name of the list
@@ -60,7 +63,7 @@ const ListSection = ({
     setProjects(updatedProjects);
     setIsEditing(false);
     setOpenListId(null);
-    setNewListName('');
+    setNewListName("");
   };
 
   /**
@@ -68,7 +71,7 @@ const ListSection = ({
    * Handles the pressing of the enter key to save the list name
    */
   const handleKeyPress = (event, listId) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSaveListName(listId);
     }
   };
@@ -92,76 +95,85 @@ const ListSection = ({
   return (
     <section
       key={list.id}
-      className='bg-primaryDark min-w-[300px] max-w-[300px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]'
+      className="bg-primaryDark min-w-[300px] max-w-[300px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
     >
-      <div className='relative flex justify-between rounded-t-lg'>
+      <div className="relative flex justify-between rounded-t-lg">
         {isEditing && openListId === list.id ? (
           <form onSubmit={(e) => e.preventDefault()}>
             <input
-              type='text'
+              type="text"
               value={newListName}
               onChange={handleInputChange}
               onKeyDown={(event) => handleKeyPress(event, list.id)}
-              placeholder='Enter list name'
-              className='p-2 ml-4 w-[96%] bg-primaryDark border-0 border-b-2 border-white text-white rounded-t-[12px] text-2xl focus:outline-none focus:ring-0'
+              placeholder="Enter list name"
+              className="p-2 ml-4 w-[96%] bg-primaryDark border-0 border-b-2 border-white text-white rounded-t-[12px] text-2xl focus:outline-none focus:ring-0"
               autoFocus
             />
           </form>
         ) : (
-          <h1 className='text-white text-2xl tracking-wider p-4'>{list.name}</h1>
+          <h1 className="text-white text-2xl tracking-wider p-4">
+            {list.name}
+          </h1>
         )}
 
         <button onClick={() => toggleDropdown(list.id)}>
-          <img src={Dots} alt='option dots' ref={listMenuIconRef} className='pr-3' />
+          <img
+            src={Dots}
+            alt="option dots"
+            ref={listMenuIconRef}
+            className="pr-3"
+          />
         </button>
 
         {dropdownListId === list.id && (
           <div
             ref={listMenuRef}
-            className='absolute right-12 top-12 w-40 h-28 bg-primaryHover rounded-lg z-40'
+            className="absolute right-12 top-12 w-40 h-28 bg-primaryHover rounded-lg z-40"
           >
-            <ul className='py-2 px-2 text-white text-lg'>
+            <ul className="py-2 px-2 text-white text-lg">
               <ListItem
-                text='Edit'
+                text="Edit"
                 onClick={() => handleEditList(list.id)}
-                className='flex items-center py-2 hover:bg-primary cursor-pointer'
+                className="flex items-center py-2 hover:bg-primary cursor-pointer"
               />
               <ListItem
-                text='Delete'
+                text="Delete"
                 onClick={() => handleDeleteList(list.id)}
-                className='flex items-center py-2 hover:bg-primary cursor-pointer'
+                className="flex items-center py-2 hover:bg-primary cursor-pointer"
               />
             </ul>
           </div>
         )}
       </div>
 
-      <div ref={setNodeRef} className='flex-1 max-w-[300px] min-h-52 bg-red-700'>
+      <div ref={setNodeRef} className="overflow-auto flex-1 max-w-[300px] min-h-[50px] ">
         <SortableContext
           items={list.cards.map((card) => card.id)}
-          strategy={verticalListSortingStrategy}
+          strategy={rectSortingStrategy}
         >
           {list.cards.map((card) => (
             <div key={card.id}>
-              <Link to={`/projects/${projectId}/card/${card.id}`}>
-              <div className='relative'>
-                <Card
-                  card={card}
-                  users={users}
-                  assigned={card.assigned}
-                  list={list}
-                  project={currentProject}
-                  setProjects={setProjects}
-                  setSmallTags={setSmallTags}
-                  smallTags={smallTags}
-                  setSelectedList={setSelectedList}
-                  setIsModalOpen={setIsModalOpen}
-                  setIsCardEditing={setIsCardEditing}
-                  setSelectedCard={setSelectedCard}
-                  className='overflow-visible'
-                />
-              </div>
-              </Link>
+                <Link to={`/projects/${projectId}/card/${card.id}`}>
+                {activeId !== card.id && ( 
+                  <div className="relative">
+                    <Card
+                      card={card}
+                      users={users}
+                      assigned={card.assigned}
+                      list={list}
+                      project={currentProject}
+                      setProjects={setProjects}
+                      setSmallTags={setSmallTags}
+                      smallTags={smallTags}
+                      setSelectedList={setSelectedList}
+                      setIsModalOpen={setIsModalOpen}
+                      setIsCardEditing={setIsCardEditing}
+                      setSelectedCard={setSelectedCard}
+                      className="overflow-visible"
+                    />
+                  </div>
+                )}
+                </Link>
             </div>
           ))}
         </SortableContext>
