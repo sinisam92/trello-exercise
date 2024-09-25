@@ -25,7 +25,7 @@ const TextInput = ({ label, ...props }) => {
 
 const Register = () => {
   const { users, registerUser } = useContext(UsersContext);
-  const [location, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const handleRegister = (values, { setSubmitting, setErrors, resetForm }) => {
     const { username } = values;

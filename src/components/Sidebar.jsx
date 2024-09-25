@@ -5,18 +5,19 @@ import { useLocation } from "wouter";
 import ListItem from "./ListItem";
 import SidebarMenu from "./SidebarMenu";
 import { UsersContext } from "../contexts/UsersContext";
+import Avatar from "./Avatar";
 
 const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
 
-  const { users, currentUser } = useContext(UsersContext);
+  const { users, setUsers, currentUser } = useContext(UsersContext);
 
   const username = currentUser && currentUser.username;
   const defaultAvatar = currentUser && currentUser.defaultAvatar;
   const avatarUrl = currentUser ? currentUser.avatarUrl : "";
   const usernameForAt = username.toLowerCase().replace(" ", "-");
-  const [location, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const { logout } = useAuth();
 
@@ -41,8 +42,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
       const updatedUsers = users.map((user) =>
         user.id === userId ? updatedUser : user
       );
-      localStorage.setItem("users", JSON.stringify(updatedUsers));
-
+      setUsers(updatedUsers);
       closeAvatarModal();
     } else {
       console.error("You can only change your own avatar.");
@@ -61,24 +61,13 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
       <div className="bg-[#2A9D8F] pb-5">
         <div className="flex justify-between pt-11 px-1 items-start ">
           <div className="pb-[22px]">
-            {avatarUrl ? (
-              <button onClick={openAvatarModal}>
-                <img
-                  src={avatarUrl}
-                  alt="Avatar"
-                  className="rounded-full w-20 h-20 object-cover "
-                />
-              </button>
-            ) : (
-              <div
-                className="bg-[#F4A261] rounded-full w-20 h-20 flex items-center justify-center"
-                onClick={openAvatarModal}
-              >
-                <span className="text-white text-4xl font-bold">
-                  {defaultAvatar}
-                </span>
-              </div>
-            )}
+            <Avatar
+              avatarUrl={avatarUrl}
+              username={username}
+              defaultAvatar={defaultAvatar}
+              onClick={openAvatarModal}
+              size={20}
+            />
 
             {isAvatarModalOpen && (
               <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">

@@ -25,7 +25,7 @@ const TextInput = ({ label, ...props }) => {
 
 const Login = () => {
   const [error, setError] = useState("");
-  const [location, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const { login } = useAuth();
   const formRef = useRef(null);

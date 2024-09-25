@@ -1,7 +1,8 @@
-import { Header } from "./Header";
+import { Header } from "../components/Header";
 import { fn } from "@storybook/test";
 import { withReactContext } from "storybook-react-context";
 import { AuthProvider } from "../contexts/AuthContext";
+// import { useAuth } from "../contexts/AuthContext";
 
 
 export default {
@@ -14,9 +15,6 @@ export default {
   },
   args: {
     onClick: fn(),
-    onMenuClick: fn(),
-    onBellClick: fn(),
-    onSearchClick: fn(),
   },
 };
 

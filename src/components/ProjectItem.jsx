@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "wouter";
 import DotsTiel from "../assets/icons/menu-tile.svg";
 import useClickOutside from "../hooks/useClickOutside";
@@ -6,13 +6,18 @@ import ListItem from "./ListItem";
 
 const ProjectItem = ({
   project,
+  projects,
+  setProjects,
+  currentUser,
+  setNewProjectName,
+  setCoverImageUrl,
+  setIsEditing,
+  setIsAdding,
+  setEditingProjectId,
   isChildMenuOpen,
-  openProjectMenuId,
-  toggleProjectMenu,
-  handleProjectEdit,
-  handleProjectDelete,
-  setOpenProjectMenuId,
 }) => {
+  const [openProjectMenuId, setOpenProjectMenuId] = useState(null);
+
   const iconRef = useRef(null);
   const optionsRef = useRef(null);
 
@@ -21,6 +26,69 @@ const ProjectItem = ({
    * @param {Event} event
    */
   useClickOutside([optionsRef, iconRef], () => setOpenProjectMenuId(null));
+
+  /**
+   *  Toggles the project menu(edit, delete)
+   * @param {Event} e
+   * @param {number} projectId
+   */
+  const toggleProjectMenu = (e, projectId) => {
+    e.preventDefault();
+    setOpenProjectMenuId((prev) => (prev === projectId ? null : projectId));
+  };
+
+  /**
+   *
+   * Sents all nessesary data to the form for editing
+   * @param {Number} projectId
+   */
+  const handleProjectEdit = (e, projectId) => {
+    e.preventDefault();
+    const projectToEdit = projects.find((project) => project.id === projectId);
+    if (projectToEdit) {
+      setIsEditing(true);
+      setNewProjectName(projectToEdit.name);
+      setCoverImageUrl(projectToEdit.coverImage);
+      setIsAdding(true);
+      setEditingProjectId(projectId);
+      setOpenProjectMenuId(null);
+    } else {
+      console.error(`Project with ID ${projectId} not found.`);
+    }
+  };
+
+  /**
+   * Handles the deletion of a project
+   *
+   * @param {Event} e - The event object
+   * @param {string} projectId - The ID of the project to delete
+   */
+  const handleProjectDelete = (e, projectId) => {
+    e.preventDefault();
+    const project = projects.find((project) => project.id === projectId);
+
+    if (project.createdBy === currentUser.username) {
+      let confirmeText = `Are you sure you want to delete project ${project.name}`;
+      if (confirm(confirmeText) === true) {
+        const deleteProject = (projectId) => {
+          const updatedProjects = projects.filter(
+            (project) => project.id !== projectId
+          );
+          setProjects(updatedProjects);
+        };
+        deleteProject(projectId);
+      } else {
+        setOpenProjectMenuId(null);
+        return;
+      }
+    } else {
+      setModalMessage(
+        `You do not have permission to delete this project! Contact the project creator ${project.createdBy} for more information.`
+      );
+      setIsModalOpen(true);
+    }
+    setOpenProjectMenuId(null);
+  };
 
   return (
     <div

@@ -20,7 +20,8 @@ import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
 import useClickOutside from "../../hooks/useClickOutside";
 import useProjects from "../../hooks/useProjects";
-import AddCardModal from "../AddCardModal";
+// import AddCardModal from "../AddCardModal";
+import AddCardModalContainer from "../AddCardModalContainer";
 import AddNewList from "../AddNewList";
 import List from "../List";
 import Card from "../Card";
@@ -368,7 +369,7 @@ const ProjectDetails = () => {
           ))}
           <DragOverlay dropAnimation={dropAnimation}>{activeId ? renderCard(activeId) : null}</DragOverlay>
 
-          <AddCardModal
+          <AddCardModalContainer
             isOpen={isModalOpen}
             onClose={closeModal}
             users={users}

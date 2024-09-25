@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { twMerge } from 'tailwind-merge';
 
-//TODO: move this to components folder
 /**
  * Primary UI component for user interaction
  */
@@ -53,9 +52,3 @@ Button.propTypes = {
   label: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };
-
-// Button.defaultProps = {
-//   primary: "primary",
-//   size: 'm',
-//   onClick: undefined,
-// };

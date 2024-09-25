@@ -8,7 +8,7 @@ import { useLocation } from "wouter";
 
 const SidebarMenu = ({ currentUser, handleLogout, handleCloseSidebar }) => {
 
-    const [location, navigate] = useLocation();
+    const [_, navigate] = useLocation();
 
     const sidebarItems = [
         { id: 1, icon: Cards, text: "My Cards", path: `/user/${currentUser.id}/cards` },

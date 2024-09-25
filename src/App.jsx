@@ -8,7 +8,7 @@ import ProjectDetails from "./components/pages/ProjectDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Header } from "./components/Header";
 import Settings from "./components/pages/Settings";
-import CardDetails from "./components/pages/CardDetails";
+import CardDetailsContainer from "./components/pages/CardDetailsContainer";
 import UserCards from "./components/pages/UserCards";
 import Info from "./components/pages/Info";
 import { UsersProvider } from "./contexts/UsersContext";
@@ -39,17 +39,13 @@ const App = () => {
           />
           <ProtectedRoute
             path="projects/:projectId/card/:cardId"
-            component={CardDetails}
+            component={CardDetailsContainer}
           />
           <ProtectedRoute path="settings" component={Settings} />
           <ProtectedRoute path="info" component={Info} />
           <ProtectedRoute path="user/:userId/cards" component={UserCards} />
           <Route path="*">
             <Redirect to={isAuthenticated ? "/projects" : "/login"} />
-            // TODO: Deal with this when you decide what to do with it // this
-            is here just to remind me if I change my mind and want to pass
-            component insted of redirect...
-            {/* {(params) => `404, Sorry the page ${params["*"]} does not exist!`} */}
           </Route>
         </Switch>
       </UsersProvider>

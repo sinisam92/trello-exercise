@@ -1,4 +1,3 @@
-// import { useDraggable } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
@@ -8,10 +7,9 @@ import { useLocation, useParams } from "wouter";
 import Comment from "../assets/icons/comment.svg";
 import Dots from "../assets/icons/dots.svg";
 import ListItem from "./ListItem";
-import Tag from "./Tag";
+import Tag from "./cardDetailsComponents/Tag";
 import useClickOutside from "../hooks/useClickOutside";
-
-//TODO: move this to components folder
+import Avatar from "./Avatar";
 
 const Card = ({
   card,
@@ -31,7 +29,7 @@ const Card = ({
   const [selectedCardId, setSelectedCardId] = useState(null);
 
   const { projectId, userId } = useParams();
-  const [location, navigation] = useLocation();
+  const [location, _] = useLocation();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);
@@ -92,11 +90,6 @@ const Card = ({
   const handleSmallThingsToggle = (e) => {
     e.preventDefault();
     setSmallTags((prev) => !prev);
-  };
-  const handleOpenMoveMenu = (e, cardId) => {
-    e.preventDefault();
-    setSelectedCardId(cardId);
-    setIsMoveMenuOpen(true);
   };
 
   const handleMoveCard = (e, listId) => {
@@ -188,27 +181,15 @@ const Card = ({
                 const assignedUser = users.find(
                   (user) => user.username === username
                 );
-                if (!assignedUser) {
-                  console.warn(`No user found for username: ${username}`);
-                  return null;
-                }
-                return assignedUser.avatarUrl ? (
-                  <img
+                
+                return (
+                  <Avatar
                     key={assignedUser.id}
-                    src={assignedUser.avatarUrl}
-                    alt={assignedUser.username}
-                    className="w-8 h-8 rounded-full border-2 border-white"
+                    avatarUrl={assignedUser.avatarUrl}
+                    username={assignedUser.username}
+                    defaultAvatar={assignedUser.defaultAvatar}
+                    size={8}
                   />
-                ) : (
-                  <div
-                    key={assignedUser.id}
-                    className="bg-[#F4A261] rounded-full w-8 h-8 flex items-center justify-center"
-                  >
-                    <span className="text-white text-2xl font-bold">
-                      {assignedUser.defaultAvatar ||
-                        assignedUser.username.charAt(0)}
-                    </span>
-                  </div>
                 );
               })}
           </div>

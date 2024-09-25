@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Bell from "../assets/icons/bell.svg";
 import Menu from "../assets/icons/menu.svg";
@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import { useSearch } from "../contexts/SearchContext";
 import useProjects from "../hooks/useProjects";
+import { UsersContext } from "../contexts/UsersContext";
 
 
 export const Header = ({ setIsChildMenuOpen }) => {
@@ -30,8 +31,7 @@ export const Header = ({ setIsChildMenuOpen }) => {
     return { projectId, cardId };
   };
   const { projectId, cardId } = getParamsFromUrl();
-
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const { currentUser } = useContext(UsersContext);
 
   useEffect(() => {
     const project = projects.find((project) => project.id === projectId);

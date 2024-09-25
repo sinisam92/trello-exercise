@@ -7,12 +7,19 @@ const useProjects = (projectId) => {
     return storedProjects || presentationData;
   });
 
+  const addProject = (newProject) => {
+    setProjects((prevProjects) => {
+      const updatedProjects = [...prevProjects, newProject];
+      return updatedProjects;
+    });
+  };
+
   useEffect(() => {
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
 
   const currentProject = projects.find((project) => project.id === projectId);
-  return { projects, currentProject, setProjects };
+  return { projects, currentProject, setProjects, addProject };
 };
 
 export default useProjects;
