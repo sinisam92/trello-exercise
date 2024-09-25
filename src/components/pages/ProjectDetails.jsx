@@ -20,7 +20,6 @@ import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
 import useClickOutside from "../../hooks/useClickOutside";
 import useProjects from "../../hooks/useProjects";
-// import AddCardModal from "../AddCardModal";
 import AddCardModalContainer from "../AddCardModalContainer";
 import AddNewList from "../AddNewList";
 import List from "../List";
@@ -295,6 +294,8 @@ const ProjectDetails = () => {
 
     if (!card) return null;
 
+    const isDragging = activeId === cardId;
+
     return (
       <Card
         card={card}
@@ -311,7 +312,7 @@ const ProjectDetails = () => {
         setIsModalOpen={setIsModalOpen}
         setIsCardEditing={setIsCardEditing}
         setSelectedCard={setSelectedCard}
-        className="overflow-visible"
+        className={`overflow-visible opacity-50 ${isDragging ? 'opacity-50 rotate-[7deg]' : ''} `}
       />
     );
   };
@@ -328,7 +329,7 @@ const ProjectDetails = () => {
       <div>
         <div
           ref={zoomAreaRef}
-          className="flex overflow-x-auto overscroll-y-none"
+          className="flex overflow-x-auto overscroll-y-none smooth-scroll"
         >
           {currentProject.lists.map((list) => (
             <SortableContext

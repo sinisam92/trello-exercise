@@ -23,6 +23,7 @@ const Card = ({
   setIsModalOpen,
   setIsCardEditing,
   setSelectedCard,
+  className,
 }) => {
   const [openCardOptionsId, setOpenCardOptionsId] = useState(null);
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
@@ -140,7 +141,7 @@ const Card = ({
       {...listeners}
       {...attributes}
       id={card.id}
-      className=" bg-primary min-w-[260px] max-w-[260px] text-white p-4 rounded-lg m-4"
+      className={`bg-primary min-w-[250px] max-w-[250px] text-white p-4 rounded-lg m-4 ${className}`}
     >
       <div className=" flex justify-between items-center">
         <div>

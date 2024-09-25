@@ -95,7 +95,7 @@ const ListSection = ({
   return (
     <section
       key={list.id}
-      className="bg-primaryDark min-w-[300px] max-w-[300px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
+      className="bg-primaryDark min-w-[280px] max-w-[280px] flex flex-col h-fit max-h-[calc(100vh-200px)] ml-5 mt-0 rounded-[20px]"
     >
       <div className="relative flex justify-between rounded-t-lg">
         {isEditing && openListId === list.id ? (
@@ -146,7 +146,7 @@ const ListSection = ({
         )}
       </div>
 
-      <div ref={setNodeRef} className="overflow-auto flex-1 max-w-[300px] min-h-[50px] ">
+      <div ref={setNodeRef} className="overflow-auto flex-1 max-w-[290px] min-h-[50px] mx-auto">
         <SortableContext
           items={list.cards.map((card) => card.id)}
           strategy={rectSortingStrategy}
