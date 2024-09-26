@@ -10,7 +10,9 @@ const Description = ({ thisCard }) => {
       <div>
         <h2 className="mb-3">Description</h2>
         {thisCard.description ? (
-          <p>{thisCard.description}</p>
+        <div className="break-all">
+          <div dangerouslySetInnerHTML={{ __html: thisCard.description }}></div>
+        </div>
         ) : (
           <p>No description.</p>
         )}

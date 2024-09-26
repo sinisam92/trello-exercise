@@ -39,7 +39,7 @@ const Comments = ({
                         avatarUrl={commentUser.avatarUrl}
                         username={commentUser.username}
                         defaultAvatar={commentUser.defaultAvatar}
-                        size={12}
+                        size={3}
                       />
                     )}
                     <div className="flex w-full justify-between items-start">
@@ -53,9 +53,10 @@ const Comments = ({
                               moment(comment.dateAdded).format("HH:mm")}
                           </p>
                         )}
-                        <p className="bg-slate-300 rounded-[4px] p-2">
+                        {/* <p className="bg-slate-300 rounded-[4px] p-2">
                           {comment.text}
-                        </p>
+                        </p> */}
+                        <div dangerouslySetInnerHTML={{ __html: comment.text }} className="bg-slate-300 rounded-[4px] p-2"></div>
                       </div>
                       {currentUser.username === comment.user && (
                         <div className="flex flex-shrink-0 mt-8">
