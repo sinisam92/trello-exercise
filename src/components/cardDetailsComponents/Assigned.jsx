@@ -20,7 +20,7 @@ const Assigned = ({ thisCardsAssigned }) => {
                 avatarUrl={person.avatarUrl}
                 username={person.username}
                 defaultAvatar={person.defaultAvatar}
-                size={16}
+                size={2.5}
               />
             ))}
           </div>

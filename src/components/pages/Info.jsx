@@ -14,14 +14,14 @@ const Info = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto mt-10">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-2">
+    <div className="bg-secundary text-primaryTextColor  p-6 rounded-lg shadow-2xl max-w-md mx-auto mt-10">
+      <h2 className="text-3xl font-semibold text-primaryTextColor mb-2">
         {myInfo.name}
       </h2>
-      <p className="text-xl text-gray-600 mb-4">{myInfo.role}</p>
-      <div className="bg-gray-100 p-4 rounded-lg mb-4">
-        <p className="text-lg font-medium text-gray-700 mb-2">Contact</p>
-        <ul className="list-none text-gray-600 space-y-1">
+      <p className="text-xl text-secundaryTextColor mb-4">{myInfo.role}</p>
+      <div className="bg-secundary shadow-2xl p-4 rounded-lg mb-4">
+        <p className="text-lg font-medium text-primaryTextColor mb-2">Contact</p>
+        <ul className="list-none text-secundaryTextColor space-y-1">
           <li>
             <span className="font-medium">Email:</span> {myInfo.contact.email}
           </li>

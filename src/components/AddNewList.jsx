@@ -48,14 +48,14 @@ const AddNewList = ({
     <div>
       {!isAdding ? (
         <button
-          className="flex justify-center items-center gap-x-2 bg-primary min-w-[340px] p-4 rounded-[12px] text-white ml-4 cursor-pointer hover:bg-primaryHover"
+          className="flex justify-center items-center gap-x-2 bg-secundary min-w-[340px] p-4 rounded-[12px] text-white ml-4 cursor-pointer hover:bg-primaryHover"
           onClick={() => setIsAdding(true)}
         >
           <img src={Plus} alt="add list" className="w-6" />
           Add new list
         </button>
       ) : (
-        <div className="flex justify-center items-center gap-x-2 bg-primary min-w-[340px] p-4 rounded-[12px] m-4 mt-0">
+        <div className="flex justify-center items-center gap-x-2 bg-secundary min-w-[340px] p-4 rounded-[12px] m-4 mt-0">
           <input
             type="text"
             value={newListName}

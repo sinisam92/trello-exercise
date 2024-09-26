@@ -57,8 +57,8 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   };
 
   return (
-    <aside className="">
-      <div className="bg-[#2A9D8F] pb-5">
+    <aside className="bg-primary">
+      <div className="bg-secundary pb-5">
         <div className="flex justify-between pt-11 px-1 items-start ">
           <div className="pb-[22px]">
             <Avatar
@@ -66,7 +66,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
               username={username}
               defaultAvatar={defaultAvatar}
               onClick={openAvatarModal}
-              size={20}
+              size={5}
             />
 
             {isAvatarModalOpen && (

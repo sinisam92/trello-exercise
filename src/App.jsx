@@ -12,6 +12,7 @@ import CardDetailsContainer from "./components/pages/CardDetailsContainer";
 import UserCards from "./components/pages/UserCards";
 import Info from "./components/pages/Info";
 import { UsersProvider } from "./contexts/UsersContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
@@ -21,33 +22,35 @@ const App = () => {
   return (
     <>
       <UsersProvider>
-        {isAuthenticated && (
-          <div className="sticky top-0 h-[130px] w-full z-50 bg-white">
-            <Header setIsChildMenuOpen={setIsChildMenuOpen} />
-          </div>
-        )}
-        <Switch>
-          <Route path="login" component={Login} />
-          <Route path="register" component={Register} />
-          <ProtectedRoute
-            path="projects"
-            component={() => <Projects isChildMenuOpen={isChildMenuOpen} />}
-          />
-          <ProtectedRoute
-            path="projects/:projectId"
-            component={ProjectDetails}
-          />
-          <ProtectedRoute
-            path="projects/:projectId/card/:cardId"
-            component={CardDetailsContainer}
-          />
-          <ProtectedRoute path="settings" component={Settings} />
-          <ProtectedRoute path="info" component={Info} />
-          <ProtectedRoute path="user/:userId/cards" component={UserCards} />
-          <Route path="*">
-            <Redirect to={isAuthenticated ? "/projects" : "/login"} />
-          </Route>
-        </Switch>
+        <ThemeProvider>
+          {isAuthenticated && (
+            <div className="sticky top-0 h-[130px] w-full z-50  bg-primary">
+              <Header setIsChildMenuOpen={setIsChildMenuOpen} />
+            </div>
+          )}
+          <Switch>
+            <Route path="login" component={Login} />
+            <Route path="register" component={Register} />
+            <ProtectedRoute
+              path="projects"
+              component={() => <Projects isChildMenuOpen={isChildMenuOpen} />}
+            />
+            <ProtectedRoute
+              path="projects/:projectId"
+              component={ProjectDetails}
+            />
+            <ProtectedRoute
+              path="projects/:projectId/card/:cardId"
+              component={CardDetailsContainer}
+            />
+            <ProtectedRoute path="settings" component={Settings} />
+            <ProtectedRoute path="info" component={Info} />
+            <ProtectedRoute path="user/:userId/cards" component={UserCards} />
+            <Route path="*">
+              <Redirect to={isAuthenticated ? "/projects" : "/login"} />
+            </Route>
+          </Switch>
+        </ThemeProvider>
       </UsersProvider>
     </>
   );

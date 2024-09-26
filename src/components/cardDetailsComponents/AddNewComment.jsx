@@ -55,7 +55,7 @@ const AddNewComment = ({ currentUser, projects, project, setProjects, list, this
         avatarUrl={currentUser.avatarUrl}
         username={currentUser.username}
         defaultAvatar={currentUser.defaultAvatar}
-        size={12}
+        size={3}
       />
       <form
         onSubmit={(e) => handleFormSubmit(e)}

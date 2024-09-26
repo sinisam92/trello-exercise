@@ -141,7 +141,7 @@ const Card = ({
       {...listeners}
       {...attributes}
       id={card.id}
-      className={`bg-primary min-w-[250px] max-w-[250px] text-white p-4 rounded-lg m-4 ${className}`}
+      className={`bg-secundary min-w-[250px] max-w-[250px] text-white p-4 rounded-lg m-4 ${className}`}
     >
       <div className=" flex justify-between items-center">
         <div>
@@ -189,7 +189,7 @@ const Card = ({
                     avatarUrl={assignedUser.avatarUrl}
                     username={assignedUser.username}
                     defaultAvatar={assignedUser.defaultAvatar}
-                    size={8}
+                    size={2.3} // in rem
                   />
                 );
               })}

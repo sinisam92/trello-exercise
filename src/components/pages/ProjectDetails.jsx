@@ -312,7 +312,7 @@ const ProjectDetails = () => {
         setIsModalOpen={setIsModalOpen}
         setIsCardEditing={setIsCardEditing}
         setSelectedCard={setSelectedCard}
-        className={`overflow-visible opacity-50 ${isDragging ? 'opacity-50 rotate-[7deg]' : ''} `}
+        className={`overflow-visible ${isDragging ? 'opacity-50 rotate-[7deg]' : ''} `}
       />
     );
   };

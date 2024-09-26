@@ -1,6 +1,16 @@
-import Close from '../assets/icons/close.svg';
+import Close from "../assets/icons/close.svg";
+import ReactDOM from "react-dom";
+import { useTheme } from "../contexts/ThemeContext";
 
 const Modal = ({ isOpen, onClose, title, children, onThemeChange }) => {
+  const { switchTheme } = useTheme();
+  
+  
+  const handleThemeChange = (newTheme) => {
+    switchTheme(newTheme);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
@@ -18,28 +28,28 @@ const Modal = ({ isOpen, onClose, title, children, onThemeChange }) => {
           </div>
         )}
         <div>{children}</div>
-        {onThemeChange && (
+       
           <div className="mt-4 border-t pt-4 flex flex-col gap-y-3 justify-around">
             <button
-              onClick={() => onThemeChange('light')}
-              className="bg-gray-200 px-4 py-4 rounded"
+              onClick={() => handleThemeChange("light")}
+              className="bg-[#fffdfd] text-black px-4 py-4 rounded border border-black"
             >
               Light
             </button>
             <button
-              onClick={() => onThemeChange('dark')}
-              className="bg-gray-800 text-white px-4 py-4 rounded"
+              onClick={() => handleThemeChange("dark")}
+              className="bg-[#264653] text-white px-4 py-4 rounded border border-[#264653]"
             >
               Dark
             </button>
             <button
-              onClick={() => onThemeChange('system')}
-              className="bg-blue-500 text-white px-4 py-4 rounded"
+              onClick={() => handleThemeChange("purple")}
+              className="bg-[#a8b1eb] text-black px-4 py-4 rounded border border-[#a8b1eb]"
             >
-              System Default
+              Purple
             </button>
           </div>
-        )}
+        
       </div>
     </div>,
     document.body

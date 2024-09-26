@@ -7,7 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#264653",
+        primary: "var(--primary)",
+        secundary: "var(--secundary)",
+        primaryTextColor: "var(--primary-text-color)",
+        secundaryTextColor: "var(--secundary-text-color)",
         primaryHover: "#38687C",
         danger: "#B52F2F",
         success: "#087506",
