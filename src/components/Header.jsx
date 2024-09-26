@@ -11,6 +11,7 @@ import Sidebar from "../components/Sidebar";
 import { useSearch } from "../contexts/SearchContext";
 import useProjects from "../hooks/useProjects";
 import { UsersContext } from "../contexts/UsersContext";
+import { useAnimation } from "../contexts/AnimationContext";
 
 
 export const Header = ({ setIsChildMenuOpen }) => {
@@ -23,6 +24,7 @@ export const Header = ({ setIsChildMenuOpen }) => {
 
   const { searchTerm, setSearchTerm } = useSearch();
   const { projects } = useProjects();
+  const { animationsEnabled } = useAnimation(); 
 
   const getParamsFromUrl = () => {
     const parts = location.split("/");
@@ -169,7 +171,7 @@ export const Header = ({ setIsChildMenuOpen }) => {
         ></div>
         <motion.section
           className={`${!isMenuOpen && "hidden"} absolute z-40 right-0 top-0 w-[320px] h-screen bg-primary border-l border-primaryTextColor `}
-          animate={isMenuOpen ? "open" : "closed"}
+          animate={animationsEnabled ? (isMenuOpen ? "open" : "closed") : undefined}
           variants={openSidebarVariant}
           style={{ overflow: "hidden" }}
         >
