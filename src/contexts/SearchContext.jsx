@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const SearchContext = createContext();
 
-export const SearchProvider = ({ children }) => {
+const SearchProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
@@ -13,9 +13,11 @@ export const SearchProvider = ({ children }) => {
   );
 };
 
-export const useSearch = () => {
+const useSearch = () => {
   return useContext(SearchContext);
 };
+
+export { SearchProvider, useSearch };
 
 SearchProvider.propTypes = {
   children: PropTypes.node,

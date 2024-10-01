@@ -16,13 +16,4 @@ const dynamicFontForLongStrings = (string, longString, mediumString) => {
   }
 };
 
-const changeTheme = (theme) => {
-  document.querySelector("html")?.setAttribute("data-theme", theme);
-};
-
-const stripHtmlTags = (html) => {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  return doc.body.textContent || "";
-};
-
-export { dynamicFontForLongStrings, changeTheme, stripHtmlTags };
+export { dynamicFontForLongStrings };

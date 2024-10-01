@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const ThemeContext = createContext();
 
-export function ThemeProvider({ children }) {
+const ThemeProvider = ({ children }) => {
   const [themeMode, setThemeMode] = useState(() => {
     const savedTheme = localStorage.getItem("themeMode") || "dark";
     document.documentElement.className = savedTheme;
@@ -21,11 +21,13 @@ export function ThemeProvider({ children }) {
       {children}
     </ThemeContext.Provider>
   );
-}
+};
 
-export function useTheme() {
+const useTheme = () => {
   return useContext(ThemeContext);
 };
+
+export { ThemeProvider, useTheme };
 
 ThemeProvider.propTypes = {
   children: PropTypes.node,

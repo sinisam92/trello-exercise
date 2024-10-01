@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const AnimationContext = createContext();
 
-export const AnimationProvider = ({ children }) => {
+const AnimationProvider = ({ children }) => {
   const [animationsEnabled, setAnimationsEnabled] = useState(() => {
     return localStorage.getItem("animationsEnabled") === "true";
   });
@@ -21,7 +21,9 @@ export const AnimationProvider = ({ children }) => {
   );
 };
 
-export const useAnimation = () => useContext(AnimationContext);
+const useAnimation = () => useContext(AnimationContext);
+
+export { AnimationProvider, useAnimation };
 
 AnimationProvider.propTypes = {
   children: PropTypes.node,
