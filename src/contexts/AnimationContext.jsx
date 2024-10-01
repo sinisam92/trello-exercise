@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 const AnimationContext = createContext();
 
@@ -12,10 +13,16 @@ export const AnimationProvider = ({ children }) => {
   }, [animationsEnabled]);
 
   return (
-    <AnimationContext.Provider value={{ animationsEnabled, setAnimationsEnabled }}>
+    <AnimationContext.Provider
+      value={{ animationsEnabled, setAnimationsEnabled }}
+    >
       {children}
     </AnimationContext.Provider>
   );
 };
 
 export const useAnimation = () => useContext(AnimationContext);
+
+AnimationProvider.propTypes = {
+  children: PropTypes.node,
+};

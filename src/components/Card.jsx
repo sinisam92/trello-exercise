@@ -1,8 +1,8 @@
+import React, { useRef, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
 import { useLocation, useParams } from "wouter";
 import Comment from "../assets/icons/comment.svg";
 import Dots from "../assets/icons/dots.svg";
@@ -100,7 +100,7 @@ const Card = ({
         return prevProjects.map((proj) => {
           if (proj.id === projectId) {
             let cardToMove;
-            let sourceListId;
+            // let sourceListId;
 
             const updatedLists = proj.lists.map((list) => {
               const cardIndex = list.cards.findIndex(
@@ -108,7 +108,7 @@ const Card = ({
               );
               if (cardIndex !== -1) {
                 cardToMove = list.cards[cardIndex];
-                sourceListId = list.id;
+                // sourceListId = list.id;
                 return {
                   ...list,
                   cards: list.cards.filter((_, index) => index !== cardIndex),
@@ -182,7 +182,7 @@ const Card = ({
                 const assignedUser = users.find(
                   (user) => user.username === username
                 );
-                
+
                 return (
                   <Avatar
                     key={assignedUser.id}
@@ -258,4 +258,15 @@ Card.propTypes = {
     dueDate: PropTypes.string,
     assigned: PropTypes.array,
   }),
+  users: PropTypes.array,
+  list: PropTypes.object,
+  setProjects: PropTypes.func,
+  project: PropTypes.object,
+  setSmallTags: PropTypes.func,
+  smallTags: PropTypes.bool,
+  setSelectedList: PropTypes.func,
+  setIsModalOpen: PropTypes.func,
+  setIsCardEditing: PropTypes.func,
+  setSelectedCard: PropTypes.func,
+  className: PropTypes.string,
 };

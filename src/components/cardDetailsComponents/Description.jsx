@@ -1,5 +1,6 @@
 import React from "react";
 import DescriptionIcon from "../../assets/icons/description.svg";
+import PropTypes from "prop-types";
 
 const Description = ({ thisCard }) => {
   return (
@@ -10,9 +11,11 @@ const Description = ({ thisCard }) => {
       <div>
         <h2 className="mb-3">Description</h2>
         {thisCard.description ? (
-        <div className="break-all">
-          <div dangerouslySetInnerHTML={{ __html: thisCard.description }}></div>
-        </div>
+          <div className="break-all">
+            <div
+              dangerouslySetInnerHTML={{ __html: thisCard.description }}
+            ></div>
+          </div>
         ) : (
           <p>No description.</p>
         )}
@@ -22,3 +25,7 @@ const Description = ({ thisCard }) => {
 };
 
 export default Description;
+
+Description.propTypes = {
+  thisCard: PropTypes.object,
+};

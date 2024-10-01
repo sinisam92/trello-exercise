@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Switch, Route, Redirect } from "wouter";
 import Login from "./components/pages/Login";
 import Register from "./components/pages/Register";

@@ -1,15 +1,8 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import { useAnimation } from "../contexts/AnimationContext";
 
 const ToggleSwitch = () => {
-  // const [isChecked, setIsChecked] = useState(() => {
-  //   return localStorage.getItem("animationsEnabled") === "true";
-  // });
-
   const { animationsEnabled, setAnimationsEnabled } = useAnimation();
-  // useEffect(() => {
-  //   localStorage.setItem("animationsEnabled", isChecked);
-  // }, [isChecked]);
 
   const handleOnChange = () => {
     setAnimationsEnabled(!animationsEnabled);
@@ -28,7 +21,6 @@ const ToggleSwitch = () => {
             id="switch"
             type="checkbox"
             className="peer sr-only"
-            // checked={isChecked}
             checked={animationsEnabled}
             onChange={handleOnChange}
           />

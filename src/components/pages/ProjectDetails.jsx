@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState, useContext } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -14,7 +15,6 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useEffect, useRef, useState, useContext } from "react";
 import { useParams } from "wouter";
 import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
@@ -54,8 +54,8 @@ const ProjectDetails = () => {
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { delay: 500 }
-  }),
+      activationConstraint: { delay: 500 },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -312,7 +312,7 @@ const ProjectDetails = () => {
         setIsModalOpen={setIsModalOpen}
         setIsCardEditing={setIsCardEditing}
         setSelectedCard={setSelectedCard}
-        className={`overflow-visible ${isDragging ? 'opacity-50 rotate-[7deg]' : ''} `}
+        className={`overflow-visible ${isDragging ? "opacity-50 rotate-[7deg]" : ""} `}
       />
     );
   };
@@ -364,11 +364,13 @@ const ProjectDetails = () => {
                 newListName={newListName}
                 setNewListName={setNewListName}
                 handleInputChange={handleInputChange}
-                activeId={activeId} 
+                activeId={activeId}
               />
             </SortableContext>
           ))}
-          <DragOverlay dropAnimation={dropAnimation}>{activeId ? renderCard(activeId) : null}</DragOverlay>
+          <DragOverlay dropAnimation={dropAnimation}>
+            {activeId ? renderCard(activeId) : null}
+          </DragOverlay>
 
           <AddCardModalContainer
             isOpen={isModalOpen}

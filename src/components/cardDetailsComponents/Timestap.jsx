@@ -1,7 +1,7 @@
 import React from "react";
 import Clock from "../../assets/icons/clock2.svg";
 import moment from "moment";
-
+import PropTypes from "prop-types";
 
 const Timestap = ({ thisCard }) => {
   return (
@@ -22,3 +22,7 @@ const Timestap = ({ thisCard }) => {
 };
 
 export default Timestap;
+
+Timestap.propTypes = {
+  thisCard: PropTypes.object,
+};

@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "wouter";
 import DotsTiel from "../assets/icons/menu-tile.svg";
 import useClickOutside from "../hooks/useClickOutside";
 import ListItem from "./ListItem";
+import PropTypes from "prop-types";
 
 const ProjectItem = ({
   project,
@@ -15,6 +16,8 @@ const ProjectItem = ({
   setIsAdding,
   setEditingProjectId,
   isChildMenuOpen,
+  setIsModalOpen,
+  setModalMessage,
 }) => {
   const [openProjectMenuId, setOpenProjectMenuId] = useState(null);
 
@@ -141,3 +144,18 @@ const ProjectItem = ({
 };
 
 export default ProjectItem;
+
+ProjectItem.propTypes = {
+  project: PropTypes.object,
+  projects: PropTypes.array,
+  setProjects: PropTypes.func,
+  currentUser: PropTypes.object,
+  setNewProjectName: PropTypes.func,
+  setCoverImageUrl: PropTypes.func,
+  setIsEditing: PropTypes.func,
+  setIsAdding: PropTypes.func,
+  setEditingProjectId: PropTypes.func,
+  isChildMenuOpen: PropTypes.bool,
+  setIsModalOpen: PropTypes.func,
+  setModalMessage: PropTypes.func,
+};

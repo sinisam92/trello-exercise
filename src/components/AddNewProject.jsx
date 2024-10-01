@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Plus from "../assets/icons/plus.svg";
 
 const AddNewProject = ({ setIsAdding, isAdding }) => {
@@ -19,3 +20,8 @@ const AddNewProject = ({ setIsAdding, isAdding }) => {
 };
 
 export default AddNewProject;
+
+AddNewProject.propTypes = {
+  setIsAdding: PropTypes.func,
+  isAdding: PropTypes.bool,
+};

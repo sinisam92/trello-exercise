@@ -1,3 +1,4 @@
+import React from "react";
 import ThemeSwitch from "../ThemeSwitch";
 import ToggleSwitch from "../ToggleSwitch";
 

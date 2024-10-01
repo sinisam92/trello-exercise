@@ -1,10 +1,9 @@
 import React from "react";
 import TagsIcon from "../../assets/icons/tags.svg";
 import Tag from "./Tag";
+import PropTypes from "prop-types";
 
-const Tags = ({
-    thisCard
-}) => {
+const Tags = ({ thisCard }) => {
   return (
     <>
       <div className="flex-shrink-0">
@@ -29,3 +28,7 @@ const Tags = ({
 };
 
 export default Tags;
+
+Tags.propTypes = {
+  thisCard: PropTypes.object,
+};

@@ -1,11 +1,12 @@
+import React from "react";
 import moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import useProjects from "../hooks/useProjects";
 import Select from "react-select";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import PropTypes from "prop-types";
 
 const AddCardModal = ({
   onClose,
@@ -20,7 +21,7 @@ const AddCardModal = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState();
-  const [tags, setTags] = useState([]);
+  const [_, setTags] = useState([]);
   const [assigned, setAssigned] = useState([]);
   const [dueDate, setDueDate] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -151,13 +152,13 @@ const AddCardModal = ({
       </div>
       <div className="mb-4">
         <label className="block text-gray-700">Description</label>
-        {/* <textarea
+        <ReactQuill
+          ref={quillRef}
+          theme="snow"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 border rounded"
+          onChange={setDescription}
           placeholder="Card Description"
-        ></textarea> */}
-        <ReactQuill ref={quillRef} theme="snow" value={description} onChange={setDescription} placeholder="Card Description"/>
+        />
       </div>
       <div className="mb-4">
         <h3>Select Tags:</h3>
@@ -217,3 +218,15 @@ const AddCardModal = ({
 };
 
 export default AddCardModal;
+
+AddCardModal.propTypes = {
+  onClose: PropTypes.func,
+  users: PropTypes.array,
+  list: PropTypes.object,
+  projects: PropTypes.array,
+  setProjects: PropTypes.func,
+  projectId: PropTypes.string,
+  selectedCard: PropTypes.object,
+  isCardEditing: PropTypes.bool,
+  setIsCardEditing: PropTypes.func,
+};

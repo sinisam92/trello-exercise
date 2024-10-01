@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import ProjectForm from "../ProjectForm";
 import ProjectItem from "../ProjectItem";
 import AlertModal from "../AlertModal";
@@ -6,6 +6,7 @@ import { useSearch } from "../../contexts/SearchContext";
 import useProjects from "../../hooks/useProjects";
 import AddNewProject from "../AddNewProject";
 import { UsersContext } from "../../contexts/UsersContext";
+import PropTypes from "prop-types";
 
 const Projects = ({ isChildMenuOpen }) => {
   const [isAdding, setIsAdding] = useState(false);
@@ -20,7 +21,7 @@ const Projects = ({ isChildMenuOpen }) => {
 
   const { searchTerm } = useSearch();
   const { projects, setProjects, addProject } = useProjects();
-  const { users, currentUser } = useContext(UsersContext);
+  const { currentUser } = useContext(UsersContext);
 
   const userProjects = projects.filter(
     (project) =>
@@ -54,6 +55,8 @@ const Projects = ({ isChildMenuOpen }) => {
                 isChildMenuOpen={isChildMenuOpen}
                 setEditingProjectId={setEditingProjectId}
                 setIsEditing={setIsEditing}
+                setModalMessage={setModalMessage}
+                setIsModalOpen={setIsModalOpen}
               />
             );
           })
@@ -94,3 +97,7 @@ const Projects = ({ isChildMenuOpen }) => {
 };
 
 export default Projects;
+
+Projects.propTypes = {
+  isChildMenuOpen: PropTypes.bool,
+};

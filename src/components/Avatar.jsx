@@ -1,10 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Avatar = ({ avatarUrl, username, defaultAvatar, onClick, size }) => {
-
   const circleSize = `${size}rem`;
   const contentSize = `${size * 0.7}rem`;
-  
+
   const avatarContent = avatarUrl ? (
     <img
       src={avatarUrl}
@@ -33,3 +33,11 @@ const Avatar = ({ avatarUrl, username, defaultAvatar, onClick, size }) => {
 };
 
 export default Avatar;
+
+Avatar.propTypes = {
+  avatarUrl: PropTypes.string,
+  username: PropTypes.string,
+  defaultAvatar: PropTypes.string,
+  onClick: PropTypes.func,
+  size: PropTypes.number,
+};

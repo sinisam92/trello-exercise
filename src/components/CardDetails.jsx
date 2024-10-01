@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useParams } from "wouter";
 import useProjects from "../hooks/useProjects";
 import useClickOutside from "../hooks/useClickOutside";

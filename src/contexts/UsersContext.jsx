@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 const UsersContext = createContext();
 
@@ -28,15 +29,22 @@ const UsersProvider = ({ children }) => {
     try {
       return JSON.parse(localStorage.getItem("currentUser"));
     } catch (error) {
+      console.error("Error parsing currentUser from localStorage:", error);
       return null;
     }
   })();
 
   return (
-    <UsersContext.Provider value={{ users, setUsers, currentUser, registerUser }}>
+    <UsersContext.Provider
+      value={{ users, setUsers, currentUser, registerUser }}
+    >
       {children}
     </UsersContext.Provider>
   );
 };
 
 export { UsersProvider, UsersContext };
+
+UsersProvider.propTypes = {
+  children: PropTypes.node,
+};

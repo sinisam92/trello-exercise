@@ -1,6 +1,7 @@
 import React from "react";
 import Avatar from "../Avatar";
 import AssignedIcon from "../../assets/icons/assigned.svg";
+import PropTypes from "prop-types";
 
 const Assigned = ({ thisCardsAssigned }) => {
   return (
@@ -31,3 +32,7 @@ const Assigned = ({ thisCardsAssigned }) => {
 };
 
 export default Assigned;
+
+Assigned.propTypes = {
+  thisCardsAssigned: PropTypes.array,
+};

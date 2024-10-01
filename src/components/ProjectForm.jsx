@@ -1,8 +1,8 @@
+import React, { useState, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useState, useContext } from "react";
 import { UsersContext } from "../contexts/UsersContext";
-import Select from 'react-select';
-
+import Select from "react-select";
+import PropTypes from "prop-types";
 
 const ProjectForm = ({
   projects,
@@ -18,7 +18,6 @@ const ProjectForm = ({
   editingProjectId,
   setEditingProjectId,
 }) => {
-  
   const [error, setError] = useState("");
   const [members, setMembers] = useState([]);
 
@@ -137,7 +136,6 @@ const ProjectForm = ({
     setCoverImageUrl("");
   };
 
-
   /**
    * Handles the input change for the project name
    *
@@ -160,7 +158,9 @@ const ProjectForm = ({
    */
 
   const handleMemberChange = (selectedOptions) => {
-    const updatedMembers = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    const updatedMembers = selectedOptions
+      ? selectedOptions.map((option) => option.value)
+      : [];
     setMembers(updatedMembers);
   };
 
@@ -183,16 +183,16 @@ const ProjectForm = ({
         placeholder="Cover image(optional)"
         className="border p-2 rounded placeholder:text-sm"
       />
-      
+
       <Select
-    placeholder="Select members.."
-    isMulti
-    name="members"
-    options={usersArray}
-    onChange={handleMemberChange}
-    className="basic-multi-select"
-    classNamePrefix="select"
-  />
+        placeholder="Select members.."
+        isMulti
+        name="members"
+        options={usersArray}
+        onChange={handleMemberChange}
+        className="basic-multi-select"
+        classNamePrefix="select"
+      />
 
       <button
         onClick={isEditing ? handleSaveEditedProject : addNewProject}
@@ -211,3 +211,18 @@ const ProjectForm = ({
 };
 
 export default ProjectForm;
+
+ProjectForm.propTypes = {
+  projects: PropTypes.array.isRequired,
+  setProjects: PropTypes.func.isRequired,
+  newProjectName: PropTypes.string.isRequired,
+  setNewProjectName: PropTypes.func.isRequired,
+  setCoverImageUrl: PropTypes.func.isRequired,
+  coverImageUrl: PropTypes.string.isRequired,
+  addProject: PropTypes.func.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  setIsEditing: PropTypes.func.isRequired,
+  setIsAdding: PropTypes.func.isRequired,
+  editingProjectId: PropTypes.string,
+  setEditingProjectId: PropTypes.func.isRequired,
+};

@@ -1,10 +1,11 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
+import PropTypes from "prop-types";
 
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [themeMode, setThemeMode] = useState(() => {
-    const savedTheme = localStorage.getItem('themeMode') || 'dark';
+    const savedTheme = localStorage.getItem("themeMode") || "dark";
     document.documentElement.className = savedTheme;
     return savedTheme;
   });
@@ -12,7 +13,7 @@ export function ThemeProvider({ children }) {
   const switchTheme = (theme) => {
     setThemeMode(theme);
     document.documentElement.className = theme;
-    localStorage.setItem('themeMode', theme);
+    localStorage.setItem("themeMode", theme);
   };
 
   return (
@@ -24,4 +25,8 @@ export function ThemeProvider({ children }) {
 
 export function useTheme() {
   return useContext(ThemeContext);
-}
+};
+
+ThemeProvider.propTypes = {
+  children: PropTypes.node,
+};

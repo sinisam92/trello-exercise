@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../Button";
 import { Link } from "wouter";
 import { useAuth } from "../../contexts/AuthContext";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
+import PropTypes from "prop-types";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -44,7 +45,7 @@ const Login = () => {
               .min(3, "Must be 3 characters or more")
               .required("Required"),
           })}
-          onSubmit={(values, { setSubmitting }) => {
+          onSubmit={(values) => {
             const { username } = values;
             const users = JSON.parse(localStorage.getItem("users")) || [];
             const foundUser = users.find((user) => user.username === username);
@@ -90,3 +91,27 @@ const Login = () => {
 };
 
 export default Login;
+
+Login.propTypes = {
+  currentUser: PropTypes.object,
+  projects: PropTypes.array,
+  handleAddComment: PropTypes.func,
+  project: PropTypes.object,
+  list: PropTypes.object,
+  thisCard: PropTypes.object,
+  users: PropTypes.array,
+  toggleOptions: PropTypes.func,
+  openOptions: PropTypes.number,
+  commentsIconRef: PropTypes.object,
+  commentsOptionsRef: PropTypes.object,
+  handleDeleteComment: PropTypes.func,
+  props: PropTypes.object,
+};
+
+TextInput.propTypes = {
+  label: PropTypes.string,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+};

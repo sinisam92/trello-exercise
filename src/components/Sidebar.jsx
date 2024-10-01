@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import Close from "../assets/icons/close.svg";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocation } from "wouter";
@@ -6,6 +6,7 @@ import ListItem from "./ListItem";
 import SidebarMenu from "./SidebarMenu";
 import { UsersContext } from "../contexts/UsersContext";
 import Avatar from "./Avatar";
+import PropTypes from "prop-types";
 
 const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
@@ -117,3 +118,9 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
 };
 
 export default Sidebar;
+
+Sidebar.propTypes = {
+  setIsChildMenuOpen: PropTypes.func,
+  handleCloseSidebar: PropTypes.func,
+  setIsMenuOpen: PropTypes.func,
+};

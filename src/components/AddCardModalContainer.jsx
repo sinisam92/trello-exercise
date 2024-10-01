@@ -1,4 +1,6 @@
+import React from "react";
 import AddCardModal from "./AddCardModal";
+import PropTypes from "prop-types";
 
 const AddCardModalContainer = ({
   isOpen,
@@ -12,12 +14,11 @@ const AddCardModalContainer = ({
   isCardEditing,
   setIsCardEditing,
 }) => {
-
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg max-w-lg w-full">
-        <AddCardModal 
+        <AddCardModal
           onClose={onClose}
           users={users}
           list={list}
@@ -34,3 +35,16 @@ const AddCardModalContainer = ({
 };
 
 export default AddCardModalContainer;
+
+AddCardModalContainer.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  users: PropTypes.array,
+  list: PropTypes.object,
+  projects: PropTypes.array,
+  setProjects: PropTypes.func,
+  projectId: PropTypes.string,
+  selectedCard: PropTypes.object,
+  isCardEditing: PropTypes.bool,
+  setIsCardEditing: PropTypes.func,
+};

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
 import { UsersContext } from "../../contexts/UsersContext";
+import PropTypes from "prop-types";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -95,3 +96,16 @@ const Register = () => {
 };
 
 export default Register;
+
+Register.propTypes = {
+  users: PropTypes.array,
+  registerUser: PropTypes.func,
+};
+
+TextInput.propTypes = {
+  label: PropTypes.string,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
+};

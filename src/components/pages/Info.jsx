@@ -20,7 +20,9 @@ const Info = () => {
       </h2>
       <p className="text-xl text-secundaryTextColor mb-4">{myInfo.role}</p>
       <div className="bg-secundary shadow-2xl p-4 rounded-lg mb-4">
-        <p className="text-lg font-medium text-primaryTextColor mb-2">Contact</p>
+        <p className="text-lg font-medium text-primaryTextColor mb-2">
+          Contact
+        </p>
         <ul className="list-none text-secundaryTextColor space-y-1">
           <li>
             <span className="font-medium">Email:</span> {myInfo.contact.email}
@@ -32,18 +34,18 @@ const Info = () => {
       </div>
 
       <div className="flex flex-col gap-y-3">
-          <Link
-            to={myInfo.bugReportLink}
-            className="inline-block text-blue-600 font-semibold hover:text-blue-800 transition-colors"
-          >
-            Report an Issue
-          </Link>
-          <Link
-            to={myInfo.contactLink}
-            className="inline-block text-blue-600 font-semibold hover:text-blue-800 transition-colors"
-          >
-            Contact Me
-          </Link>
+        <Link
+          to={myInfo.bugReportLink}
+          className="inline-block text-blue-600 font-semibold hover:text-blue-800 transition-colors"
+        >
+          Report an Issue
+        </Link>
+        <Link
+          to={myInfo.contactLink}
+          className="inline-block text-blue-600 font-semibold hover:text-blue-800 transition-colors"
+        >
+          Contact Me
+        </Link>
       </div>
     </div>
   );

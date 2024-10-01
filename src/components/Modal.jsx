@@ -1,11 +1,12 @@
-import Close from "../assets/icons/close.svg";
+import React from "react";
 import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
+import Close from "../assets/icons/close.svg";
 import { useTheme } from "../contexts/ThemeContext";
 
-const Modal = ({ isOpen, onClose, title, children, onThemeChange }) => {
+const Modal = ({ isOpen, onClose, title, children }) => {
   const { switchTheme } = useTheme();
-  
-  
+
   const handleThemeChange = (newTheme) => {
     switchTheme(newTheme);
     onClose();
@@ -28,28 +29,27 @@ const Modal = ({ isOpen, onClose, title, children, onThemeChange }) => {
           </div>
         )}
         <div>{children}</div>
-       
-          <div className="mt-4 border-t pt-4 flex flex-col gap-y-3 justify-around">
-            <button
-              onClick={() => handleThemeChange("light")}
-              className="bg-[#fffdfd] text-black px-4 py-4 rounded border border-black"
-            >
-              Light
-            </button>
-            <button
-              onClick={() => handleThemeChange("dark")}
-              className="bg-[#264653] text-white px-4 py-4 rounded border border-[#264653]"
-            >
-              Dark
-            </button>
-            <button
-              onClick={() => handleThemeChange("purple")}
-              className="bg-[#a8b1eb] text-black px-4 py-4 rounded border border-[#a8b1eb]"
-            >
-              Purple
-            </button>
-          </div>
-        
+
+        <div className="mt-4 border-t pt-4 flex flex-col gap-y-3 justify-around">
+          <button
+            onClick={() => handleThemeChange("light")}
+            className="bg-[#fffdfd] text-black px-4 py-4 rounded border border-black"
+          >
+            Light
+          </button>
+          <button
+            onClick={() => handleThemeChange("dark")}
+            className="bg-[#264653] text-white px-4 py-4 rounded border border-[#264653]"
+          >
+            Dark
+          </button>
+          <button
+            onClick={() => handleThemeChange("purple")}
+            className="bg-[#a8b1eb] text-black px-4 py-4 rounded border border-[#a8b1eb]"
+          >
+            Purple
+          </button>
+        </div>
       </div>
     </div>,
     document.body
@@ -57,3 +57,10 @@ const Modal = ({ isOpen, onClose, title, children, onThemeChange }) => {
 };
 
 export default Modal;
+
+Modal.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func,
+  title: PropTypes.string,
+  children: PropTypes.node,
+};

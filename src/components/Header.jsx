@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import Bell from "../assets/icons/bell.svg";
 import Menu from "../assets/icons/menu.svg";
@@ -13,18 +13,17 @@ import useProjects from "../hooks/useProjects";
 import { UsersContext } from "../contexts/UsersContext";
 import { useAnimation } from "../contexts/AnimationContext";
 
-
 export const Header = ({ setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [_, setIsNotificationOpen] = useState(false);
   const [title, setTitle] = useState("");
 
   const [location, navigate] = useLocation();
 
   const { searchTerm, setSearchTerm } = useSearch();
   const { projects } = useProjects();
-  const { animationsEnabled } = useAnimation(); 
+  const { animationsEnabled } = useAnimation();
 
   const getParamsFromUrl = () => {
     const parts = location.split("/");
@@ -94,9 +93,7 @@ export const Header = ({ setIsChildMenuOpen }) => {
 
   return (
     <>
-      <header className="relative border-b px-2 py-5 h-[104px] text-primaryTextColor " 
-      
-      >
+      <header className="relative border-b px-2 py-5 h-[104px] text-primaryTextColor ">
         <div
           className={`flex justify-between items-center ${isMenuOpen ? " blur-sm" : ""}`}
         >
@@ -171,7 +168,9 @@ export const Header = ({ setIsChildMenuOpen }) => {
         ></div>
         <motion.section
           className={`${!isMenuOpen && "hidden"} absolute z-40 right-0 top-0 w-[320px] h-screen bg-primary border-l border-primaryTextColor `}
-          animate={animationsEnabled ? (isMenuOpen ? "open" : "closed") : undefined}
+          animate={
+            animationsEnabled ? (isMenuOpen ? "open" : "closed") : undefined
+          }
           variants={openSidebarVariant}
           style={{ overflow: "hidden" }}
         >

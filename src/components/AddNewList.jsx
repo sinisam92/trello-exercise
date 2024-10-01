@@ -2,6 +2,7 @@ import React from "react";
 import Plus from "../assets/icons/plus.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "wouter";
+import PropTypes from "prop-types";
 
 const AddNewList = ({
   isAdding,
@@ -42,8 +43,6 @@ const AddNewList = ({
     setIsAdding(false);
   };
 
-  
-
   return (
     <div>
       {!isAdding ? (
@@ -82,3 +81,13 @@ const AddNewList = ({
 };
 
 export default AddNewList;
+
+AddNewList.propTypes = {
+  isAdding: PropTypes.bool,
+  setIsAdding: PropTypes.func,
+  newListName: PropTypes.string,
+  setNewListName: PropTypes.func,
+  handleInputChange: PropTypes.func,
+  handleCancel: PropTypes.func,
+  setProjects: PropTypes.func,
+};

@@ -5,6 +5,7 @@ import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
+import PropTypes from "prop-types";
 
 const AddNewComment = ({
   currentUser,
@@ -69,12 +70,6 @@ const AddNewComment = ({
         onSubmit={(e) => handleFormSubmit(e)}
         className="flex items-center w-full h-[50px] border border-black rounded-full p-4"
       >
-        {/* <textarea
-          className="w-full h-[25px] focus:outline-none resize-none"
-          placeholder="Write your comment here..."
-          onChange={(e) => setCommentText(e.target.value)}
-        ></textarea> */}
-
         <ReactQuill
           ref={quillRef}
           theme="bubble"
@@ -92,3 +87,12 @@ const AddNewComment = ({
 };
 
 export default AddNewComment;
+
+AddNewComment.propTypes = {
+  currentUser: PropTypes.object,
+  projects: PropTypes.array,
+  project: PropTypes.object,
+  setProjects: PropTypes.func,
+  list: PropTypes.object,
+  thisCard: PropTypes.object,
+};

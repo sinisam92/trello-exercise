@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card";
 import useProjects from "../../hooks/useProjects";
 import { UsersContext } from "../../contexts/UsersContext";
@@ -9,7 +9,6 @@ const UsersCards = () => {
   const { users, currentUser } = useContext(UsersContext);
   const { projects } = useProjects();
   useEffect(() => {
-
     const getAllCards = projects
       .filter((project) => project.lists)
       .flatMap((project) => project.lists)

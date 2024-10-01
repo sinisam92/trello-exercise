@@ -1,10 +1,8 @@
-import { useDroppable } from "@dnd-kit/core";
-import {
-  SortableContext,
-  rectSortingStrategy,
-} from "@dnd-kit/sortable";
 import React from "react";
+import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { Link } from "wouter";
+import PropTypes from "prop-types";
 import Dots from "../assets/icons/dots.svg";
 import Card from "./Card";
 import AddNewCard from "./AddNewCard";
@@ -36,12 +34,11 @@ const ListSection = ({
   setNewListName,
   handleInputChange,
   setDropdownListId,
-  activeId 
+  activeId,
 }) => {
   const { setNodeRef } = useDroppable({
     id: list.id,
   });
-
 
   /**
    *
@@ -146,15 +143,18 @@ const ListSection = ({
         )}
       </div>
 
-      <div ref={setNodeRef} className="overflow-auto flex-1 max-w-[290px] min-h-[50px] mx-auto">
+      <div
+        ref={setNodeRef}
+        className="overflow-auto flex-1 max-w-[290px] min-h-[50px] mx-auto"
+      >
         <SortableContext
           items={list.cards.map((card) => card.id)}
           strategy={rectSortingStrategy}
         >
           {list.cards.map((card) => (
             <div key={card.id}>
-                <Link to={`/projects/${projectId}/card/${card.id}`}>
-                {activeId !== card.id && ( 
+              <Link to={`/projects/${projectId}/card/${card.id}`}>
+                {activeId !== card.id && (
                   <div className="relative">
                     <Card
                       card={card}
@@ -173,7 +173,7 @@ const ListSection = ({
                     />
                   </div>
                 )}
-                </Link>
+              </Link>
             </div>
           ))}
         </SortableContext>
@@ -190,3 +190,32 @@ const ListSection = ({
 };
 
 export default ListSection;
+
+ListSection.propTypes = {
+  list: PropTypes.object,
+  projects: PropTypes.array,
+  projectId: PropTypes.string,
+  currentProject: PropTypes.object,
+  users: PropTypes.array,
+  setProjects: PropTypes.func,
+  setSmallTags: PropTypes.func,
+  smallTags: PropTypes.bool,
+  setSelectedList: PropTypes.func,
+  setIsModalOpen: PropTypes.func,
+  setIsCardEditing: PropTypes.func,
+  setSelectedCard: PropTypes.func,
+  toggleDropdown: PropTypes.func,
+  dropdownListId: PropTypes.string,
+  handleEditList: PropTypes.func,
+  listMenuIconRef: PropTypes.object,
+  listMenuRef: PropTypes.object,
+  isEditing: PropTypes.bool,
+  setIsEditing: PropTypes.func,
+  openListId: PropTypes.string,
+  setOpenListId: PropTypes.func,
+  newListName: PropTypes.string,
+  setNewListName: PropTypes.func,
+  handleInputChange: PropTypes.func,
+  setDropdownListId: PropTypes.func,
+  activeId: PropTypes.string,
+};

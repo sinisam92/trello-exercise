@@ -1,8 +1,8 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
+import PropTypes from "prop-types";
 
 const Tag = ({ tag, handleSmallThingsToggle, smallTags, className }) => {
-  
   const colors = {
     urgent: "bg-myOrange",
     critical: "bg-danger",
@@ -17,14 +17,17 @@ const Tag = ({ tag, handleSmallThingsToggle, smallTags, className }) => {
   );
 
   return (
-    <span
-      key={tag}
-      onClick={handleSmallThingsToggle}
-      className={tagClasses}
-    >
+    <span key={tag} onClick={handleSmallThingsToggle} className={tagClasses}>
       {smallTags ? null : tag}
     </span>
   );
 };
 
 export default Tag;
+
+Tag.propTypes = {
+  tag: PropTypes.string,
+  handleSmallThingsToggle: PropTypes.func,
+  smallTags: PropTypes.bool,
+  className: PropTypes.string,
+};

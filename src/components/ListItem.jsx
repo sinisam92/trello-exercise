@@ -1,3 +1,6 @@
+import React from "react";
+import PropTypes from "prop-types";
+
 const ListItem = ({ onClick, text, className }) => (
   <li
     onClick={onClick}
@@ -8,3 +11,9 @@ const ListItem = ({ onClick, text, className }) => (
 );
 
 export default ListItem;
+
+ListItem.propTypes = {
+  onClick: PropTypes.func,
+  text: PropTypes.string,
+  className: PropTypes.string,
+};
