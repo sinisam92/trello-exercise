@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Bell from "../../assets/icons/bell.svg";
 import Menu from "../../assets/icons/menu.svg";
@@ -10,8 +10,8 @@ import { motion } from "framer-motion";
 import Sidebar from "./Sidebar";
 import { useSearch } from "../../contexts/SearchContext";
 import useProjects from "../../hooks/useProjects";
-import { UsersContext } from "../../contexts/UsersContext";
 import { useAnimation } from "../../contexts/AnimationContext";
+import { useSelector } from "react-redux";
 
 const Header = ({ setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,6 +20,8 @@ const Header = ({ setIsChildMenuOpen }) => {
   const [title, setTitle] = useState("");
 
   const [location, navigate] = useLocation();
+
+  const { currentUser } = useSelector((state) => state.users);
 
   const { searchTerm, setSearchTerm } = useSearch();
   const { projects } = useProjects();
@@ -32,7 +34,6 @@ const Header = ({ setIsChildMenuOpen }) => {
     return { projectId, cardId };
   };
   const { projectId, cardId } = getParamsFromUrl();
-  const { currentUser } = useContext(UsersContext);
 
   useEffect(() => {
     const project = projects.find((project) => project.id === projectId);

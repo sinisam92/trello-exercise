@@ -1,14 +1,14 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef } from "react";
 import { useParams } from "wouter";
 import useProjects from "../../hooks/useProjects";
 import useClickOutside from "../../hooks/useClickOutside";
-import { UsersContext } from "../../contexts/UsersContext";
 import Timestap from "./Timestap";
 import Comments from "./Comments";
 import AddNewComment from "./AddNewComment";
 import Assigned from "./Assigned";
 import Tags from "./Tags";
 import Description from "./Description";
+import { useSelector } from "react-redux";
 
 const CardDetails = () => {
   const [openOptions, setOpenOptions] = useState(null);
@@ -17,7 +17,7 @@ const CardDetails = () => {
   const commentsIconRef = useRef(null);
 
   const { projects, setProjects } = useProjects();
-  const { users, currentUser } = useContext(UsersContext);
+  const { users, currentUser } = useSelector((state) => state.users);
 
   const { cardId } = useParams();
 

@@ -1,24 +1,26 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Close from "../../assets/icons/close.svg";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation } from "wouter";
 import ListItem from "../list-components/ListItem";
 import SidebarMenu from "./SidebarMenu";
-import { UsersContext } from "../../contexts/UsersContext";
 import Avatar from "../common/Avatar";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { setUsers, setCurrentUser } from "../../reducers/userSlice";
 
 const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [error, setError] = useState("");
 
-  const { users, setUsers, currentUser } = useContext(UsersContext);
+const {currentUser, users} = useSelector((state) => state.users);
 
   const username = currentUser && currentUser.username;
   const defaultAvatar = currentUser && currentUser.defaultAvatar;
   const avatarUrl = currentUser ? currentUser.avatarUrl : "";
   const usernameForAt = username.toLowerCase().replace(" ", "-");
+  const dispatch = useDispatch();
   const [_, navigate] = useLocation();
 
   const { logout } = useAuth();
@@ -44,12 +46,12 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
     }
     if (currentUser && currentUser.id === userId) {
       const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      dispatch(setCurrentUser(updatedUser));
 
       const updatedUsers = users.map((user) =>
         user.id === userId ? updatedUser : user
       );
-      setUsers(updatedUsers);
+      dispatch(setUsers(updatedUsers));
       closeAvatarModal();
     } else {
       console.error("You can only change your own avatar.");
@@ -79,8 +81,12 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
             {isAvatarModalOpen && (
               <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg">
-                  <h2 className="text-xl font-bold mb-4 text-black">Change Avatar</h2>
-                  <label htmlFor="avatarUrl" className="block mb-2 text-black">Avatar URL</label>
+                  <h2 className="text-xl font-bold mb-4 text-black">
+                    Change Avatar
+                  </h2>
+                  <label htmlFor="avatarUrl" className="block mb-2 text-black">
+                    Avatar URL
+                  </label>
                   <input
                     type="text"
                     id="avatarUrl"
@@ -88,9 +94,11 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
                     onChange={handleAvatarUrlChange}
                     placeholder="Enter new avatar URL"
                     required
-                    className={`${!error && 'mb-4'} border p-2 w-full text-black`}
+                    className={`${!error && "mb-4"} border p-2 w-full text-black`}
                   />
-                  {error && <div className="text-danger mb-4 text-sm">{error}</div>}
+                  {error && (
+                    <div className="text-danger mb-4 text-sm">{error}</div>
+                  )}
                   <ul className="flex justify-end gap-4">
                     <ListItem
                       text="Save"

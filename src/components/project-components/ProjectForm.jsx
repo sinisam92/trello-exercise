@@ -1,11 +1,10 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { UsersContext } from "../../contexts/UsersContext";
 import Select from "react-select";
 import PropTypes from "prop-types";
-// import useProjects from "../../hooks/useProjects";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -45,11 +44,9 @@ const ProjectForm = ({
   const [error, setError] = useState("");
   const [members, setMembers] = useState([]);
 
-  const { users, currentUser } = useContext(UsersContext);
+  const { users, currentUser } = useSelector((state) => state.users);
 
   const formRef = useRef(null);
-
-  "error", error;
 
   /**
    *  Dummy data when new list is added

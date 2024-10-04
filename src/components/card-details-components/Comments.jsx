@@ -56,9 +56,6 @@ const Comments = ({
                             moment(comment.dateAdded).format("HH:mm")}
                         </p>
                       )}
-                      {/* <p className="bg-slate-300 rounded-[4px] p-2">
-                          {comment.text}
-                        </p> */}
                       <div
                         dangerouslySetInnerHTML={{ __html: comment.text }}
                         className="bg-slate-300 rounded-[4px] p-2"

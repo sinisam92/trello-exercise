@@ -1,14 +1,14 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ProjectForm from "./ProjectForm";
 import ProjectItem from "./ProjectItem";
 import AlertModal from "./AlertModal";
 import { useSearch } from "../../contexts/SearchContext";
 import useProjects from "../../hooks/useProjects";
 import AddNewProject from "./AddNewProject";
-import { UsersContext } from "../../contexts/UsersContext";
 import PropTypes from "prop-types";
 import Banner from "../common/Banner";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const Projects = ({ isChildMenuOpen }) => {
   const [isAdding, setIsAdding] = useState(false);
@@ -26,7 +26,8 @@ const Projects = ({ isChildMenuOpen }) => {
 
   const { searchTerm } = useSearch();
   const { projects, setProjects, addProject } = useProjects();
-  const { currentUser } = useContext(UsersContext);
+
+  const { currentUser } = useSelector((state) => state.users);
 
   const userProjects = projects.filter(
     (project) =>

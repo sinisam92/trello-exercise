@@ -6,6 +6,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentUser } from "../../reducers/userSlice";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -28,6 +30,8 @@ const Login = () => {
   const [error, setError] = useState("");
   const [_, navigate] = useLocation();
 
+  const { users } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
   const { login } = useAuth();
   const formRef = useRef(null);
 
@@ -47,11 +51,12 @@ const Login = () => {
           })}
           onSubmit={(values) => {
             const { username } = values;
-            const users = JSON.parse(localStorage.getItem("users")) || [];
+            console.log("users --> login", users);
+            
             const foundUser = users.find((user) => user.username === username);
 
             if (foundUser) {
-              localStorage.setItem("currentUser", JSON.stringify(foundUser));
+              dispatch(setCurrentUser(foundUser));
               login();
               navigate("/projects");
             } else {

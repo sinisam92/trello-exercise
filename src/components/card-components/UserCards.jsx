@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import useProjects from "../../hooks/useProjects";
-import { UsersContext } from "../../contexts/UsersContext";
+import { useSelector } from "react-redux";
 
 const UsersCards = () => {
   const [cards, setCards] = useState([]);
 
-  const { users, currentUser } = useContext(UsersContext);
+  const { users, currentUser } = useSelector((state) => state.users);
   const { projects } = useProjects();
   useEffect(() => {
     const getAllCards = projects

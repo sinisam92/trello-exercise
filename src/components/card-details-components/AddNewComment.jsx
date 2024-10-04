@@ -3,8 +3,8 @@ import Avatar from "../common/Avatar";
 import Post from "../../assets/icons/post.svg";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
+import ReactQuill from "react-quill-new";
+import 'react-quill-new/dist/quill.bubble.css';;
 import PropTypes from "prop-types";
 
 const AddNewComment = ({
@@ -18,6 +18,11 @@ const AddNewComment = ({
   const [commentText, setCommentText] = useState("");
 
   const quillRef = useRef(null);
+
+  const handleSetCommentText = (text) => {
+    setCommentText(text);
+
+  };
 
   const handleAddComment = (projectId, listId, cardId, commentText) => {
     const updatedProjects = projects.map((project) => ({
@@ -54,7 +59,7 @@ const AddNewComment = ({
     e.preventDefault();
     if (commentText.trim() === "") return;
     handleAddComment(project.id, list.id, thisCard.id, commentText);
-    e.target[0].value = "";
+    setCommentText(""); 
     window.scrollTo(0, document.body.scrollHeight);
   };
 
@@ -74,7 +79,7 @@ const AddNewComment = ({
           ref={quillRef}
           theme="bubble"
           value={commentText}
-          onChange={setCommentText}
+          onChange={handleSetCommentText}
           placeholder="Comment"
           className="block w-full h-[40px] focus:outline-none resize-none"
         />

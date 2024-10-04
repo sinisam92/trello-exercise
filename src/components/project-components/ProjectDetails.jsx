@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -24,7 +24,7 @@ import AddCardModalContainer from "../card-components/AddCardModalContainer";
 import AddNewList from "../list-components/AddNewList";
 import List from "../list-components/List";
 import Card from "../card-components/Card";
-import { UsersContext } from "../../contexts/UsersContext";
+import { useSelector } from "react-redux";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -41,7 +41,7 @@ const ProjectDetails = () => {
   const [activeId, setActiveId] = useState(null);
 
   const { projectId } = useParams();
-  const { users } = useContext(UsersContext);
+  const { users } = useSelector((state) => state.users);
   const { projects, currentProject, setProjects } = useProjects(projectId);
 
   const listMenuRef = useRef(null);

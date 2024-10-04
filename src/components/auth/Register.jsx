@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import Button from "../common/Button";
 import { useLocation, Link } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
-import { UsersContext } from "../../contexts/UsersContext";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { registerUser } from "../../reducers/userSlice";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -25,12 +26,15 @@ const TextInput = ({ label, ...props }) => {
 };
 
 const Register = () => {
-  const { users, registerUser } = useContext(UsersContext);
+  const { users } = useSelector((state) => state.users);
   const [_, navigate] = useLocation();
+  const dispatch = useDispatch();
 
   const handleRegister = (values, { setSubmitting, setErrors, resetForm }) => {
     const { username } = values;
     setSubmitting(true);
+    console.log('users', users);
+    
     if (users.some((user) => user.username === username)) {
       setErrors({ username: "Username is already taken" });
     } else {
@@ -41,7 +45,7 @@ const Register = () => {
         avatarUrl: "",
       };
 
-      registerUser(newUser);
+      dispatch(registerUser(newUser));
       resetForm();
       navigate("/login");
     }
