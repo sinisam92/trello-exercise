@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
+  const [error, setError] = useState("");
 
   const { users, setUsers, currentUser } = useContext(UsersContext);
 
@@ -29,6 +30,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const closeAvatarModal = () => {
     setIsAvatarModalOpen(false);
     setNewAvatarUrl("");
+    setError("");
   };
 
   const handleAvatarUrlChange = (e) => {
@@ -36,6 +38,10 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   };
 
   const handleAvatarSubmit = (userId) => {
+    if (!newAvatarUrl) {
+      setError("Avatar URL is required.");
+      return;
+    }
     if (currentUser && currentUser.id === userId) {
       const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
@@ -73,14 +79,18 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
             {isAvatarModalOpen && (
               <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg">
-                  <h2 className="text-xl font-bold mb-4">Change Avatar</h2>
+                  <h2 className="text-xl font-bold mb-4 text-black">Change Avatar</h2>
+                  <label htmlFor="avatarUrl" className="block mb-2 text-black">Avatar URL</label>
                   <input
                     type="text"
+                    id="avatarUrl"
                     value={newAvatarUrl}
                     onChange={handleAvatarUrlChange}
                     placeholder="Enter new avatar URL"
-                    className="border p-2 w-full mb-4"
+                    required
+                    className={`${!error && 'mb-4'} border p-2 w-full text-black`}
                   />
+                  {error && <div className="text-danger mb-4 text-sm">{error}</div>}
                   <ul className="flex justify-end gap-4">
                     <ListItem
                       text="Save"

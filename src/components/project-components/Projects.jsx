@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ProjectForm from "./ProjectForm";
 import ProjectItem from "./ProjectItem";
 import AlertModal from "./AlertModal";
@@ -7,11 +7,16 @@ import useProjects from "../../hooks/useProjects";
 import AddNewProject from "./AddNewProject";
 import { UsersContext } from "../../contexts/UsersContext";
 import PropTypes from "prop-types";
+import Banner from "../common/Banner";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Projects = ({ isChildMenuOpen }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [showBanner, setShowBanner] = useState(false);
+  const [alertTheme, setAlertTheme] = useState("");
+  const [bannerMessage, setBannerMessage] = useState("");
 
   const [_, setIsEditing] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState(null);
@@ -33,11 +38,42 @@ const Projects = ({ isChildMenuOpen }) => {
     project.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    if (showBanner) {
+      const timer = setTimeout(() => {
+        setShowBanner(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showBanner]);
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const bannerContainer = {
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        ease: "easeIn",
+        // duration: 0.2,
+      },
+    },
+    hidden: {
+      opacity: 0,
+      x: 200,
+    },
+    onExit: {
+      x: 200,
+      opacity: 0,
+      transition: { ease: "easeOut", duration: 0.4 },
+    },
+  };
+
   return (
-    <div className="flex flex-col">
+    <div className="relative flex flex-col">
       <div className={`relative ${isChildMenuOpen ? "blur-sm" : ""}`}>
         {/* Hndles filtering of projects based on search term and then shows the projects */}
         {filteredProjects.length > 0 ? (
@@ -57,6 +93,9 @@ const Projects = ({ isChildMenuOpen }) => {
                 setIsEditing={setIsEditing}
                 setModalMessage={setModalMessage}
                 setIsModalOpen={setIsModalOpen}
+                setShowBanner={setShowBanner}
+                setAlertTheme={setAlertTheme}
+                setBannerMessage={setBannerMessage}
               />
             );
           })
@@ -92,6 +131,19 @@ const Projects = ({ isChildMenuOpen }) => {
           />
         </div>
       )}
+      <AnimatePresence>
+        {showBanner && (
+          <motion.div
+            variants={bannerContainer}
+            initial="hidden"
+            animate="show"
+            exit="onExit"
+            className="absolute -top-24 right-5 z-50 max-w-[350px]"
+          >
+            <Banner theme={alertTheme}>{bannerMessage}</Banner>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

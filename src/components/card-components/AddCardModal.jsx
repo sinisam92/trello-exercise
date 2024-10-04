@@ -89,7 +89,6 @@ const AddCardModal = ({
         : project
     );
 
-    // Save changes and reset form state
     setProjects(updatedProjects);
     resetForm();
     onClose();

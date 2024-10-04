@@ -18,6 +18,9 @@ const ProjectItem = ({
   isChildMenuOpen,
   setIsModalOpen,
   setModalMessage,
+  setShowBanner,
+  setAlertTheme,
+  setBannerMessage,
 }) => {
   const [openProjectMenuId, setOpenProjectMenuId] = useState(null);
 
@@ -78,6 +81,13 @@ const ProjectItem = ({
             (project) => project.id !== projectId
           );
           setProjects(updatedProjects);
+          const storedErrors =
+            JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
+          const updatedErrors = storedErrors.filter((id) => id !== projectId);
+          sessionStorage.setItem(
+            "triggeredErrors",
+            JSON.stringify(updatedErrors)
+          );
         };
         deleteProject(projectId);
       } else {
@@ -93,6 +103,26 @@ const ProjectItem = ({
     setOpenProjectMenuId(null);
   };
 
+  const triggerAlert = (theme, message) => {
+    setAlertTheme(theme);
+    setBannerMessage(message);
+    setShowBanner(true);
+  };
+
+  const handleError = (e, projectName) => {
+    e.target.src = "/src/assets/images/project3.jpg";
+    const storedErrors =
+      JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
+    if (!storedErrors.includes(project.id)) {
+      triggerAlert(
+        "info",
+        `Image URL is not existant or not reachable! We applied our default cover image to project ${projectName}. You can always edit project and replace it with valid image url. 😉`
+      );
+      storedErrors.push(project.id);
+      sessionStorage.setItem("triggeredErrors", JSON.stringify(storedErrors));
+    }
+  };
+
   return (
     <div
       className={`${isChildMenuOpen ? "blur-sm" : ""} max-h-24 h-24 mb-4 `}
@@ -102,6 +132,7 @@ const ProjectItem = ({
         <div className="relative h-full">
           <img
             src={project.coverImage}
+            onError={(e) => handleError(e, project.name)}
             alt="cover image"
             className="absolute -z-10 h-full w-full object-cover"
           />
@@ -158,4 +189,7 @@ ProjectItem.propTypes = {
   isChildMenuOpen: PropTypes.bool,
   setIsModalOpen: PropTypes.func,
   setModalMessage: PropTypes.func,
+  setShowBanner: PropTypes.func,
+  setAlertTheme: PropTypes.func,
+  setBannerMessage: PropTypes.func,
 };

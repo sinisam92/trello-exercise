@@ -1,8 +1,32 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { UsersContext } from "../../contexts/UsersContext";
 import Select from "react-select";
 import PropTypes from "prop-types";
+// import useProjects from "../../hooks/useProjects";
+import { Formik, Form, useField } from "formik";
+import * as Yup from "yup";
+
+const TextInput = ({ label, ...props }) => {
+  const [field, meta] = useField(props);
+
+  return (
+    <>
+      <label htmlFor={props.id || props.name} className="mt-4 w-full">
+        {label}
+      </label>
+      <input
+        className={`${meta.error ? "border border-red-600 focus:ring-danger" : null} border p-2  mt-1 rounded w-full placeholder:text-sm shadow-md appearance-none h-12 py-2 px-3 text-gray-700 leading-tight mb-2 focus:outline-none focus:shadow-outline`}
+        id={props.id || props.name}
+        {...field}
+        {...props}
+      />
+      {meta.touched && meta.error ? (
+        <div className="text-red-500 mt-2 text-sm">{meta.error}</div>
+      ) : null}
+    </>
+  );
+};
 
 const ProjectForm = ({
   projects,
@@ -22,6 +46,10 @@ const ProjectForm = ({
   const [members, setMembers] = useState([]);
 
   const { users, currentUser } = useContext(UsersContext);
+
+  const formRef = useRef(null);
+
+  "error", error;
 
   /**
    *  Dummy data when new list is added
@@ -59,16 +87,30 @@ const ProjectForm = ({
     label: user.username,
   }));
 
+  const handleProjectAction = (values) => {
+    if (isEditing) {
+      handleSaveEditedProject(values);
+    } else {
+      addNewProject(values);
+    }
+  };
   /**
    * Handles the addition of a new project
    *
    */
-  const addNewProject = () => {
+  const addNewProject = (values) => {
+    const { newProjectName, coverImageUrl } = values;
+
     if (projects.some((project) => project.name === newProjectName)) {
       setError("Project name already exists");
       return;
     }
+    if (newProjectName == "") {
+      setError("Project name cannot be empty");
+      return;
+    }
     if (newProjectName !== "") {
+      let projectSlug = newProjectName.toLowerCase().replace(/\s/g, "-");
       const newProject = {
         id: uuidv4(),
         name: newProjectName,
@@ -76,7 +118,7 @@ const ProjectForm = ({
         lists: [dummyData],
         members: members,
         createdBy: currentUser.username,
-        slug: newProjectName.toLowerCase().replace(/\s/g, "-"),
+        slug: projectSlug,
       };
 
       const updatedProjects = [...projects, newProject];
@@ -85,23 +127,25 @@ const ProjectForm = ({
 
       setIsAdding(false);
     }
+
     setCoverImageUrl("");
     setNewProjectName("");
     setError("");
   };
 
   const handleCancel = () => {
+    setIsEditing(false);
     setNewProjectName("");
-    setIsAdding(false);
     setError("");
+    setIsAdding(false);
   };
 
   /**
    * Handles the saving of the edited(updated) project
    *
    */
-  const handleSaveEditedProject = (e) => {
-    e.preventDefault();
+  const handleSaveEditedProject = (values) => {
+    const { newProjectName, coverImageUrl } = values;
 
     if (editingProjectId !== null) {
       const updatedProjects = projects.map((project) =>
@@ -117,44 +161,12 @@ const ProjectForm = ({
       setProjects(updatedProjects);
       localStorage.setItem("projects", JSON.stringify(updatedProjects));
       setEditingProjectId(null);
-    } else {
-      const newProject = {
-        id: projects.length + 1,
-        name: newProjectName,
-        coverImage: coverImageUrl,
-      };
-      setProjects([...projects, newProject]);
-      localStorage.setItem(
-        "projects",
-        JSON.stringify([...projects, newProject])
-      );
     }
     setIsEditing(false);
     setIsAdding(false);
     setNewProjectName("");
     setCoverImageUrl("");
   };
-
-  /**
-   * Handles the input change for the project name
-   *
-   */
-  const handleProjectNameInputChange = (event) => {
-    setNewProjectName(event.target.value);
-  };
-
-  /**
-   * Handles the input change for the image URL
-   *
-   */
-  const handleImageUrlInputChange = (event) => {
-    setCoverImageUrl(event.target.value);
-  };
-
-  /**
-   * Handles the change in the members of the project
-   *
-   */
 
   const handleMemberChange = (selectedOptions) => {
     const updatedMembers = selectedOptions
@@ -164,47 +176,77 @@ const ProjectForm = ({
   };
 
   return (
-    <div className=" flex flex-col gap-y-2 justify-center">
-      <input
-        type="text"
-        value={newProjectName}
-        onChange={handleProjectNameInputChange}
-        placeholder="Enter project name"
-        className={`border p-2 rounded placeholder:text-sm ${error ? "border-danger" : ""}`}
-        required
-      />
-      {error && <div className="text-danger">{error}</div>}
-
-      <input
-        type="text"
-        value={coverImageUrl}
-        onChange={handleImageUrlInputChange}
-        placeholder="Cover image(optional)"
-        className="border p-2 rounded placeholder:text-sm"
-      />
-
-      <Select
-        placeholder="Select members.."
-        isMulti
-        name="members"
-        options={usersArray}
-        onChange={handleMemberChange}
-        className="basic-multi-select"
-        classNamePrefix="select"
-      />
-
-      <button
-        onClick={isEditing ? handleSaveEditedProject : addNewProject}
-        className="bg-success text-white px-4 py-2 rounded"
+    <div className="flex flex-col gap-y-2 justify-center">
+      <Formik
+        initialValues={{
+          newProjectName: isEditing ? newProjectName : "",
+          coverImageUrl: isEditing ? coverImageUrl : "",
+        }}
+        validationSchema={Yup.object({
+          newProjectName: Yup.string().required("Required"),
+          coverImageUrl: Yup.string().test(
+            "is-valid-or-exact-match",
+            "Cover image URL must match valid image URL or our default image URL",
+            (value) => {
+              return (
+                Yup.string().url().isValidSync(value) ||
+                value === "/src/assets/images/project3.jpg"
+              );
+            }
+          ),
+        })}
+        onSubmit={handleProjectAction}
       >
-        {isEditing ? "Save" : "Add"}
-      </button>
-      <button
-        onClick={handleCancel}
-        className="bg-danger text-white px-4 py-2 rounded"
-      >
-        Cancel
-      </button>
+        {({ handleSubmit, resetForm }) => (
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <TextInput
+              label="Project Name"
+              name="newProjectName"
+              type="text"
+              placeholder="Enter project name"
+              className={`${error && "border border-red-500 focus:ring-danger"} border p-2  mt-1 rounded w-full placeholder:text-sm shadow-md appearance-none h-12 py-2 px-3 text-gray-700 leading-tight mb-2 focus:outline-none focus:shadow-outline`}
+            />
+            {error && <div className="text-danger mt-2 text-sm">{error}</div>}
+            <TextInput
+              label="Cover Image URL"
+              name="coverImageUrl"
+              type="text"
+              placeholder="Enter image URL"
+            />
+            <label className="mt-2" htmlFor="members">
+              Members
+              <Select
+                placeholder="Select members.."
+                isMulti
+                name="members"
+                options={usersArray}
+                onChange={handleMemberChange}
+                className="basic-multi-select mb-4 w-full"
+                classNamePrefix="select"
+              />
+            </label>
+            <div className="flex justify-evenly gap-x-1">
+              <button
+                className="bg-success w-full text-white px-4 py-2 rounded"
+                type="submit"
+              >
+                {isEditing ? "Save" : "Add"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  resetForm();
+                  setIsEditing(false);
+                  handleCancel();
+                }}
+                className="bg-danger w-full text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
@@ -224,4 +266,12 @@ ProjectForm.propTypes = {
   setIsAdding: PropTypes.func.isRequired,
   editingProjectId: PropTypes.string,
   setEditingProjectId: PropTypes.func.isRequired,
+};
+
+TextInput.propTypes = {
+  label: PropTypes.string,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  type: PropTypes.string,
+  placeholder: PropTypes.string,
 };

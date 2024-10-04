@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Plus from "../../assets/icons/plus.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "wouter";
@@ -13,13 +13,17 @@ const AddNewList = ({
   handleCancel,
   setProjects,
 }) => {
+  const [error, setError] = useState("");
   const { projectId } = useParams();
 
   /**
    * Handles adding a new list to the project
    */
   const handleAddNewList = () => {
-    if (!newListName) return;
+    if (!newListName) {
+      setError("List name is required.");
+      return;
+    }
 
     const formattedName =
       newListName.charAt(0).toUpperCase() + newListName.slice(1);
@@ -43,6 +47,11 @@ const AddNewList = ({
     setIsAdding(false);
   };
 
+  const handleCancelNewList = () => {
+    handleCancel();
+    setError("");
+  };
+
   return (
     <div>
       {!isAdding ? (
@@ -59,8 +68,9 @@ const AddNewList = ({
             type="text"
             value={newListName}
             onChange={handleInputChange}
-            placeholder="Enter list name"
-            className="border p-2 rounded mr-2"
+            required
+            placeholder={error ? error : "Enter list name"}
+            className={`border p-2 rounded mr-2 ${error ? "placeholder:text-red-500 border-red-500 focus:ring-red-500" : "placeholder:text-sm"} `}
           />
           <button
             onClick={handleAddNewList}
@@ -69,7 +79,7 @@ const AddNewList = ({
             Add
           </button>
           <button
-            onClick={handleCancel}
+            onClick={handleCancelNewList}
             className="bg-danger text-white px-4 py-2 rounded ml-2"
           >
             Cancel
