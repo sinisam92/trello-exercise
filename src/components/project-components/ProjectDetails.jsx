@@ -19,12 +19,12 @@ import { useParams } from "wouter";
 import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
 import useClickOutside from "../../hooks/useClickOutside";
-import useProjects from "../../hooks/useProjects";
 import AddCardModalContainer from "../card-components/AddCardModalContainer";
 import AddNewList from "../list-components/AddNewList";
 import List from "../list-components/List";
 import Card from "../card-components/Card";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProject } from "../../reducers/projectSlice";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -42,7 +42,13 @@ const ProjectDetails = () => {
 
   const { projectId } = useParams();
   const { users } = useSelector((state) => state.users);
-  const { projects, currentProject, setProjects } = useProjects(projectId);
+  const { projects } = useSelector((state) => state.projects);
+
+  const currentProject = useSelector((state) =>
+    state.projects.projects.find((project) => project.id === projectId)
+  );
+
+  const dispatch = useDispatch();
 
   const listMenuRef = useRef(null);
   const listMenuIconRef = useRef(null);
@@ -80,11 +86,12 @@ const ProjectDetails = () => {
       return null;
     }
 
-    setProjects((prevProjects) => {
+    const updateCardPositions = () => {
       const activeItems = activeList.cards;
       const overItems = overList.cards;
       const activeIndex = activeItems.findIndex((i) => i.id === activeId);
       const overIndex = overItems.findIndex((i) => i.id === overId);
+
       const newIndex = () => {
         const putOnBelowLastItem =
           overIndex === overItems.length - 1 && delta.y > 0;
@@ -92,37 +99,110 @@ const ProjectDetails = () => {
         return overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
       };
 
-      return prevProjects.map((project) => {
-        if (project.id === currentProject.id) {
-          return {
-            ...project,
-            lists: project.lists.map((list) => {
-              if (list.id === activeList.id) {
-                return {
-                  ...list,
-                  cards: activeItems.filter((i) => i.id !== activeId),
-                };
-              } else if (list.id === overList.id) {
-                return {
-                  ...list,
-                  cards: [
-                    ...overItems.slice(0, newIndex()),
-                    activeItems[activeIndex],
-                    ...overItems.slice(newIndex(), overItems.length),
-                  ],
-                };
-              } else {
-                return list;
-              }
-            }),
-          };
-        } else {
-          return project;
-        }
-      });
-    });
+      const updatedProject = {
+        ...currentProject,
+        lists: currentProject.lists.map((list) => {
+          if (list.id === activeList.id) {
+            return {
+              ...list,
+              cards: activeItems.filter((i) => i.id !== activeId),
+            };
+          } else if (list.id === overList.id) {
+            return {
+              ...list,
+              cards: [
+                ...overItems.slice(0, newIndex()),
+                activeItems[activeIndex],
+                ...overItems.slice(newIndex(), overItems.length),
+              ],
+            };
+          } else {
+            return list;
+          }
+        }),
+      };
+
+      return updatedProject;
+    };
+    dispatch(updateProject(updateCardPositions()));
   };
 
+  // const handleDragEnd = (event) => {
+  //   setActiveId(null);
+  //   const { active, over } = event;
+  //   if (!over) return;
+
+  //   const activeId = String(active.id);
+  //   const overId = String(over.id);
+  //   if (activeId !== overId) {
+  //     saveProjects((prevProjects) => {
+  //       const activeList = currentProject.lists.find((list) =>
+  //         list.cards.some((card) => card.id === activeId)
+  //       );
+
+  //       const overList = currentProject.lists.find(
+  //         (list) => list.id === overId
+  //       );
+
+  //       if (!activeList || !overList) return prevProjects;
+
+  //       const activeIndex = activeList.cards.findIndex(
+  //         (card) => card.id === activeId
+  //       );
+  //       const overIndex = overList.cards.findIndex(
+  //         (card) => card.id === overId
+  //       );
+
+  //       if (activeList.id === overList.id) {
+  //         return prevProjects.map((project) => {
+  //           if (project.id === currentProject.id) {
+  //             return {
+  //               ...project,
+  //               lists: project.lists.map((list) => {
+  //                 if (list.id === activeList.id) {
+  //                   return {
+  //                     ...list,
+  //                     cards: arrayMove(list.cards, activeIndex, overIndex),
+  //                   };
+  //                 }
+  //                 return list;
+  //               }),
+  //             };
+  //           }
+  //           return project;
+  //         });
+  //       } else {
+  //         const activeCard = activeList.cards[activeIndex];
+  //         return prevProjects.map((project) => {
+  //           if (project.id === currentProject.id) {
+  //             return {
+  //               ...project,
+  //               lists: project.lists.map((list) => {
+  //                 if (list.id === activeList.id) {
+  //                   return {
+  //                     ...list,
+  //                     cards: list.cards.filter((card) => card.id !== activeId),
+  //                   };
+  //                 } else if (list.id === overList.id) {
+  //                   return {
+  //                     ...list,
+  //                     cards: [
+  //                       ...list.cards.slice(0, overIndex),
+  //                       activeCard,
+  //                       ...list.cards.slice(overIndex),
+  //                     ],
+  //                   };
+  //                 }
+  //                 return list;
+  //               }),
+  //             };
+  //           }
+  //           return project;
+  //         });
+  //       }
+  //     });
+  //   }
+  // };
   const handleDragEnd = (event) => {
     setActiveId(null);
     const { active, over } = event;
@@ -130,73 +210,74 @@ const ProjectDetails = () => {
 
     const activeId = String(active.id);
     const overId = String(over.id);
+
     if (activeId !== overId) {
-      setProjects((prevProjects) => {
-        const activeList = currentProject.lists.find((list) =>
-          list.cards.some((card) => card.id === activeId)
-        );
+      const activeList = currentProject.lists.find((list) =>
+        list.cards.some((card) => card.id === activeId)
+      );
+      const overList = currentProject.lists.find((list) => list.id === overId);
 
-        const overList = currentProject.lists.find(
-          (list) => list.id === overId
-        );
+      if (!activeList || !overList) return;
 
-        if (!activeList || !overList) return prevProjects;
+      const activeIndex = activeList.cards.findIndex(
+        (card) => card.id === activeId
+      );
 
-        const activeIndex = activeList.cards.findIndex(
-          (card) => card.id === activeId
-        );
-        const overIndex = overList.cards.findIndex(
-          (card) => card.id === overId
-        );
+      const overIndex = overList.cards.findIndex((card) => card.id === overId);
 
-        if (activeList.id === overList.id) {
-          return prevProjects.map((project) => {
-            if (project.id === currentProject.id) {
+      let updatedProject;
+
+      // Same list: Move the card within the same list
+
+      if (activeList.id === overList.id) {
+        console.log("Moving card withing the same list");
+        console.log("Before move:", activeList.cards);
+        updatedProject = {
+          ...currentProject,
+          lists: currentProject.lists.map((list) => {
+            if (list.id === activeList.id) {
               return {
-                ...project,
-                lists: project.lists.map((list) => {
-                  if (list.id === activeList.id) {
-                    return {
-                      ...list,
-                      cards: arrayMove(list.cards, activeIndex, overIndex),
-                    };
-                  }
-                  return list;
-                }),
+                ...list,
+                cards: arrayMove(list.cards, activeIndex, overIndex),
               };
             }
-            return project;
-          });
-        } else {
-          const activeCard = activeList.cards[activeIndex];
-          return prevProjects.map((project) => {
-            if (project.id === currentProject.id) {
+            return list;
+          }),
+        };
+        console.log("updatedProject", updatedProject);
+        console.log(
+          "After move:",
+          updatedProject.lists.find((list) => list.id === activeList.id).cards
+        );
+      }
+      // Different lists: Move the card to another list
+      else {
+        const activeCard = activeList.cards[activeIndex];
+        updatedProject = {
+          ...currentProject,
+          lists: currentProject.lists.map((list) => {
+            if (list.id === activeList.id) {
               return {
-                ...project,
-                lists: project.lists.map((list) => {
-                  if (list.id === activeList.id) {
-                    return {
-                      ...list,
-                      cards: list.cards.filter((card) => card.id !== activeId),
-                    };
-                  } else if (list.id === overList.id) {
-                    return {
-                      ...list,
-                      cards: [
-                        ...list.cards.slice(0, overIndex),
-                        activeCard,
-                        ...list.cards.slice(overIndex),
-                      ],
-                    };
-                  }
-                  return list;
-                }),
+                ...list,
+                cards: list.cards.filter((card) => card.id !== activeId),
+              };
+            } else if (list.id === overList.id) {
+              return {
+                ...list,
+                cards: [
+                  ...list.cards.slice(0, overIndex),
+                  activeCard,
+                  ...list.cards.slice(overIndex),
+                ],
               };
             }
-            return project;
-          });
-        }
-      });
+            return list;
+          }),
+        };
+      }
+
+      // Dispatch the updated project to Redux
+      dispatch(updateProject(updatedProject));
     }
   };
 
@@ -305,7 +386,7 @@ const ProjectDetails = () => {
           list.cards.some((c) => c.id === cardId)
         )}
         project={currentProject}
-        setProjects={setProjects}
+        // setProjects={setProjects}
         setSmallTags={setSmallTags}
         smallTags={smallTags}
         setSelectedList={setSelectedList}
@@ -344,7 +425,7 @@ const ProjectDetails = () => {
                 projectId={projectId}
                 currentProject={currentProject}
                 users={users}
-                setProjects={setProjects}
+                // setProjects={setProjects}
                 setSmallTags={setSmallTags}
                 smallTags={smallTags}
                 setSelectedList={setSelectedList}
@@ -378,7 +459,7 @@ const ProjectDetails = () => {
             users={users}
             list={selectedList}
             projects={projects}
-            setProjects={setProjects}
+            // setProjects={setProjects}
             projectId={currentProject.id}
             isCardEditing={isCardEditing}
             selectedCard={selectedCard}
@@ -391,7 +472,7 @@ const ProjectDetails = () => {
             setNewListName={setNewListName}
             handleInputChange={handleInputChange}
             handleCancel={handleCancel}
-            setProjects={setProjects}
+            // setProjects={setProjects}
           />
         </div>
         <div className="fixed bottom-6 right-12">

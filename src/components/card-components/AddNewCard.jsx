@@ -9,6 +9,7 @@ const AddNewCard = ({
   setIsCardEditing,
 }) => {
   const openModal = (list) => {
+    console.log('list selected', list);
     setSelectedList(list);
     setIsCardEditing(false);
     setIsModalOpen(true);

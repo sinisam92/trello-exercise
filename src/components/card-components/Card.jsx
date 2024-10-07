@@ -36,12 +36,13 @@ const Card = ({
   const moveIconRef = useRef(null);
   const moveMenuRef = useRef(null);
 
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
-    id: card.id,
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: card.id
   });
 
   const style = {
     transform: CSS.Translate.toString(transform),
+    transition,
   };
 
   useClickOutside([cardOptionsRef, optionsIconRef], () =>

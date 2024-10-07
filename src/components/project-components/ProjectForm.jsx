@@ -4,7 +4,8 @@ import Select from "react-select";
 import PropTypes from "prop-types";
 import { Formik, Form, useField } from "formik";
 import * as Yup from "yup";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addProject, updateProject } from "../../reducers/projectSlice";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -29,12 +30,10 @@ const TextInput = ({ label, ...props }) => {
 
 const ProjectForm = ({
   projects,
-  setProjects,
   newProjectName,
   setNewProjectName,
   setCoverImageUrl,
   coverImageUrl,
-  addProject,
   isEditing,
   setIsEditing,
   setIsAdding,
@@ -44,9 +43,13 @@ const ProjectForm = ({
   const [error, setError] = useState("");
   const [members, setMembers] = useState([]);
 
-  const { users, currentUser } = useSelector((state) => state.users);
-
   const formRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const { users, currentUser } = useSelector((state) => state.users);
+  const currentProject = useSelector((state) =>
+    state.projects.projects.find((project) => project.id === editingProjectId)
+  ); 
 
   /**
    *  Dummy data when new list is added
@@ -118,10 +121,7 @@ const ProjectForm = ({
         slug: projectSlug,
       };
 
-      const updatedProjects = [...projects, newProject];
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
-      addProject(newProject);
-
+      dispatch(addProject(newProject));
       setIsAdding(false);
     }
 
@@ -133,6 +133,7 @@ const ProjectForm = ({
   const handleCancel = () => {
     setIsEditing(false);
     setNewProjectName("");
+    setCoverImageUrl("");
     setError("");
     setIsAdding(false);
   };
@@ -143,20 +144,19 @@ const ProjectForm = ({
    */
   const handleSaveEditedProject = (values) => {
     const { newProjectName, coverImageUrl } = values;
-
-    if (editingProjectId !== null) {
-      const updatedProjects = projects.map((project) =>
-        project.id === editingProjectId
-          ? {
-              ...project,
-              name: newProjectName,
-              coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
-              members: members,
-            }
-          : project
-      );
-      setProjects(updatedProjects);
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+  
+    if (editingProjectId !== null && currentProject) {
+      const updatedProject = {
+        ...currentProject,
+        name: newProjectName,
+        coverImage: coverImageUrl || '/src/assets/images/project3.jpg',
+      };
+  
+      if (JSON.stringify(currentProject.members) !== JSON.stringify(members)) {
+        updatedProject.members = members;
+      }
+  
+      dispatch(updateProject(updatedProject)); 
       setEditingProjectId(null);
     }
     setIsEditing(false);
@@ -252,12 +252,10 @@ export default ProjectForm;
 
 ProjectForm.propTypes = {
   projects: PropTypes.array.isRequired,
-  setProjects: PropTypes.func.isRequired,
   newProjectName: PropTypes.string.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setCoverImageUrl: PropTypes.func.isRequired,
   coverImageUrl: PropTypes.string.isRequired,
-  addProject: PropTypes.func.isRequired,
   isEditing: PropTypes.bool.isRequired,
   setIsEditing: PropTypes.func.isRequired,
   setIsAdding: PropTypes.func.isRequired,

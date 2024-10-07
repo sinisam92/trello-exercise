@@ -32,7 +32,7 @@ const initialState = {
   users: loadUsersFromLocalStorage(),
   currentUser: loadCurrentUserFromLocalStorage(),
 };
-console.log("initialState- usersSlice", initialState);
+console.log("initialState", initialState);
 
 const userSlice = createSlice({
   name: "users",
@@ -40,10 +40,6 @@ const userSlice = createSlice({
   reducers: {
     setUsers(state, action) {
       state.users = action.payload;
-      saveUsersToLocalStorage(state.users);
-    },
-    updateUsers(state, action) {
-      state.users.push(action.payload);
       saveUsersToLocalStorage(state.users);
     },
     setCurrentUser(state, action) {
@@ -55,13 +51,13 @@ const userSlice = createSlice({
       removeCurrentUserFromLocalStorage();
     },
     registerUser(state, action) {
-        state.users = action.payload;
+        state.users.push(action.payload);
         registerNewUser(action.payload);
     },
   },
 });
 
-export const { setUsers, updateUsers, setCurrentUser, removeCurrentUser, registerUser } =
+export const { setUsers, setCurrentUser, removeCurrentUser, registerUser } =
   userSlice.actions;
 
 export default userSlice.reducer;

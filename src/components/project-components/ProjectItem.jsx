@@ -4,11 +4,13 @@ import DotsTiel from "../../assets/icons/menu-tile.svg";
 import useClickOutside from "../../hooks/useClickOutside";
 import ListItem from "../list-components/ListItem";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { deleteProject } from "../../reducers/projectSlice";
 
 const ProjectItem = ({
   project,
   projects,
-  setProjects,
+  // setProjects,
   currentUser,
   setNewProjectName,
   setCoverImageUrl,
@@ -26,6 +28,7 @@ const ProjectItem = ({
 
   const iconRef = useRef(null);
   const optionsRef = useRef(null);
+  const dispatch = useDispatch();
 
   /**
    * Handles closing the project menu when clicking outside of it
@@ -76,20 +79,14 @@ const ProjectItem = ({
     if (project.createdBy === currentUser.username) {
       let confirmeText = `Are you sure you want to delete project ${project.name}`;
       if (confirm(confirmeText) === true) {
-        const deleteProject = (projectId) => {
-          const updatedProjects = projects.filter(
-            (project) => project.id !== projectId
-          );
-          setProjects(updatedProjects);
-          const storedErrors =
-            JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
-          const updatedErrors = storedErrors.filter((id) => id !== projectId);
-          sessionStorage.setItem(
-            "triggeredErrors",
-            JSON.stringify(updatedErrors)
-          );
-        };
-        deleteProject(projectId);
+        dispatch(deleteProject(projectId));
+        const storedErrors =
+          JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
+        const updatedErrors = storedErrors.filter((id) => id !== projectId);
+        sessionStorage.setItem(
+          "triggeredErrors",
+          JSON.stringify(updatedErrors)
+        );
       } else {
         setOpenProjectMenuId(null);
         return;
@@ -115,7 +112,7 @@ const ProjectItem = ({
       JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
     if (!storedErrors.includes(project.id)) {
       triggerAlert(
-        "info",
+        "warning",
         `Image URL is not existant or not reachable! We applied our default cover image to project ${projectName}. You can always edit project and replace it with valid image url. 😉`
       );
       storedErrors.push(project.id);

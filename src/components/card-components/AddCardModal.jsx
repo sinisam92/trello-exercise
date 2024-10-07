@@ -2,18 +2,20 @@ import React from "react";
 import moment from "moment";
 import { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
-import useProjects from "../../hooks/useProjects";
+// import useProjects from "../../hooks/useProjects";
 import Select from "react-select";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import PropTypes from "prop-types";
+import { useSelector, useDispatch } from "react-redux";
+import { updateProject } from "../../reducers/projectSlice";
 
 const AddCardModal = ({
   onClose,
   users,
   list,
-  projects,
-  setProjects,
+  // projects,
+  // setProjects,
   projectId,
   selectedCard,
   isCardEditing,
@@ -28,6 +30,7 @@ const AddCardModal = ({
   const [error, setError] = useState("");
 
   const quillRef = useRef();
+  const dispatch = useDispatch();
 
   const predefinedTags = [
     "critical",
@@ -38,7 +41,13 @@ const AddCardModal = ({
     "default",
   ];
 
-  const { currentProject } = useProjects(projectId);
+  // const { currentProject } = useProjects(projectId);
+  const currentProject = useSelector((state) =>
+    state.projects.projects.find((project) => project.id === projectId)
+  ); 
+
+  console.log("currentProject => currentProject", currentProject);
+  
 
   const currentProjectMembers = currentProject.members.map((member) => {
     const members = users.find((user) => user.username === member);
@@ -70,7 +79,12 @@ const AddCardModal = ({
       dueDate: dueDate || "",
     };
 
+    console.log("ADD CARD MODAL => newCard", newCard);
+    
     const updateListCards = (lst) => {
+      console.log('lst.id', lst.id);
+      console.log('list.id', list.id);
+      console.log('is card editing', isCardEditing);
       return lst.id === list.id
         ? {
             ...lst,
@@ -83,13 +97,10 @@ const AddCardModal = ({
         : lst;
     };
 
-    const updatedProjects = projects.map((project) =>
-      project.id === projectId
-        ? { ...project, lists: project.lists.map(updateListCards) }
-        : project
-    );
+    const updatedProject =  { ...currentProject, lists: currentProject.lists.map(updateListCards) }
 
-    setProjects(updatedProjects);
+    // setProjects(updatedProjects);
+    dispatch(updateProject(updatedProject));
     resetForm();
     onClose();
   };
@@ -222,8 +233,8 @@ AddCardModal.propTypes = {
   onClose: PropTypes.func,
   users: PropTypes.array,
   list: PropTypes.object,
-  projects: PropTypes.array,
-  setProjects: PropTypes.func,
+  // projects: PropTypes.array,
+  // setProjects: PropTypes.func,
   projectId: PropTypes.string,
   selectedCard: PropTypes.object,
   isCardEditing: PropTypes.bool,

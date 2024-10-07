@@ -3,7 +3,6 @@ import ProjectForm from "./ProjectForm";
 import ProjectItem from "./ProjectItem";
 import AlertModal from "./AlertModal";
 import { useSearch } from "../../contexts/SearchContext";
-import useProjects from "../../hooks/useProjects";
 import AddNewProject from "./AddNewProject";
 import PropTypes from "prop-types";
 import Banner from "../common/Banner";
@@ -25,9 +24,10 @@ const Projects = ({ isChildMenuOpen }) => {
   const [modalMessage, setModalMessage] = useState("");
 
   const { searchTerm } = useSearch();
-  const { projects, setProjects, addProject } = useProjects();
 
   const { currentUser } = useSelector((state) => state.users);
+  const { projects } = useSelector((state) => state.projects);
+  console.log("projects => projects", projects);
 
   const userProjects = projects.filter(
     (project) =>
@@ -59,7 +59,6 @@ const Projects = ({ isChildMenuOpen }) => {
       x: 0,
       transition: {
         ease: "easeIn",
-        // duration: 0.2,
       },
     },
     hidden: {
@@ -84,7 +83,6 @@ const Projects = ({ isChildMenuOpen }) => {
                 key={project.id}
                 project={project}
                 projects={projects}
-                setProjects={setProjects}
                 currentUser={currentUser}
                 setNewProjectName={setNewProjectName}
                 setCoverImageUrl={setCoverImageUrl}
@@ -117,8 +115,6 @@ const Projects = ({ isChildMenuOpen }) => {
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 flex justify-center items-center bg-primaryHover px-20 py-10 rounded-lg">
           <ProjectForm
             projects={projects}
-            setProjects={setProjects}
-            addProject={addProject}
             setNewProjectName={setNewProjectName}
             setCoverImageUrl={setCoverImageUrl}
             newProjectName={newProjectName}
