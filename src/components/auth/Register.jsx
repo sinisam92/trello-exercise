@@ -33,7 +33,6 @@ const Register = () => {
   const handleRegister = (values, { setSubmitting, setErrors, resetForm }) => {
     const { username } = values;
     setSubmitting(true);
-    console.log('users', users);
     
     if (users.some((user) => user.username === username)) {
       setErrors({ username: "Username is already taken" });

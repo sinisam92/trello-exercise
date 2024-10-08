@@ -31,7 +31,6 @@ const Login = () => {
   const [_, navigate] = useLocation();
 
   const { users } = useSelector((state) => state.users);
-  console.log("users AT useSelection", users);
   
   const dispatch = useDispatch();
   const { login } = useAuth();
@@ -53,7 +52,6 @@ const Login = () => {
           })}
           onSubmit={(values) => {
             const { username } = values;
-            console.log("users --> login", users);
             
             const foundUser = users.find((user) => user.username === username);
 
