@@ -1,11 +1,12 @@
+import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "wouter";
+
 import DotsTiel from "../../assets/icons/menu-tile.svg";
 import useClickOutside from "../../hooks/useClickOutside";
-import ListItem from "../list-components/ListItem";
-import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
 import { deleteProject } from "../../reducers/projectSlice";
+import ListItem from "../list-components/ListItem";
 
 const ProjectItem = ({
   project,
@@ -85,7 +86,7 @@ const ProjectItem = ({
         const updatedErrors = storedErrors.filter((id) => id !== projectId);
         sessionStorage.setItem(
           "triggeredErrors",
-          JSON.stringify(updatedErrors)
+          JSON.stringify(updatedErrors),
         );
       } else {
         setOpenProjectMenuId(null);
@@ -93,7 +94,7 @@ const ProjectItem = ({
       }
     } else {
       setModalMessage(
-        `You do not have permission to delete this project! Contact the project creator ${project.createdBy} for more information.`
+        `You do not have permission to delete this project! Contact the project creator ${project.createdBy} for more information.`,
       );
       setIsModalOpen(true);
     }
@@ -113,7 +114,7 @@ const ProjectItem = ({
     if (!storedErrors.includes(project.id)) {
       triggerAlert(
         "warning",
-        `Image URL is not existant or not reachable! We applied our default cover image to project ${projectName}. You can always edit project and replace it with valid image url. 😉`
+        `Image URL is not existant or not reachable! We applied our default cover image to project ${projectName}. You can always edit project and replace it with valid image url. 😉`,
       );
       storedErrors.push(project.id);
       sessionStorage.setItem("triggeredErrors", JSON.stringify(storedErrors));

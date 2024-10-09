@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import PropTypes from "prop-types";
 
 const Tag = ({ tag, handleSmallThingsToggle, smallTags, className }) => {
   const colors = {
@@ -13,7 +13,7 @@ const Tag = ({ tag, handleSmallThingsToggle, smallTags, className }) => {
   };
 
   const tagClasses = twMerge(
-    `text-white transition-transform duration-300 ease-in-out transform ${smallTags ? "scale-90 px-4 py-2" : "px-2 py-1"}  rounded-md text-xs mb-2 ${colors[tag]} ${className}`
+    `text-white transition-transform duration-300 ease-in-out transform ${smallTags ? "scale-90 px-4 py-2" : "px-2 py-1"}  rounded-md text-xs mb-2 ${colors[tag]} ${className}`,
   );
 
   return (

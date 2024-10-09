@@ -1,20 +1,21 @@
+import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "wouter";
+
 import Close from "../../assets/icons/close.svg";
 import { useAuth } from "../../contexts/AuthContext";
-import { useLocation } from "wouter";
+import { setCurrentUser, setUsers } from "../../reducers/userSlice";
+import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
 import SidebarMenu from "./SidebarMenu";
-import Avatar from "../common/Avatar";
-import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
-import { setUsers, setCurrentUser } from "../../reducers/userSlice";
 
 const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [error, setError] = useState("");
 
-const {currentUser, users} = useSelector((state) => state.users);
+  const { currentUser, users } = useSelector((state) => state.users);
 
   const username = currentUser && currentUser.username;
   const defaultAvatar = currentUser && currentUser.defaultAvatar;
@@ -49,7 +50,7 @@ const {currentUser, users} = useSelector((state) => state.users);
       dispatch(setCurrentUser(updatedUser));
 
       const updatedUsers = users.map((user) =>
-        user.id === userId ? updatedUser : user
+        user.id === userId ? updatedUser : user,
       );
       dispatch(setUsers(updatedUsers));
       closeAvatarModal();

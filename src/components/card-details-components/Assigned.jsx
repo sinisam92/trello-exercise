@@ -1,7 +1,8 @@
-import React from "react";
-import Avatar from "../common/Avatar";
-import AssignedIcon from "../../assets/icons/assigned.svg";
 import PropTypes from "prop-types";
+import React from "react";
+
+import AssignedIcon from "../../assets/icons/assigned.svg";
+import Avatar from "../common/Avatar";
 
 const Assigned = ({ thisCardsAssigned }) => {
   return (

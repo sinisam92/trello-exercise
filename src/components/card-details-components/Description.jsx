@@ -1,6 +1,7 @@
-import React from "react";
-import DescriptionIcon from "../../assets/icons/description.svg";
 import PropTypes from "prop-types";
+import React from "react";
+
+import DescriptionIcon from "../../assets/icons/description.svg";
 
 const Description = ({ thisCard }) => {
   return (

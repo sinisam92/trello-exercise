@@ -1,10 +1,11 @@
 import { Router } from "express";
+
 import {
+  addUser,
+  deleteUser,
   getAllUsers,
   getUserById,
-  deleteUser,
   updateUser,
-  addUser,
 } from "../controllers/userController.js";
 import { userValidation } from "../validators/userValidations.js";
 

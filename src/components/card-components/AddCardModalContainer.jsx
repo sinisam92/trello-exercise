@@ -1,6 +1,7 @@
-import React from "react";
-import AddCardModal from "./AddCardModal";
 import PropTypes from "prop-types";
+import React from "react";
+
+import AddCardModal from "./AddCardModal";
 
 const AddCardModalContainer = ({
   isOpen,

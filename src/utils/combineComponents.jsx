@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 const combineComponents = (...components) => {
   return components.reduce(
@@ -15,7 +15,7 @@ const combineComponents = (...components) => {
       CombinedComponent.propTypes = { children: PropTypes.node };
       return CombinedComponent;
     },
-    ({ children }) => <>{children}</>
+    ({ children }) => <>{children}</>,
   );
 };
 

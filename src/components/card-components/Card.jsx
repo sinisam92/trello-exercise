@@ -1,15 +1,16 @@
-import React, { useRef, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
 import PropTypes from "prop-types";
+import React, { useRef, useState } from "react";
 import { useLocation, useParams } from "wouter";
+
 import Comment from "../../assets/icons/comment.svg";
 import Dots from "../../assets/icons/dots.svg";
-import ListItem from "../list-components/ListItem";
-import Tag from "../card-details-components/Tag";
 import useClickOutside from "../../hooks/useClickOutside";
+import Tag from "../card-details-components/Tag";
 import Avatar from "../common/Avatar";
+import ListItem from "../list-components/ListItem";
 
 const Card = ({
   card,
@@ -36,9 +37,10 @@ const Card = ({
   const moveIconRef = useRef(null);
   const moveMenuRef = useRef(null);
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: card.id
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: card.id,
+    });
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -46,7 +48,7 @@ const Card = ({
   };
 
   useClickOutside([cardOptionsRef, optionsIconRef], () =>
-    setOpenCardOptionsId(null)
+    setOpenCardOptionsId(null),
   );
   useClickOutside([moveMenuRef, moveIconRef], () => setIsMoveMenuOpen(false));
 
@@ -79,11 +81,11 @@ const Card = ({
                       ...list,
                       cards: list.cards.filter((card) => card.id !== cardId),
                     }
-                  : list
+                  : list,
               ),
             }
-          : project
-      )
+          : project,
+      ),
     );
 
     setOpenCardOptionsId(null);
@@ -105,7 +107,7 @@ const Card = ({
 
             const updatedLists = proj.lists.map((list) => {
               const cardIndex = list.cards.findIndex(
-                (card) => card.id === selectedCardId
+                (card) => card.id === selectedCardId,
               );
               if (cardIndex !== -1) {
                 cardToMove = list.cards[cardIndex];
@@ -181,7 +183,7 @@ const Card = ({
             {card.assigned &&
               card.assigned.map((username) => {
                 const assignedUser = users.find(
-                  (user) => user.username === username
+                  (user) => user.username === username,
                 );
 
                 return (

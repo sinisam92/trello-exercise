@@ -1,10 +1,13 @@
+import moment from "moment";
+import PropTypes from "prop-types";
 import React from "react";
+import { useDispatch } from "react-redux";
+
 import CommentIcon from "../../assets/icons/comment.svg";
 import DotsSmall from "../../assets/icons/dots-small.svg";
-import moment from "moment";
+import { updateProject } from "../../reducers/projectSlice";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
-import PropTypes from "prop-types";
 
 const Comments = ({
   thisCard,
@@ -14,8 +17,36 @@ const Comments = ({
   commentsIconRef,
   openOptions,
   commentsOptionsRef,
-  handleDeleteComment,
+  currentProject,
 }) => {
+  const dispatch = useDispatch();
+
+  const handleDeleteComment = (cardId, commentId) => {
+    const updatedLists = currentProject.lists.map((list) => ({
+      ...list,
+      cards: list.cards.map((card) => {
+        if (card.id === cardId) {
+          const updatedComments = card.comments.filter(
+            (comment) =>
+              !(
+                comment.user === currentUser.username &&
+                comment.id === commentId
+              ),
+          );
+          return { ...card, comments: updatedComments };
+        }
+        return card;
+      }),
+    }));
+
+    const updatedProject = {
+      ...currentProject,
+      lists: updatedLists,
+    };
+
+    dispatch(updateProject(updatedProject));
+  };
+
   return (
     <>
       <div className="flex-shrink-0">
@@ -33,7 +64,7 @@ const Comments = ({
           <ul>
             {thisCard.comments.map((comment) => {
               const commentUser = users.find(
-                (user) => user.username === comment.user
+                (user) => user.username === comment.user,
               );
               return (
                 <li key={comment.id} className="flex mb-4">
@@ -110,6 +141,7 @@ Comments.propTypes = {
   currentUser: PropTypes.object,
   toggleOptions: PropTypes.func,
   commentsIconRef: PropTypes.object,
+  currentProject: PropTypes.object,
   openOptions: PropTypes.string,
   commentsOptionsRef: PropTypes.object,
   handleDeleteComment: PropTypes.func,

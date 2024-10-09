@@ -22,18 +22,16 @@ const removeCurrentUserFromLocalStorage = () => {
 };
 
 const registerNewUser = (newUser) => {
-    const users = loadUsersFromLocalStorage();
-    const updatedUsers = [...users, newUser];
-    saveUsersToLocalStorage(updatedUsers);
-    return updatedUsers;
+  const users = loadUsersFromLocalStorage();
+  const updatedUsers = [...users, newUser];
+  saveUsersToLocalStorage(updatedUsers);
+  return updatedUsers;
 };
 
 const initialState = {
   users: loadUsersFromLocalStorage(),
   currentUser: loadCurrentUserFromLocalStorage(),
 };
-console.log("initialState", initialState);
-
 const userSlice = createSlice({
   name: "users",
   initialState,
@@ -51,8 +49,8 @@ const userSlice = createSlice({
       removeCurrentUserFromLocalStorage();
     },
     registerUser(state, action) {
-        state.users.push(action.payload);
-        registerNewUser(action.payload);
+      state.users.push(action.payload);
+      registerNewUser(action.payload);
     },
   },
 });

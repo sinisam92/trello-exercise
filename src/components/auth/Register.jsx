@@ -1,12 +1,13 @@
-import React from "react";
-import Button from "../common/Button";
-import { useLocation, Link } from "wouter";
-import { v4 as uuidv4 } from "uuid";
-import { Formik, Form, useField } from "formik";
-import * as Yup from "yup";
+import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { Link, useLocation } from "wouter";
+import * as Yup from "yup";
+
 import { registerUser } from "../../reducers/userSlice";
+import Button from "../common/Button";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -33,7 +34,7 @@ const Register = () => {
   const handleRegister = (values, { setSubmitting, setErrors, resetForm }) => {
     const { username } = values;
     setSubmitting(true);
-    
+
     if (users.some((user) => user.username === username)) {
       setErrors({ username: "Username is already taken" });
     } else {

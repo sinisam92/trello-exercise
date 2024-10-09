@@ -1,6 +1,7 @@
 import React from "react";
-import ThemeSwitch from "../theme-components/ThemeSwitch";
+
 import ToggleSwitch from "../animation-components/ToggleSwitch";
+import ThemeSwitch from "../theme-components/ThemeSwitch";
 
 const Settings = () => {
   return (

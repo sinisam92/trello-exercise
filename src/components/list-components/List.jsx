@@ -1,11 +1,12 @@
-import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import { Link } from "wouter";
 import PropTypes from "prop-types";
+import React from "react";
+import { Link } from "wouter";
+
 import Dots from "../../assets/icons/dots.svg";
-import Card from "../card-components/Card";
 import AddNewCard from "../card-components/AddNewCard";
+import Card from "../card-components/Card";
 import ListItem from "./ListItem";
 
 const ListSection = ({
@@ -51,10 +52,10 @@ const ListSection = ({
         ? {
             ...proj,
             lists: proj.lists.map((list) =>
-              list.id === listId ? { ...list, name: newListName } : list
+              list.id === listId ? { ...list, name: newListName } : list,
             ),
           }
-        : proj
+        : proj,
     );
 
     setProjects(updatedProjects);
@@ -83,8 +84,8 @@ const ListSection = ({
       prevProjects.map((proj) =>
         proj.id === projectId
           ? { ...proj, lists: proj.lists.filter((list) => list.id !== listId) }
-          : proj
-      )
+          : proj,
+      ),
     );
 
     setDropdownListId(null);

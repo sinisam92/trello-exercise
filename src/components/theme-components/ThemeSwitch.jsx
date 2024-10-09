@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import ThemeModal from "./ThemeModal";
 
 const ThemeSwitch = () => {
@@ -18,7 +19,11 @@ const ThemeSwitch = () => {
         </button>
       </div>
 
-      <ThemeModal isOpen={isModalOpen} onClose={closeModal} title="Select Theme" />
+      <ThemeModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="Select Theme"
+      />
     </>
   );
 };

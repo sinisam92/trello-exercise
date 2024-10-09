@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
-import Select from "react-select";
+import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import { Formik, Form, useField } from "formik";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Select from "react-select";
+import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
-import { useSelector, useDispatch } from "react-redux";
+
 import { addProject, updateProject } from "../../reducers/projectSlice";
 
 const TextInput = ({ label, ...props }) => {
@@ -48,8 +49,8 @@ const ProjectForm = ({
 
   const { users, currentUser } = useSelector((state) => state.users);
   const currentProject = useSelector((state) =>
-    state.projects.projects.find((project) => project.id === editingProjectId)
-  ); 
+    state.projects.projects.find((project) => project.id === editingProjectId),
+  );
 
   /**
    *  Dummy data when new list is added
@@ -144,19 +145,19 @@ const ProjectForm = ({
    */
   const handleSaveEditedProject = (values) => {
     const { newProjectName, coverImageUrl } = values;
-  
+
     if (editingProjectId !== null && currentProject) {
       const updatedProject = {
         ...currentProject,
         name: newProjectName,
-        coverImage: coverImageUrl || '/src/assets/images/project3.jpg',
+        coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
       };
-  
+
       if (JSON.stringify(currentProject.members) !== JSON.stringify(members)) {
         updatedProject.members = members;
       }
-  
-      dispatch(updateProject(updatedProject)); 
+
+      dispatch(updateProject(updatedProject));
       setEditingProjectId(null);
     }
     setIsEditing(false);
@@ -189,7 +190,7 @@ const ProjectForm = ({
                 Yup.string().url().isValidSync(value) ||
                 value === "/src/assets/images/project3.jpg"
               );
-            }
+            },
           ),
         })}
         onSubmit={handleProjectAction}

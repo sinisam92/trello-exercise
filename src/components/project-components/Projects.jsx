@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
+import { useSearch } from "../../contexts/SearchContext";
+import Banner from "../common/Banner";
+import AddNewProject from "./AddNewProject";
+import AlertModal from "./AlertModal";
 import ProjectForm from "./ProjectForm";
 import ProjectItem from "./ProjectItem";
-import AlertModal from "./AlertModal";
-import { useSearch } from "../../contexts/SearchContext";
-import AddNewProject from "./AddNewProject";
-import PropTypes from "prop-types";
-import Banner from "../common/Banner";
-import { motion, AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
 
 const Projects = ({ isChildMenuOpen }) => {
   const [isAdding, setIsAdding] = useState(false);
@@ -32,11 +33,11 @@ const Projects = ({ isChildMenuOpen }) => {
   const userProjects = projects.filter(
     (project) =>
       project.members.includes(currentUser.username) ||
-      project.createdBy === currentUser.username
+      project.createdBy === currentUser.username,
   );
 
   const filteredProjects = userProjects.filter((project) =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase())
+    project.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   useEffect(() => {
