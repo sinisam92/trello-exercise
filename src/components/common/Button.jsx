@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import { twMerge } from "tailwind-merge";
 
 /**
@@ -34,7 +34,7 @@ const Button = ({ variation, size, label, extraClasses, ...props }) => {
     "font-bold rounded-lg inline-block leading-3 tracking-wider transition-colors duration-300",
     sizeClasses[size],
     mode[variation],
-    extraClasses
+    extraClasses,
   );
   return (
     <button type="button" className={classes} {...props}>

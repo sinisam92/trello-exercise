@@ -1,5 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
+
 import Plus from "../../assets/icons/plus.svg";
 
 const AddNewCard = ({
@@ -9,7 +10,7 @@ const AddNewCard = ({
   setIsCardEditing,
 }) => {
   const openModal = (list) => {
-    console.log('list selected', list);
+    console.log("list selected", list);
     setSelectedList(list);
     setIsCardEditing(false);
     setIsModalOpen(true);

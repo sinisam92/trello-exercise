@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import Card from "./Card";
-import useProjects from "../../hooks/useProjects";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+
+import Card from "./Card";
 
 const UsersCards = () => {
   const [cards, setCards] = useState([]);
 
   const { users, currentUser } = useSelector((state) => state.users);
-  const { projects } = useProjects();
+  const { projects } = useSelector((state) => state.projects);
   useEffect(() => {
     const getAllCards = projects
       .filter((project) => project.lists)
@@ -15,7 +15,7 @@ const UsersCards = () => {
       .flatMap((list) => list.cards || []);
 
     const userCards = getAllCards.filter((card) =>
-      card.assigned.includes(currentUser.username)
+      card.assigned.includes(currentUser.username),
     );
     setCards(userCards);
   }, []);

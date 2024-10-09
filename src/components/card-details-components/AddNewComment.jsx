@@ -1,65 +1,68 @@
-import React, { useState, useRef } from "react";
-import Avatar from "../common/Avatar";
-import Post from "../../assets/icons/post.svg";
 import moment from "moment";
-import { v4 as uuidv4 } from "uuid";
-import ReactQuill from "react-quill-new";
-import 'react-quill-new/dist/quill.bubble.css';;
 import PropTypes from "prop-types";
+import React, { useRef, useState } from "react";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.bubble.css";
+import { useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
-const AddNewComment = ({
-  currentUser,
-  projects,
-  project,
-  setProjects,
-  list,
-  thisCard,
-}) => {
+import Post from "../../assets/icons/post.svg";
+import { updateProject } from "../../reducers/projectSlice";
+import Avatar from "../common/Avatar";
+
+const AddNewComment = ({ currentUser, projects, project, list, thisCard }) => {
   const [commentText, setCommentText] = useState("");
 
   const quillRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleSetCommentText = (text) => {
     setCommentText(text);
-
   };
 
   const handleAddComment = (projectId, listId, cardId, commentText) => {
-    const updatedProjects = projects.map((project) => ({
-      ...project,
-      lists: project.lists.map((list) => ({
-        ...list,
-        cards: list.cards.map((card) => {
-          if (
-            project.id === projectId &&
-            list.id === listId &&
-            card.id === cardId
-          ) {
-            const newComment = {
-              id: uuidv4(),
-              text: commentText,
-              user: currentUser.username,
-              dateAdded: moment().toISOString(),
-            };
+    const updatedProject = projects.find((project) => project.id === projectId);
 
-            return {
-              ...card,
-              comments: [...(card.comments || []), newComment],
-            };
-          }
-          return card;
-        }),
-      })),
-    }));
+    if (!updatedProject) return;
 
-    setProjects(updatedProjects);
+    const updatedLists = updatedProject.lists.map((list) => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          cards: list.cards.map((card) => {
+            if (card.id === cardId) {
+              const newComment = {
+                id: uuidv4(),
+                text: commentText,
+                user: currentUser.username,
+                dateAdded: moment().toISOString(),
+              };
+
+              return {
+                ...card,
+                comments: [...(card.comments || []), newComment],
+              };
+            }
+            return card;
+          }),
+        };
+      }
+      return list;
+    });
+
+    const updatedProjectData = {
+      ...updatedProject,
+      lists: updatedLists,
+    };
+
+    dispatch(updateProject(updatedProjectData));
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (commentText.trim() === "") return;
     handleAddComment(project.id, list.id, thisCard.id, commentText);
-    setCommentText(""); 
+    setCommentText("");
     window.scrollTo(0, document.body.scrollHeight);
   };
 
@@ -97,7 +100,6 @@ AddNewComment.propTypes = {
   currentUser: PropTypes.object,
   projects: PropTypes.array,
   project: PropTypes.object,
-  setProjects: PropTypes.func,
   list: PropTypes.object,
   thisCard: PropTypes.object,
 };

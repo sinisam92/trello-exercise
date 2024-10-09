@@ -23,13 +23,13 @@ const projectSlice = createSlice({
     },
     deleteProject(state, action) {
       state.projects = state.projects.filter(
-        (project) => project.id !== action.payload
+        (project) => project.id !== action.payload,
       );
       saveProjectsToLocalStorage(state.projects);
     },
     updateProject(state, action) {
       const updatedProjects = state.projects.map((project) =>
-        project.id === action.payload.id ? action.payload : project
+        project.id === action.payload.id ? action.payload : project,
       );
       state.projects = updatedProjects;
       saveProjectsToLocalStorage(state.projects);

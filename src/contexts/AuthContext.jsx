@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
 import PropTypes from "prop-types";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("authToken") ? true : false
+    localStorage.getItem("authToken") ? true : false,
   );
 
   useEffect(() => {

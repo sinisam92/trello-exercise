@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "wouter";
-import useProjects from "../../hooks/useProjects";
+
 import useClickOutside from "../../hooks/useClickOutside";
-import Timestap from "./Timestap";
-import Comments from "./Comments";
 import AddNewComment from "./AddNewComment";
 import Assigned from "./Assigned";
-import Tags from "./Tags";
+import Comments from "./Comments";
 import Description from "./Description";
-import { useSelector } from "react-redux";
+import Tags from "./Tags";
+import Timestap from "./Timestap";
 
 const CardDetails = () => {
   const [openOptions, setOpenOptions] = useState(null);
@@ -16,7 +16,7 @@ const CardDetails = () => {
   const commentsOptionsRef = useRef(null);
   const commentsIconRef = useRef(null);
 
-  const { projects, setProjects } = useProjects();
+  const { projects } = useSelector((state) => state.projects);
   const { users, currentUser } = useSelector((state) => state.users);
 
   const { cardId } = useParams();
@@ -27,7 +27,7 @@ const CardDetails = () => {
   const thisCard = allCards.find((card) => card.id === cardId);
 
   const project = projects.find((project) =>
-    project.lists.some((list) => list.cards.includes(thisCard))
+    project.lists.some((list) => list.cards.includes(thisCard)),
   );
   const list = project.lists.find((list) => list.cards.includes(thisCard));
 
@@ -44,31 +44,8 @@ const CardDetails = () => {
   };
 
   useClickOutside([commentsOptionsRef, commentsIconRef], () =>
-    setOpenOptions(null)
+    setOpenOptions(null),
   );
-
-  const handleDeleteComment = (cardId, commentId) => {
-    const updatedProjects = projects.map((project) => ({
-      ...project,
-      lists: project.lists.map((list) => ({
-        ...list,
-        cards: list.cards.map((card) => {
-          if (card.id !== cardId) return card;
-
-          const updatedComments = card.comments.filter(
-            (comment) =>
-              !(
-                comment.user === currentUser.username &&
-                comment.id === commentId
-              )
-          );
-          return { ...card, comments: updatedComments };
-        }),
-      })),
-    }));
-
-    setProjects(updatedProjects);
-  };
 
   return (
     <>
@@ -97,12 +74,12 @@ const CardDetails = () => {
         <Comments
           users={users}
           currentUser={currentUser}
-          handleDeleteComment={handleDeleteComment}
           toggleOptions={toggleOptions}
           openOptions={openOptions}
           commentsOptionsRef={commentsOptionsRef}
           commentsIconRef={commentsIconRef}
           thisCard={thisCard}
+          currentProject={project}
         />
       </section>
       <section className="sticky bottom-0 bg-white">
@@ -110,7 +87,6 @@ const CardDetails = () => {
           currentUser={currentUser}
           projects={projects}
           project={project}
-          setProjects={setProjects}
           list={list}
           thisCard={thisCard}
         />

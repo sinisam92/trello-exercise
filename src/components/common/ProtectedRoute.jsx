@@ -1,7 +1,8 @@
-import React from "react";
-import { Route, Redirect } from "wouter";
-import { useAuth } from "../../contexts/AuthContext";
 import PropTypes from "prop-types";
+import React from "react";
+import { Redirect, Route } from "wouter";
+
+import { useAuth } from "../../contexts/AuthContext";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const { isAuthenticated } = useAuth();

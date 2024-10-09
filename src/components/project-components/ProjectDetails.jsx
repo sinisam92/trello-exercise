@@ -1,30 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
 import {
   DndContext,
+  DragOverlay,
   KeyboardSensor,
   PointerSensor,
+  closestCorners,
+  defaultDropAnimation,
   useSensor,
   useSensors,
-  DragOverlay,
-  defaultDropAnimation,
-  closestCorners,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "wouter";
+
 import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
 import useClickOutside from "../../hooks/useClickOutside";
+import { updateProject } from "../../reducers/projectSlice";
 import AddCardModalContainer from "../card-components/AddCardModalContainer";
+import Card from "../card-components/Card";
 import AddNewList from "../list-components/AddNewList";
 import List from "../list-components/List";
-import Card from "../card-components/Card";
-import { useSelector, useDispatch } from "react-redux";
-import { updateProject } from "../../reducers/projectSlice";
 
 const ProjectDetails = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -45,7 +46,7 @@ const ProjectDetails = () => {
   const { projects } = useSelector((state) => state.projects);
 
   const currentProject = useSelector((state) =>
-    state.projects.projects.find((project) => project.id === projectId)
+    state.projects.projects.find((project) => project.id === projectId),
   );
 
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ const ProjectDetails = () => {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragStart = (event) => {
@@ -76,10 +77,10 @@ const ProjectDetails = () => {
     const activeId = String(active.id);
     const overId = over ? String(over.id) : null;
     const activeList = currentProject.lists.find((list) =>
-      list.cards.some((card) => card.id === activeId)
+      list.cards.some((card) => card.id === activeId),
     );
     const overList = currentProject.lists.find((list) =>
-      list.cards.some((card) => card.id === overId)
+      list.cards.some((card) => card.id === overId),
     );
 
     if (!activeList || !overList || activeList === overList) {
@@ -213,14 +214,14 @@ const ProjectDetails = () => {
 
     if (activeId !== overId) {
       const activeList = currentProject.lists.find((list) =>
-        list.cards.some((card) => card.id === activeId)
+        list.cards.some((card) => card.id === activeId),
       );
       const overList = currentProject.lists.find((list) => list.id === overId);
 
       if (!activeList || !overList) return;
 
       const activeIndex = activeList.cards.findIndex(
-        (card) => card.id === activeId
+        (card) => card.id === activeId,
       );
 
       const overIndex = overList.cards.findIndex((card) => card.id === overId);
@@ -228,27 +229,30 @@ const ProjectDetails = () => {
       let updatedProject;
 
       // Same list: Move the card within the same list
+      console.log("activeList", activeList.id);
+      console.log("overList", overList.id);
 
       if (activeList.id === overList.id) {
-        console.log("Moving card withing the same list");
-        console.log("Before move:", activeList.cards);
-        updatedProject = {
+        const updatedCards = arrayMove(
+          activeList.cards,
+          activeIndex,
+          overIndex,
+        );
+
+        const updatedProject = {
           ...currentProject,
           lists: currentProject.lists.map((list) => {
             if (list.id === activeList.id) {
               return {
                 ...list,
-                cards: arrayMove(list.cards, activeIndex, overIndex),
+                cards: updatedCards,
               };
             }
             return list;
           }),
         };
-        console.log("updatedProject", updatedProject);
-        console.log(
-          "After move:",
-          updatedProject.lists.find((list) => list.id === activeList.id).cards
-        );
+
+        dispatch(updateProject(updatedProject));
       }
       // Different lists: Move the card to another list
       else {
@@ -298,7 +302,7 @@ const ProjectDetails = () => {
    *
    */
   useClickOutside([listMenuRef, listMenuIconRef], () =>
-    setDropdownListId(null)
+    setDropdownListId(null),
   );
 
   /**
@@ -383,7 +387,7 @@ const ProjectDetails = () => {
         users={users}
         assigned={card.assigned}
         list={currentProject.lists.find((list) =>
-          list.cards.some((c) => c.id === cardId)
+          list.cards.some((c) => c.id === cardId),
         )}
         project={currentProject}
         // setProjects={setProjects}

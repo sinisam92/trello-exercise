@@ -1,13 +1,14 @@
-import React, { useState, useRef } from "react";
-import { useLocation } from "wouter";
-import Button from "../common/Button";
-import { Link } from "wouter";
-import { useAuth } from "../../contexts/AuthContext";
-import { Formik, Form, useField } from "formik";
-import * as Yup from "yup";
+import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "wouter";
+import { Link } from "wouter";
+import * as Yup from "yup";
+
+import { useAuth } from "../../contexts/AuthContext";
 import { setCurrentUser } from "../../reducers/userSlice";
+import Button from "../common/Button";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -31,7 +32,7 @@ const Login = () => {
   const [_, navigate] = useLocation();
 
   const { users } = useSelector((state) => state.users);
-  
+
   const dispatch = useDispatch();
   const { login } = useAuth();
   const formRef = useRef(null);
@@ -52,7 +53,7 @@ const Login = () => {
           })}
           onSubmit={(values) => {
             const { username } = values;
-            
+
             const foundUser = users.find((user) => user.username === username);
 
             if (foundUser) {

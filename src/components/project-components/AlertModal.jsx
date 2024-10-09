@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 const AlertModal = ({ isOpen, onClose, title, message }) => {
   if (!isOpen) return null;

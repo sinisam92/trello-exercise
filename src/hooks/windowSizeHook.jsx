@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const useWindowDimensions = () => {
   const hasWindow = typeof window !== "undefined";
@@ -13,7 +13,7 @@ const useWindowDimensions = () => {
   };
 
   const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
+    getWindowDimensions(),
   );
 
   useEffect(() => {

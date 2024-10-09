@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { Switch, Route, Redirect } from "wouter";
+import { Provider } from "react-redux";
+import { Redirect, Route, Switch } from "wouter";
+
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
-import { useAuth } from "./contexts/AuthContext";
-import Projects from "./components/project-components/Projects";
-import ProjectDetails from "./components/project-components/ProjectDetails";
+import UserCards from "./components/card-components/UserCards";
+import CardDetailsContainer from "./components/card-details-components/CardDetailsContainer";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Header from "./components/header/Header";
-import Settings from "./components/settings-components/Settings";
-import CardDetailsContainer from "./components/card-details-components/CardDetailsContainer";
-import UserCards from "./components/card-components/UserCards";
 import Info from "./components/info-components/Info";
-import { Provider } from "react-redux";
+import ProjectDetails from "./components/project-components/ProjectDetails";
+import Projects from "./components/project-components/Projects";
+import Settings from "./components/settings-components/Settings";
+import { useAuth } from "./contexts/AuthContext";
 import store from "./store/store";
 
 const App = () => {

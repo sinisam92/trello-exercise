@@ -1,6 +1,8 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+
+import cors from "./middleware/cors.js";
 import userRouter from "./routes/userRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,8 +12,9 @@ const app = express();
 const port = 3044;
 
 app.use(express.json());
+app.use(cors);
 
-app.use('/users', userRouter);
+app.use("/users", userRouter);
 
 //Fallback route
 app.get("*", (_req, res) => {

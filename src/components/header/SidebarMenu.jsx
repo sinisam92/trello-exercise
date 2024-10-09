@@ -1,10 +1,11 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
+import { useLocation } from "wouter";
+
 import Cards from "../../assets/icons/cards.svg";
-import Settings from "../../assets/icons/settings.svg";
 import Info from "../../assets/icons/info.svg";
 import Logout from "../../assets/icons/logout.svg";
-import { useLocation } from "wouter";
+import Settings from "../../assets/icons/settings.svg";
 
 const SidebarMenu = ({ currentUser, handleLogout, handleCloseSidebar }) => {
   const [_, navigate] = useLocation();

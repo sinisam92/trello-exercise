@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation } from "wouter";
+
 import Bell from "../../assets/icons/bell.svg";
 import Menu from "../../assets/icons/menu.svg";
 import Return from "../../assets/icons/return.svg";
 import Search from "../../assets/icons/search.svg";
-import { useLocation } from "wouter";
-import { dynamicFontForLongStrings } from "../../utils/helperFunctions";
-import { motion } from "framer-motion";
-import Sidebar from "./Sidebar";
-import { useSearch } from "../../contexts/SearchContext";
-import useProjects from "../../hooks/useProjects";
 import { useAnimation } from "../../contexts/AnimationContext";
-import { useSelector } from "react-redux";
+import { useSearch } from "../../contexts/SearchContext";
+import { dynamicFontForLongStrings } from "../../utils/helperFunctions";
+import Sidebar from "./Sidebar";
 
 const Header = ({ setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ const Header = ({ setIsChildMenuOpen }) => {
   const { currentUser } = useSelector((state) => state.users);
 
   const { searchTerm, setSearchTerm } = useSearch();
-  const { projects } = useProjects();
+  const { projects } = useSelector((state) => state.projects);
   const { animationsEnabled } = useAnimation();
 
   const getParamsFromUrl = () => {

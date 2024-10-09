@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useAnimation } from "../../contexts/AnimationContext";
 
 const ToggleSwitch = () => {

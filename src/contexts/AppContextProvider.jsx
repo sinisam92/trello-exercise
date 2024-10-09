@@ -1,9 +1,8 @@
+import combineComponents from "../utils/combineComponents";
 import { AnimationProvider } from "./AnimationContext";
 import { AuthProvider } from "./AuthContext";
 import { SearchProvider } from "./SearchContext";
 import { ThemeProvider } from "./ThemeContext";
-
-import combineComponents from "../utils/combineComponents";
 
 const providers = [
   AuthProvider,

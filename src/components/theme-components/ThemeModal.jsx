@@ -1,6 +1,7 @@
+import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
+
 import Close from "../../assets/icons/close.svg";
 import { useTheme } from "../../contexts/ThemeContext";
 
@@ -52,7 +53,7 @@ const ThemeModal = ({ isOpen, onClose, title, children }) => {
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 

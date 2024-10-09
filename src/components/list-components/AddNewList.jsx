@@ -1,8 +1,9 @@
+import PropTypes from "prop-types";
 import React, { useState } from "react";
-import Plus from "../../assets/icons/plus.svg";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "wouter";
-import PropTypes from "prop-types";
+
+import Plus from "../../assets/icons/plus.svg";
 
 const AddNewList = ({
   isAdding,
@@ -39,8 +40,8 @@ const AddNewList = ({
       prevProjects.map((project) =>
         project.id === projectId
           ? { ...project, lists: [...project.lists, newList] }
-          : project
-      )
+          : project,
+      ),
     );
 
     setNewListName("");
