@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { useSearch } from "../../contexts/SearchContext";
+// import { fetchProjects } from "../../reducers/projectSlice";
 import Banner from "../common/Banner";
 import AddNewProject from "./AddNewProject";
 import AlertModal from "./AlertModal";
@@ -25,6 +26,7 @@ const Projects = ({ isChildMenuOpen }) => {
   const [modalMessage, setModalMessage] = useState("");
 
   const { searchTerm } = useSearch();
+  // const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state) => state.users);
   const { projects } = useSelector((state) => state.projects);
