@@ -1,8 +1,6 @@
-import { v4 as uuidv4 } from "uuid";
-
 const projects = [
   {
-    id: uuidv4(),
+    id: "74ec1eb5-11ef-42dd-83de-c4d30267a33b",
     name: "Task Management",
     slug: "task-management",
     description: "A simple task management app",
@@ -13,14 +11,14 @@ const projects = [
     members: ["Sinisa"],
     lists: [
       {
-        id: uuidv4(),
+        id: "3ee80e49-51dc-448e-8c3f-262c8eccf4e5",
 
         name: "Planning",
         slug: "planning",
         dateAdded: "2024-09-01",
         cards: [
           {
-            id: uuidv4(),
+            id: "f0a1ed9b-fa81-4395-b763-e97b844aa849",
             title: "Planning Task 1",
             description: "Description of task 1",
             dateAdded: "2024-09-01",
@@ -31,7 +29,7 @@ const projects = [
             comments: [],
           },
           {
-            id: uuidv4(),
+            id: "5e8ed33a-591a-47db-bc08-abd8a38afbe6",
             title: "Planning Task 2",
             description: "Description of task 2",
             dateAdded: "2024-09-01",
@@ -44,13 +42,13 @@ const projects = [
         ],
       },
       {
-        id: uuidv4(),
+        id: "1b6d124e-6c12-4e5c-bbf0-1fe637170fef",
         name: "Todo",
         slug: "todo",
         dateAdded: "2024-08-01",
         cards: [
           {
-            id: uuidv4(),
+            id: "777af1e6-2122-40c2-8dae-215fdb57b6c7",
             title: "Todo Task 1",
             description: "Description of task 1",
             dateAdded: "2024-07-01",
@@ -61,7 +59,7 @@ const projects = [
             comments: [],
           },
           {
-            id: uuidv4(),
+            id: "1f72016a-9643-4022-99cf-7e42714171db",
             title: "Todo Task 2",
             description: "Description of task 2",
             dateAdded: "2024-08-01",
@@ -72,7 +70,7 @@ const projects = [
             comments: [],
           },
           {
-            id: uuidv4(),
+            id: "7f695db6-c4c2-40c0-b970-8960afab87dc",
             title: "Todo Task 3",
             description: "Description of task 3",
             dateAdded: "2024-10-01",
@@ -85,13 +83,13 @@ const projects = [
         ],
       },
       {
-        id: uuidv4(),
+        id: "f74d50ad-681e-4e30-973b-52e40f077ce7",
         name: "Done",
         slug: "done",
         dateAdded: "2024-09-01",
         cards: [
           {
-            id: uuidv4(),
+            id: "88012964-e9e1-47dc-8688-8dffe8f1febf",
             title: "Done Task 5",
             description: "Description of task 5",
             dateAdded: "2024-12-01",
@@ -106,7 +104,7 @@ const projects = [
     ],
   },
   {
-    id: uuidv4(),
+    id: "d25b69c7-1855-40e3-bf2e-725967b0afa6",
     name: "Task Management 2",
     slug: "task-management",
     description: "A simple task management app",
@@ -117,14 +115,14 @@ const projects = [
     members: ["Anna"],
     lists: [
       {
-        id: uuidv4(),
+        id: "f7f53bee-8d11-471c-8b41-55cd2889934e",
 
         name: "Planning",
         slug: "planning",
         dateAdded: "2024-09-01",
         cards: [
           {
-            id: uuidv4(),
+            id: "9641b039-13a1-4347-ab6b-d897b2010904",
             title: "Planning Task 1",
             description: "Description of task 1",
             dateAdded: "2024-09-01",
@@ -135,7 +133,7 @@ const projects = [
             comments: [],
           },
           {
-            id: uuidv4(),
+            id: "b566cefc-80bc-4b40-a2b1-5fbceb1d4aa4",
             title: "Planning Task 2",
             description: "Description of task 2",
             dateAdded: "2024-09-01",
@@ -148,13 +146,13 @@ const projects = [
         ],
       },
       {
-        id: uuidv4(),
+        id: "0abf7aa6-4d68-4025-a586-b78a80463846",
         name: "Todo",
         slug: "todo",
         dateAdded: "2024-08-01",
         cards: [
           {
-            id: uuidv4(),
+            id: "721f64ac-87f5-4213-b02f-4f2b9ab03c44",
             title: "Todo Task 1",
             description: "Description of task 1",
             dateAdded: "2024-07-01",
@@ -165,7 +163,7 @@ const projects = [
             comments: [],
           },
           {
-            id: uuidv4(),
+            id: "66065717-bef2-437c-93ff-df379bd82ba1",
             title: "Todo Task 2",
             description: "Description of task 2",
             dateAdded: "2024-08-01",
@@ -176,7 +174,7 @@ const projects = [
             comments: [],
           },
           {
-            id: uuidv4(),
+            id: "ce13315d-4136-4fff-b626-a294c50a6300",
             title: "Todo Task 3",
             description: "Description of task 3",
             dateAdded: "2024-10-01",
@@ -189,13 +187,13 @@ const projects = [
         ],
       },
       {
-        id: uuidv4(),
+        id: "289519c3-1b14-4dfc-a2ff-98c349f5ce7c",
         name: "Done",
         slug: "done",
         dateAdded: "2024-09-01",
         cards: [
           {
-            id: uuidv4(),
+            id: "88f1a662-c7b0-4205-a243-80cc1a33ae6d",
             title: "Done Task 5",
             description: "Description of task 5",
             dateAdded: "2024-12-01",

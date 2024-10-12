@@ -11,9 +11,13 @@ import { userValidation } from "../validators/userValidations.js";
 
 const router = Router();
 
-router.route("/").get(getAllUsers).post(userValidation, addUser);
-router
-  .route("/:id")
+// prettier-ignore
+router.route("/")
+  .get(getAllUsers)
+  .post(userValidation, addUser);
+
+// prettier-ignore
+router.route("/:id")
   .get(getUserById)
   .delete(deleteUser)
   .put(userValidation, updateUser);

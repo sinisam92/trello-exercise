@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 
 const userValidation = [
-  body("name")
+  body("username")
     .isString()
     .withMessage("Name must be a string")
     .notEmpty()
