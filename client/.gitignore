@@ -24,3 +24,5 @@ jspm_packages/
 # OS specific files
 Thumbs.db
 
+
+*storybook.log
