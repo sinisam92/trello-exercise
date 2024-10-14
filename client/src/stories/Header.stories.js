@@ -1,9 +1,10 @@
-import { Header } from "../components/Header";
 import { fn } from "@storybook/test";
 import { withReactContext } from "storybook-react-context";
-import { AuthProvider } from "../contexts/AuthContext";
-// import { useAuth } from "../contexts/AuthContext";
 
+import Header from "../components/header/Header";
+import { AuthProvider } from "../contexts/AuthContext";
+
+// import { useAuth } from "../contexts/AuthContext";
 
 export default {
   title: "Components/Header",
@@ -22,8 +23,9 @@ export const Default = {
   parameters: {
     reactContext: {
       context: AuthProvider,
-      contextValue: {  isAuthenticated: true },
-    }},
+      contextValue: { isAuthenticated: true },
+    },
+  },
   args: {
     hasNotification: false,
   },

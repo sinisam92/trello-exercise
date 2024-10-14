@@ -1,5 +1,6 @@
 import { fn } from "@storybook/test";
-import Card from "../components/Card";
+
+import Card from "../components/card-components/Card";
 
 export default {
   title: "Components/Card",
