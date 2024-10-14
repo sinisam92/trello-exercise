@@ -13,7 +13,7 @@ const getProjectById = (req, res) => {
     return res.status(404).json({ message: "Project not found" });
   }
 
-  res.json(project);
+  res.status(200).json(project);
 };
 
 const createProject = (req, res) => {
@@ -55,7 +55,7 @@ const updateProject = (req, res) => {
   const updatedProject = { ...projects[projectIndex], ...req.body };
   projects[projectIndex] = updatedProject;
 
-  res.json(updatedProject);
+  res.status(200).json(updatedProject);
 };
 
 export { getAllProjects, getProjectById, createProject, deleteProject, updateProject };

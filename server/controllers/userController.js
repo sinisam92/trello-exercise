@@ -39,7 +39,7 @@ const getUserById = (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  res.json(user);
+  res.status(200).json(user).end();
 };
 
 const deleteUser = (req, res) => {

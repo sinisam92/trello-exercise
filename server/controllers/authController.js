@@ -6,21 +6,19 @@ import { validationResult } from "express-validator";
 
 const register = async (req, res) => {
   const { username, firstName, lastName, email, password, avatarUrl } = req.body;
-  const salt = 10;
 
   try {
-    const existingUser = users.find((user) => user.username === username);
+    const existingUser = users.find((user) => user.email === email);
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-    const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = {
       username,
       firstName,
       lastName,
       email,
       avatarUrl,
-      password: hashedPassword,
+      password,
     };
     users.push(newUser);
     res.status(201).json({ message: "User created" });
@@ -30,32 +28,25 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { username, password } = req.body;
-  console.log(req.body);
+  const { email, password } = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
   }
 
-  const user = users.find((user) => user.username === username);
-  console.log("User", user);
+  const user = users.find((user) => user.email === email);
 
   if (!user) {
     return res.status(400).json({ message: "User not found" });
   }
 
   try {
-    console.log(await bcrypt.compare(password, user.password));
     if (await bcrypt.compare(password, user.password)) {
-      console.log("TEST LOG");
-      console.log("process.env", process.env.TOKEN_SECRET);
-
-      const token = jwt.sign({ username }, process.env.TOKEN_SECRET);
-      //   res.cookie("token", token, {
-      //     httpOnly: true,
-      //     // maxAge: 900000,
-      //   });
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.TOKEN_SECRET
+      );
       res.status(200).json({ token });
     } else {
       res.status(401).json({ message: "Invalid credentials" });

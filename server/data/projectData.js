@@ -9,13 +9,14 @@ const projects = [
     dateAdded: "2024-09-01",
     createdBy: "Sinisa",
     members: ["Sinisa"],
+    createByUserId: "7915e5ba-649e-4bc1-b1e9-2906a287f8be",
     lists: [
       {
         id: "3ee80e49-51dc-448e-8c3f-262c8eccf4e5",
-
         name: "Planning",
         slug: "planning",
         dateAdded: "2024-09-01",
+        //projectId add
         cards: [
           {
             id: "f0a1ed9b-fa81-4395-b763-e97b844aa849",
@@ -27,6 +28,8 @@ const projects = [
             status: "planning",
             tags: ["important", "critical"],
             comments: [],
+            //add userID to track who created card
+            //add project ID
           },
           {
             id: "5e8ed33a-591a-47db-bc08-abd8a38afbe6",
@@ -113,6 +116,7 @@ const projects = [
     dateAdded: "2024-09-01",
     createdBy: "Anna",
     members: ["Anna"],
+    createByUserId: "a44b5d3e-77d6-4429-83f2-2d80312c57f5",
     lists: [
       {
         id: "f7f53bee-8d11-471c-8b41-55cd2889934e",

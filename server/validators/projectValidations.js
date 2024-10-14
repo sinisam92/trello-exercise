@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-
+// add trim and esacpe to some fields
 const projectValidation = [
   body("name")
     .isString()
@@ -20,4 +20,9 @@ const projectValidation = [
   body("comments").isArray().withMessage("Comments must be an array").optional(),
 ];
 
-export { projectValidation };
+const addProjectValidation = [
+  ...projectValidation,
+  body("id").isUUID().withMessage("ID must be a valid and unique UUID"),
+];
+
+export { projectValidation, addProjectValidation };

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isUserLoggedIn } from "../middleware/authMiddleware.js";
 
 import {
   addUser,
@@ -7,19 +8,22 @@ import {
   getUserById,
   updateUser,
 } from "../controllers/userController.js";
-import { userValidation } from "../validators/userValidations.js";
+import {
+  registerValidation,
+  updateUserValidation,
+} from "../validators/authValidations.js";
 
 const router = Router();
 
 // prettier-ignore
 router.route("/")
   .get(getAllUsers)
-  .post(userValidation, addUser);
+  .post(registerValidation, addUser);
 
 // prettier-ignore
 router.route("/:id")
-  .get(getUserById)
-  .delete(deleteUser)
-  .put(userValidation, updateUser);
+  .get(isUserLoggedIn, getUserById)
+  .delete(isUserLoggedIn, deleteUser)
+  .put(isUserLoggedIn, updateUserValidation, updateUser);
 
 export default router;

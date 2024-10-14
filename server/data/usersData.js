@@ -109,6 +109,15 @@ const users = [
     defaultAvatar: "S",
     avatarUrl: "",
   },
+  {
+    id: "c4b3767d-8d64-4d17-bd70-0e0b98f07ef91",
+    username: "Test",
+    firstName: "Test",
+    lastName: "Sinisa",
+    email: "test@123.com",
+    password: "$2b$10$s4Dj2KDaojjBnFuv9GhzQOT7qg3.ZaYcPZEMPh3s0PXjtgeIseog.",
+    avatarUrl: "",
+  },
 ];
 
 export default users;
