@@ -24,13 +24,13 @@ const loginValidation = [
 // prettier-ignore
 const registerValidation = [
   ...commonValidation,
-  param("id")
-    .isUUID()
-    .withMessage("ID must be a valid and unique UUID"),
-  body("id")
-    .isUUID()
-    .withMessage("ID must be a valid and unique UUID")
-    .optional(),
+  // param("_id")
+  //   .isUUID()
+  //   .withMessage("ID must be a valid and unique UUID"),
+  // body("id")
+  //   .isUUID()
+  //   .withMessage("ID must be a valid and unique UUID")
+  //   .optional(),
   body("username")
     .isString()
     .withMessage("Username must be a string")

@@ -22,7 +22,7 @@ const addUser = async (req, res) => {
   const salt = 10;
 
   try {
-    const checkIfExists = await User.findOne({ email: newUserData.email });
+    const checkIfExists = await User.findOne({ email: newUser.email });
     if (checkIfExists) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -45,7 +45,7 @@ const getUserById = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
-    const user = await User.findOne({ id: paramsId });
+    const user = await User.findById(paramsId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -61,7 +61,7 @@ const deleteUser = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
-    const user = await User.findOneAndDelete({ id: paramsId });
+    const user = await User.findByIdAndDelete(paramsId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -84,7 +84,7 @@ const updateUser = async (req, res) => {
   const updatedData = req.body;
 
   try {
-    const user = await User.findOneAndUpdate({ id: paramsId }, updatedData, {
+    const user = await User.findByIdAndUpdate(paramsId, updatedData, {
       new: true,
       runValidators: true,
     });

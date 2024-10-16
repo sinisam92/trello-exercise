@@ -17,13 +17,13 @@ const router = Router();
 
 // prettier-ignore
 router.route("/")
-  .get(isUserLoggedIn, getAllUsers)
+  .get(getAllUsers)
   .post(registerValidation, addUser);
 
 // prettier-ignore
 router.route("/:id")
-  .get(isUserLoggedIn, getUserById)
-  .delete(isUserLoggedIn, deleteUser)
-  .put(isUserLoggedIn, updateUser);
+  .get( getUserById)
+  .delete( deleteUser)
+  .put( updateUser);
 
 export default router;

@@ -3,10 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 const commentSchema = new mongoose.Schema(
   {
-    id: {
+    _id: {
       type: String,
       default: uuidv4,
-      unique: true,
       required: true,
     },
     userId: {
@@ -28,4 +27,6 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-export default commentSchema;
+const Comment = mongoose.model("Comment", commentSchema);
+
+export default Comment;

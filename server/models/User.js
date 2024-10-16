@@ -3,10 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 const userSchema = new mongoose.Schema(
   {
-    id: {
+    _id: {
       type: String,
       default: uuidv4,
-      unique: true,
       required: true,
     },
     username: {
@@ -46,14 +45,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    // createAt: {
-    //   type: Date,
-    //   default: Date.now,
-    // },
-    // updatedAt: {
-    //   type: Date,
-    //   default: Date.now,
-    // },
   },
   { timestamps: true }
 );

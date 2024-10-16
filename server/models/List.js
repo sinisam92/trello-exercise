@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
+import { SiUniqlo } from "react-icons/si";
 import { v4 as uuidv4 } from "uuid";
-import { cardSchema } from "./Card.js";
 
 const listSchema = new mongoose.Schema(
   {
@@ -26,14 +26,22 @@ const listSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cards: {
-      type: [cardSchema],
-      default: [],
-    },
+    // cards: {
+    //   type: Array,
+    // },
+    // cards: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Card",
+    //   },
+    // ],
   },
   {
     timestamps: true,
   }
 );
 
-export { listSchema };
+const List = mongoose.model("List", listSchema);
+// export { listSchema };
+
+export default List;

@@ -8,6 +8,9 @@ import cors from "./middleware/cors.js";
 import userRouter from "./routes/userRoutes.js";
 import projectRouter from "./routes/projectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import listRoutes from "./routes/listRoutes.js";
+import cardRoutes from "./routes/cardRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 import connectDB from "./db/db.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,6 +29,9 @@ connectDB();
 app.use("/users", userRouter);
 app.use("/projects", projectRouter);
 app.use("/api/auth", authRoutes);
+app.use("/lists", listRoutes);
+app.use("/cards", cardRoutes);
+app.use("/comments", commentRoutes);
 
 //Fallback route
 app.get("*", (_req, res) => {

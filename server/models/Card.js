@@ -4,20 +4,19 @@ import commentSchema from "./Comment.js";
 
 const cardSchema = new mongoose.Schema(
   {
-    id: {
+    _id: {
       type: String,
       default: uuidv4,
-      unique: true,
       required: true,
     },
     listId: {
       type: String,
       required: true,
     },
-    userId: {
-      type: String,
-      required: true,
-    },
+    // userId: {
+    //   type: String,
+    //   required: true,
+    // },
     title: {
       type: String,
       required: true,
@@ -41,11 +40,16 @@ const cardSchema = new mongoose.Schema(
     tags: {
       type: Array,
     },
-    comments: [commentSchema],
+    // comments: {
+    //   type: Array,
+    //   default: [],
+    // },
   },
   {
     timestamps: true,
   }
 );
 
-export { cardSchema };
+const Card = mongoose.model("Card", cardSchema);
+
+export default Card;
