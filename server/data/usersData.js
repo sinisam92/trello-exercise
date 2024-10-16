@@ -5,7 +5,8 @@ const users = [
     firstName: "John",
     lastName: "Doe",
     email: "john.doe@example.com",
-    password: "Password123!",
+    // password in DB
+    password: "$2a$10$MdR6z0cQR3wwucjtSEaoXepg0H.LGLLkqHmZnavyx4d4FhSTLyMP6", // test1
     role: "admin",
     defaultAvatar: "J",
     avatarUrl: "",

@@ -8,6 +8,7 @@ import cors from "./middleware/cors.js";
 import userRouter from "./routes/userRoutes.js";
 import projectRouter from "./routes/projectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import connectDB from "./db/db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cors);
 app.use(cookieParser());
 dotenv.config();
+connectDB();
 
 // Routes
 app.use("/users", userRouter);

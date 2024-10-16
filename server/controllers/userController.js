@@ -1,9 +1,15 @@
-import users from "../data/usersData.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import User from "../models/User.js";
 
-const getAllUsers = (_req, res) => {
-  res.status(200).json(users);
+const getAllUsers = async (_req, res) => {
+  try {
+    const users = await User.find();
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching users!" });
+  }
 };
 
 const addUser = async (req, res) => {
@@ -16,61 +22,82 @@ const addUser = async (req, res) => {
   const salt = 10;
 
   try {
+    const checkIfExists = await User.findOne({ email: newUserData.email });
+    if (checkIfExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
     const hashedPassword = await bcrypt.hash(newUser.password, salt);
     newUser.password = hashedPassword;
+
+    const userToAdd = new User(newUser);
+
+    const savedUser = await userToAdd.save();
+
+    res.status(201).json(savedUser);
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: "Error hashing password, contact administrator." });
+    console.error("Error during user creation:", error);
+    res.status(500).json({ error: "Error hashing password, contact administrator." });
   }
-  //TODO: this part will change when we connect to a database, as uuid will be used
-  const newId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
-  const userToAdd = { id: newId, ...newUser };
-
-  users.push(userToAdd);
-  res.status(201).json(userToAdd);
 };
 
-const getUserById = (req, res) => {
+const getUserById = async (req, res) => {
   const paramsId = req.params.id;
-  const user = users.find((u) => u.id == paramsId);
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findOne({ id: paramsId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching user!" });
   }
-
-  res.status(200).json(user).end();
 };
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
   const paramsId = req.params.id;
-  const userIndex = users.findIndex((u) => u.id === paramsId);
 
-  if (userIndex === -1) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await User.findOneAndDelete({ id: paramsId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // prettier-ignore
+    res.status(204).end();
+  } catch (error) {
+    console.error("Error during user deletion:", error);
+    res.status(500).json({ error: "Error deleting user, contact administrator." });
   }
-
-  users.splice(userIndex, 1);
-  res.status(204).end();
 };
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   const errors = validationResult(req);
-  const paramsId = req.params.id;
-  const userIndex = users.findIndex((u) => u.id === paramsId);
-
-  // Check if user exists
-  if (userIndex === -1) {
-    return res.status(404).json({ message: "User not found" });
-  }
-  // Checks for validation errors
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
   }
-  const updatedUser = { ...users[userIndex], ...req.body };
-  users[userIndex] = updatedUser;
 
-  res.json(updatedUser);
+  const paramsId = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const user = await User.findOneAndUpdate({ id: paramsId }, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(201).json(user);
+  } catch (error) {
+    console.error("Error during user update:", error);
+    res.status(500).json({ error: "Error updating user, contact administrator." });
+  }
 };
 
 export { getAllUsers, addUser, getUserById, deleteUser, updateUser };

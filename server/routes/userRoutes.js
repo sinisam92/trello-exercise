@@ -10,20 +10,20 @@ import {
 } from "../controllers/userController.js";
 import {
   registerValidation,
-  updateUserValidation,
+  // updateUserValidation,
 } from "../validators/authValidations.js";
 
 const router = Router();
 
 // prettier-ignore
 router.route("/")
-  .get(getAllUsers)
+  .get(isUserLoggedIn, getAllUsers)
   .post(registerValidation, addUser);
 
 // prettier-ignore
 router.route("/:id")
   .get(isUserLoggedIn, getUserById)
   .delete(isUserLoggedIn, deleteUser)
-  .put(isUserLoggedIn, updateUserValidation, updateUser);
+  .put(isUserLoggedIn, updateUser);
 
 export default router;
