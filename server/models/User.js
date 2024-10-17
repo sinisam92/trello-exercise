@@ -48,8 +48,21 @@ const UserSchema = new mongoose.Schema(
       required: false,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
+
+UserSchema.virtual('fullName').get(function () {
+  return this.firstName + ' ' + this.lastName;
+});
 
 //Find by the token
 UserSchema.statics.findByToken = function (token) {
