@@ -1,3 +1,4 @@
+// this wfile will be deleted in the future it has become redundant
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 

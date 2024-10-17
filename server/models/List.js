@@ -25,13 +25,11 @@ const listSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // cards: {
-    //   type: Array,
-    // },
     // cards: [
     //   {
-    //     type: mongoose.Schema.Types.ObjectId,
+    //     type: String,
     //     ref: "Card",
+    //     required: true,
     //   },
     // ],
   },
@@ -41,6 +39,5 @@ const listSchema = new mongoose.Schema(
 );
 
 const List = mongoose.model("List", listSchema);
-// export { listSchema };
 
 export default List;

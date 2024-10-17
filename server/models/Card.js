@@ -13,6 +13,7 @@ const cardSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // Do I need this?
     // userId: {
     //   type: String,
     //   required: true,
@@ -40,6 +41,10 @@ const cardSchema = new mongoose.Schema(
     tags: {
       type: Array,
     },
+    //will be implemented in future
+    // updates: {
+    //   type: Array,
+    // },
     // comments: {
     //   type: Array,
     //   default: [],

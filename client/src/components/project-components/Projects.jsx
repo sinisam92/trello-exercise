@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { useSearch } from "../../contexts/SearchContext";
-// import { fetchProjects } from "../../reducers/projectSlice";
+import { fetchProjects } from "../../reducers/projectSlice";
 import Banner from "../common/Banner";
 import AddNewProject from "./AddNewProject";
 import AlertModal from "./AlertModal";
@@ -26,7 +26,7 @@ const Projects = ({ isChildMenuOpen }) => {
   const [modalMessage, setModalMessage] = useState("");
 
   const { searchTerm } = useSearch();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state) => state.users);
   const { projects } = useSelector((state) => state.projects);
@@ -34,13 +34,17 @@ const Projects = ({ isChildMenuOpen }) => {
 
   const userProjects = projects.filter(
     (project) =>
-      project.members.includes(currentUser.username) ||
+      project.members?.includes(currentUser.username) ||
       project.createdBy === currentUser.username,
   );
 
   const filteredProjects = userProjects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  useEffect(() => {
+    dispatch(fetchProjects());
+  }, [dispatch]);
 
   useEffect(() => {
     if (showBanner) {

@@ -27,14 +27,6 @@ const projectSchema = new mongoose.Schema(
       maxLength: 500,
     },
     lists: [{ type: String, required: true, ref: "List" }],
-    //   lists: {
-    //     type: [listSchema],
-    //     default: [],
-    //   },
-    // lists: {
-    //   type: Array,
-    //   default: [],
-    // },
     coverImage: {
       type: String,
     },
