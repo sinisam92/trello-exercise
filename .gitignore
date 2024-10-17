@@ -10,36 +10,35 @@ mangoData.txt
 
 
 # Node.js
-server/node_modules/
-server/.env
-server/.env.development
-
+/server/node_modules/
+/server/.env
+/server/.env.development
 
 # React
-client/node_modules/
-client/.env
-client/build
+/client/node_modules/
+/client/.env
+/client/build
 
 # Logs
-client/logs
-client/*.log
-client/npm-debug.log*
+/client/logs
+/client/*.log
+/client/npm-debug.log*
 
 # Build output
-client/dist/
-client/build/
+/client/dist/
+/client/build/
 
 # Dependency directories
-client/jspm_packages/
+/client/jspm_packages/
 
 # IDE specific files
-client/.idea/
-client/.vscode/
-client/.DS_Store
+/client/.idea/
+/client/.vscode/
+/client/.DS_Store
 
 # OS specific files
-client/Thumbs.db
+/client/Thumbs.db
 
 
-client/*storybook.log
+/client/*storybook.log
 
