@@ -1,6 +1,7 @@
 import projects from "../data/projectData.js";
 import { validationResult } from "express-validator";
 import Project from "../models/Project.js";
+import List from "../models/List.js";
 
 const getAllProjects = async (_req, res) => {
   try {
@@ -95,4 +96,59 @@ const updateProject = async (req, res) => {
   }
 };
 
-export { getAllProjects, getProjectById, createProject, deleteProject, updateProject };
+const addListToProject = async (req, res) => {
+  const { projectId } = req.params;
+  console.log("projectId", projectId);
+
+  const listData = req.body;
+
+  try {
+    const newList = new List(listData);
+    await newList.save();
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    console.log("project.lists", project.lists);
+    project.lists.push(newList._id);
+
+    await project.save();
+
+    res.status(201).json(newList);
+  } catch (error) {
+    console.error("Error adding list to project:", error);
+    res.status(500).json({ error: "Error adding list to project!" });
+  }
+};
+
+const getProjectWithLists = async (req, res) => {
+  const { projectId } = req.params;
+
+  try {
+    console.log(`Fetching project with ID: ${projectId}`);
+    const project = await Project.findById(projectId).populate("lists");
+
+    if (!project) {
+      console.log("Project not found");
+      return res.status(404).json({ message: "Project not found" });
+    }
+    console.log("Project with populated lists:", project);
+
+    res.json(project);
+  } catch (error) {
+    console.error("Error fetching project with lists:", error);
+    res.status(500).json({ error: "Error fetching project with lists!" });
+  }
+};
+
+export {
+  getAllProjects,
+  getProjectById,
+  createProject,
+  deleteProject,
+  updateProject,
+  addListToProject,
+  getProjectWithLists,
+};

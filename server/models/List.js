@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { SiUniqlo } from "react-icons/si";
 import { v4 as uuidv4 } from "uuid";
 
 const listSchema = new mongoose.Schema(

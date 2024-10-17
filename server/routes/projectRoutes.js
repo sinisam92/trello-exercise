@@ -5,6 +5,8 @@ import {
   createProject,
   deleteProject,
   updateProject,
+  addListToProject,
+  getProjectWithLists,
 } from "../controllers/projectController.js";
 import { projectValidation } from "../validators/projectValidations.js";
 import { isUserLoggedIn } from "../middleware/authMiddleware.js";
@@ -18,8 +20,12 @@ router.route("/")
 
 // prettier-ignore
 router.route("/:id")
-  .get(getProjectById)
+  // .get(getProjectById)
   .put( projectValidation, updateProject)
   .delete( deleteProject)
+
+// prettier-ignore
+router.post("/:projectId/lists", addListToProject);
+router.get("/:projectId", getProjectWithLists);
 
 export default router;

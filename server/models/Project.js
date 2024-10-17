@@ -26,6 +26,7 @@ const projectSchema = new mongoose.Schema(
       required: true,
       maxLength: 500,
     },
+    lists: [{ type: String, required: true, ref: "List" }],
     //   lists: {
     //     type: [listSchema],
     //     default: [],
