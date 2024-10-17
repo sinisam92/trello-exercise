@@ -5,7 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import connectDB from './db/db.js';
-import cors from './middleware/cors.js';
+// import cors from './middleware/cors.js';
+import cors from 'cors';
+
 import authRoutes from './routes/authRoutes.js';
 import cardRoutes from './routes/cardRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
@@ -20,7 +22,12 @@ const app = express();
 const port = 3044;
 
 app.use(express.json());
-app.use(cors);
+app.use(
+  cors({
+    credentials: true,
+    origin: '*',
+  })
+);
 app.use(cookieParser());
 // serve static files -  preffered route / actual folder path
 app.use('/images', express.static('statics'));
@@ -42,4 +49,12 @@ app.get('*', (_req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+app.use(function errorHandler(err, req, res, next) {
+  res.status(err.status || 500).send({
+    error: {
+      message: err.message,
+    },
+  });
 });

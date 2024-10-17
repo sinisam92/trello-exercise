@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid";
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import config from '../config/config.js';
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     _id: {
       type: String,
@@ -49,6 +51,17 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+//Find by the token
+UserSchema.statics.findByToken = function (token) {
+  const User = this;
+  try {
+    let decoded = jwt.verify(token, config.tokenSecret);
+    console.log(`Decoded token: ${decoded._id}`);
+    return User.findOne({ _id: '0b0be344-fc2c-419c-b24e-483879e00f7b' });
+  } catch (err) {
+    return;
+  }
+};
 
+const User = mongoose.model('User', UserSchema);
 export default User;

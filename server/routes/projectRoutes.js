@@ -1,21 +1,20 @@
 import { Router } from "express";
 import {
-  getAllProjects,
-  getProjectById,
+  addListToProject,
   createProject,
   deleteProject,
-  updateProject,
-  addListToProject,
+  getAllProjects,
   getProjectWithLists,
+  updateProject
 } from "../controllers/projectController.js";
+import authCookie from "../middleware/authCookie.js";
 import { projectValidation } from "../validators/projectValidations.js";
-import { isUserLoggedIn } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
 // prettier-ignore
 router.route("/")
-    .get(getAllProjects)
+    .get(authCookie, getAllProjects)
     .post(projectValidation, createProject);
 
 // prettier-ignore
