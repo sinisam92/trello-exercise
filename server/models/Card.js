@@ -13,11 +13,10 @@ const cardSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // Do I need this?
-    // userId: {
-    //   type: String,
-    //   required: true,
-    // },
+    createdByUserId: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -52,6 +51,13 @@ const cardSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
   }
 );
 

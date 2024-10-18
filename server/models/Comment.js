@@ -8,7 +8,7 @@ const commentSchema = new mongoose.Schema(
       default: uuidv4,
       required: true,
     },
-    userId: {
+    createdByUserId: {
       type: String,
       required: true,
     },
@@ -24,6 +24,13 @@ const commentSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
   }
 );
 

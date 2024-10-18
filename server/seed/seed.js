@@ -1,12 +1,12 @@
-import { faker } from '@faker-js/faker';
-import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
-import connectDB from '../db/db.js';
-import Card from '../models/Card.js';
-import Comment from '../models/Comment.js';
-import List from '../models/List.js';
-import Project from '../models/Project.js';
-import User from '../models/User.js';
+import { faker } from "@faker-js/faker";
+import bcrypt from "bcrypt";
+import mongoose from "mongoose";
+import connectDB from "../db/db.js";
+import Card from "../models/Card.js";
+import Comment from "../models/Comment.js";
+import List from "../models/List.js";
+import Project from "../models/Project.js";
+import User from "../models/User.js";
 
 let usersCreated = [],
   projectsCreated = [],
@@ -21,7 +21,7 @@ let usersCreated = [],
   //delete all the users
   try {
     await User.deleteMany({});
-    console.log('All users deleted');
+    console.log("All users deleted");
   } catch (error) {
     console.log(error);
   }
@@ -29,7 +29,7 @@ let usersCreated = [],
   //delete all the projects
   try {
     await Project.deleteMany({});
-    console.log('All projects deleted');
+    console.log("All projects deleted");
   } catch (error) {
     console.log(error);
   }
@@ -37,7 +37,7 @@ let usersCreated = [],
   //delete all the lists
   try {
     await List.deleteMany({});
-    console.log('All lists deleted');
+    console.log("All lists deleted");
   } catch (error) {
     console.log(error);
   }
@@ -45,7 +45,7 @@ let usersCreated = [],
   //delete all the cards
   try {
     await Card.deleteMany({});
-    console.log('All cards deleted');
+    console.log("All cards deleted");
   } catch (error) {
     console.log(error);
   }
@@ -53,12 +53,12 @@ let usersCreated = [],
   //delete all the comments
   try {
     await Comment.deleteMany({});
-    console.log('All comments deleted');
+    console.log("All comments deleted");
   } catch (error) {
     console.log(error);
   }
 
-  const hashedPassword = await bcrypt.hash('123456789', 10);
+  const hashedPassword = await bcrypt.hash("123456789", 10);
 
   const usersPromises = Array(5)
     .fill(null)
@@ -72,7 +72,7 @@ let usersCreated = [],
         lastName: faker.person.lastName(),
         email: faker.internet.email().toLowerCase(),
         password: hashedPassword,
-        role: faker.helpers.arrayElement(['Admin', 'User']),
+        role: faker.helpers.arrayElement(["Admin", "User"]),
         defaultAvatar: `${userName[0]}.`,
         avatarUrl: faker.image.avatar(),
       };
@@ -87,7 +87,7 @@ let usersCreated = [],
 
   try {
     usersCreated = await Promise.all(usersPromises);
-    console.log('All users created');
+    console.log("All users created");
   } catch (error) {
     console.log(error);
   }
@@ -121,7 +121,103 @@ let usersCreated = [],
 
   try {
     projectsCreated = await Promise.all(projectsPromises);
-    console.log('All projects created');
+    console.log("All projects created");
+  } catch (error) {
+    console.log(error);
+  }
+
+  //create lists
+  const projectIds = projectsCreated.map((project) => project._id);
+
+  const listsPromises = Array(30)
+    .fill(null)
+    .map(() => {
+      const listName = faker.word.adjective({ length: { min: 5, max: 7 } });
+
+      const listData = {
+        id: faker.string.uuid(),
+        name: listName,
+        createdByUserId: faker.helpers.arrayElement(userIds),
+        projectId: faker.helpers.arrayElement(projectIds),
+        slug: faker.helpers.slugify(listName),
+        cards: [],
+      };
+      console.log(`List ${listData.name} created`);
+
+      const list = new List(listData);
+      return list.save();
+    });
+
+  try {
+    listsCreated = await Promise.all(listsPromises);
+    console.log("All lists created");
+  } catch (error) {
+    console.log(error);
+  }
+
+  //create cards
+  const listIds = listsCreated.map((list) => list._id);
+  const cardStatus = listsCreated.map((list) => list.name);
+
+  const cardsPromises = Array(50)
+    .fill(null)
+    .map(() => {
+      const cardData = {
+        id: faker.string.uuid(),
+        title: faker.lorem.words(),
+        description: faker.lorem.sentence(),
+        createdByUserId: faker.helpers.arrayElement(userIds),
+        listId: faker.helpers.arrayElement(listIds),
+        duoDate: faker.date.future(),
+        status: faker.helpers.arrayElement(cardStatus),
+        comments: [],
+        assigned: [
+          faker.helpers.arrayElement(userIds),
+          faker.helpers.arrayElement(userIds),
+          faker.helpers.arrayElement(userIds),
+        ],
+        tags: faker.helpers.arrayElements([
+          "important",
+          "urgent",
+          "feature",
+          "bug",
+          "critical",
+        ]),
+      };
+      console.log(`Card ${cardData.title} created`);
+
+      const card = new Card(cardData);
+      return card.save();
+    });
+
+  try {
+    cardsCreated = await Promise.all(cardsPromises);
+    console.log("All cards created");
+  } catch (error) {
+    console.log(error);
+  }
+
+  //create comments
+  const cardIds = cardsCreated.map((card) => card._id);
+
+  const commentsPromises = Array(100)
+    .fill(null)
+    .map(() => {
+      const commentData = {
+        id: faker.string.uuid(),
+        text: faker.lorem.sentence(),
+        createdByUserId: faker.helpers.arrayElement(userIds),
+        cardId: faker.helpers.arrayElement(cardIds),
+      };
+      console.log(`Comment ${commentData.text} created`);
+
+      const comment = new Comment(commentData);
+      return comment.save();
+    });
+
+  try {
+    commentsCreated = await Promise.all(commentsPromises);
+    console.log("All comments created");
   } catch (error) {
     console.log(error);
   }
