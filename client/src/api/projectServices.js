@@ -12,6 +12,7 @@ const createProject = async (project) => {
   return await apiClient("projects", {
     method: "POST",
     body: JSON.stringify(project),
+    //credentials: 'include'
   });
 };
 
@@ -28,4 +29,5 @@ const deleteProject = async (projectId) => {
   });
 };
 
-export { getProjects, getProject, createProject, updateProject, deleteProject };
+export { createProject, deleteProject, getProject, getProjects, updateProject };
+
