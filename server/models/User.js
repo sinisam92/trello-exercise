@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
-import config from '../config/config.js';
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
+import config from "../config/config.js";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -47,6 +47,8 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    createdProjects: [{ type: String, ref: "Project" }],
+    memberProjects: [{ type: String, ref: "Project" }],
   },
   {
     timestamps: true,
@@ -60,8 +62,8 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-UserSchema.virtual('fullName').get(function () {
-  return this.firstName + ' ' + this.lastName;
+UserSchema.virtual("fullName").get(function () {
+  return this.firstName + " " + this.lastName;
 });
 
 //Find by the token
@@ -70,11 +72,11 @@ UserSchema.statics.findByToken = function (token) {
   try {
     let decoded = jwt.verify(token, config.tokenSecret);
     console.log(`Decoded token: ${decoded._id}`);
-    return User.findOne({ _id: '0b0be344-fc2c-419c-b24e-483879e00f7b' });
+    return User.findOne({ _id: "0b0be344-fc2c-419c-b24e-483879e00f7b" });
   } catch (err) {
     return;
   }
 };
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", UserSchema);
 export default User;

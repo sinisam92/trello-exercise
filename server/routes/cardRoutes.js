@@ -5,6 +5,7 @@ import {
   getCardById,
   updateCard,
   deleteCard,
+  getCardsWithComments,
 } from "../controllers/cardController.js";
 
 const router = Router();
@@ -16,7 +17,8 @@ router.route("/")
 
 // prettier-ignore
 router.route("/:id")
-    .get(getCardById)
+    // .get(getCardById)
+    .get(getCardsWithComments)
     .put(updateCard)
     .delete(deleteCard);
 

@@ -25,13 +25,13 @@ const listSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // cards: [
-    //   {
-    //     type: String,
-    //     ref: "Card",
-    //     required: true,
-    //   },
-    // ],
+    cards: [
+      {
+        type: String,
+        ref: "Card",
+        required: true,
+      },
+    ],
   },
   {
     timestamps: true,

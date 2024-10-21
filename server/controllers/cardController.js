@@ -82,4 +82,30 @@ const updateCard = async (req, res) => {
   }
 };
 
-export { getAllCard, getCardById, createCard, deleteCard, updateCard };
+const getCardsWithComments = async (req, res) => {
+  const { id: cardId } = req.params;
+
+  try {
+    console.log(`Fetching card with ID: ${cardId}`);
+    const card = await Card.findById(cardId).populate("comments");
+
+    if (!card) {
+      console.log("Card not found");
+      return res.status(404).json({ message: "Card not found" });
+    }
+
+    res.json(card);
+  } catch (error) {
+    console.error("Error fetching card with lists:", error);
+    res.status(500).json({ error: "Error fetching card with lists!" });
+  }
+};
+
+export {
+  getAllCard,
+  getCardById,
+  createCard,
+  deleteCard,
+  updateCard,
+  getCardsWithComments,
+};

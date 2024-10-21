@@ -11,6 +11,7 @@ const projectSchema = new mongoose.Schema(
     createdByUserId: {
       type: String,
       required: true,
+      ref: "User",
     },
     slug: {
       type: String,
@@ -36,9 +37,12 @@ const projectSchema = new mongoose.Schema(
     avatarUrl: {
       type: String,
     },
-    membersId: {
-      type: Array,
-    },
+    membersId: [
+      {
+        type: String,
+        ref: "User",
+      },
+    ],
     updates: {
       type: Array,
     },

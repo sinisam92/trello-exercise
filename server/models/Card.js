@@ -44,10 +44,17 @@ const cardSchema = new mongoose.Schema(
     // updates: {
     //   type: Array,
     // },
-    // comments: {
-    //   type: Array,
-    //   default: [],
-    // },
+    comments: [
+      {
+        type: Array,
+        default: [],
+        ref: "Comment",
+      },
+    ],
+    commentsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
