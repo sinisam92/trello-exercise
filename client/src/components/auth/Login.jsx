@@ -123,6 +123,7 @@ const Login = () => {
                   label="Email"
                   name="email"
                   type="text"
+                  id="email"
                   placeholder="Enter your email"
                 />
                 {error && <p className="text-danger mt-2">{error}</p>}
@@ -130,6 +131,7 @@ const Login = () => {
                   <PasswordInput
                     label="Password"
                     name="password"
+                    id="password"
                     placeholder="Enter your password"
                   />
                 </div>
