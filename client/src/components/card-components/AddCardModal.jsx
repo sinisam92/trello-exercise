@@ -2,6 +2,7 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+// TODO: replace this with some other text editor as this one is return errors and not maintained
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";

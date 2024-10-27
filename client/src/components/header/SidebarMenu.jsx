@@ -28,7 +28,7 @@ const SidebarMenu = ({ currentUser, handleLogout, handleCloseSidebar }) => {
   };
 
   return (
-    <ul className="flex flex-col gap-y-2">
+    <ul className="flex flex-col gap-y-2 mt-4">
       {sidebarItems.map((item) => (
         <li key={item.id}>
           <button
@@ -39,7 +39,7 @@ const SidebarMenu = ({ currentUser, handleLogout, handleCloseSidebar }) => {
             }
           >
             <div className="flex items-center gap-x-2">
-              <img src={item.icon} alt={item.text} />
+              <img src={item.icon} alt={item.text} className="w-10" />
               <span>{item.text}</span>
             </div>
           </button>

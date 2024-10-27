@@ -1,20 +1,33 @@
 import PropTypes from "prop-types";
-import React from "react";
-import { Redirect, Route } from "wouter";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useLocation } from "wouter";
 
-import { useAuth } from "../../contexts/AuthContext";
+import LoadingSpinner from "./loaders/LoadingSpinner";
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const { isAuthenticated } = useAuth();
-  return (
-    <Route {...rest}>
-      {isAuthenticated ? <Component /> : <Redirect to="/login" />}
-    </Route>
+const ProtectedRoute = ({ component: Component }) => {
+  const { isAuthenticated, isInitialized, status } = useSelector(
+    (state) => state.auth,
   );
+
+  const [_, navigate] = useLocation();
+
+  useEffect(() => {
+    // Redirect to login if not authenticated, but only after initialization
+    if (isInitialized && !isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated, isInitialized, navigate]);
+
+  if (!isInitialized || status === "loading") {
+    return <LoadingSpinner />;
+  }
+  return <Component />;
+};
+
+ProtectedRoute.propTypes = {
+  component: PropTypes.elementType.isRequired,
+  location: PropTypes.object,
 };
 
 export default ProtectedRoute;
-
-ProtectedRoute.propTypes = {
-  component: PropTypes.func,
-};

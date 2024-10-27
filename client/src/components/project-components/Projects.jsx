@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { useSearch } from "../../contexts/SearchContext";
-import { fetchProjects } from "../../reducers/projectSlice";
+// import { fetchProjects } from "../../reducers/projectSlice";
 import Banner from "../common/Banner";
 import AddNewProject from "./AddNewProject";
 import AlertModal from "./AlertModal";
@@ -26,25 +26,31 @@ const Projects = ({ isChildMenuOpen }) => {
   const [modalMessage, setModalMessage] = useState("");
 
   const { searchTerm } = useSearch();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const { currentUser } = useSelector((state) => state.users);
+  const currentUser = useSelector((state) => state.auth.user);
+  console.log("currentUser:", currentUser);
+
   const { projects } = useSelector((state) => state.projects);
-  console.log("projects => projects", projects);
+  const allCurrentUsersProjects = currentUser
+    ? [...currentUser.createdProjects, ...currentUser.memberProjects]
+    : [];
+  console.log("allCurrentUsersProjects:", allCurrentUsersProjects);
 
-  const userProjects = projects.filter(
-    (project) =>
-      project.members?.includes(currentUser.username) ||
-      project.createdBy === currentUser.username,
-  );
+  // const userProjects = allCurrentUsersProjects.filter((project) => {
+  //   return (
+  //     project.members?.includes(currentUser.username) ||
+  //     project.createdByUserId === currentUser._id
+  //   );
+  // });
 
-  const filteredProjects = userProjects.filter((project) =>
+  const filteredProjects = allCurrentUsersProjects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  useEffect(() => {
-    dispatch(fetchProjects());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchProjects());
+  // }, [dispatch]);
 
   useEffect(() => {
     if (showBanner) {

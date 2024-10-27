@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "wouter";
 
 import Close from "../../assets/icons/close.svg";
-import { useAuth } from "../../contexts/AuthContext";
+import { logout } from "../../reducers/authSlice";
 import { setCurrentUser, setUsers } from "../../reducers/userSlice";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
@@ -15,16 +15,16 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [error, setError] = useState("");
 
-  const { currentUser, users } = useSelector((state) => state.users);
+  const { users } = useSelector((state) => state.users);
+  const currentUser = useSelector((state) => state.auth.user);
 
-  const username = currentUser && currentUser.username;
+  const username = currentUser ? currentUser.username : null;
+
   const defaultAvatar = currentUser && currentUser.defaultAvatar;
   const avatarUrl = currentUser ? currentUser.avatarUrl : "";
   const usernameForAt = username.toLowerCase().replace(" ", "-");
   const dispatch = useDispatch();
-  const [_, navigate] = useLocation();
-
-  const { logout } = useAuth();
+  const [, navigate] = useLocation();
 
   const openAvatarModal = () => {
     setIsAvatarModalOpen(true);
@@ -59,17 +59,21 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
     }
   };
 
-  const handleLogout = () => {
-    setIsMenuOpen(false);
-    setIsChildMenuOpen(false);
-    logout();
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      setIsMenuOpen(false);
+      setIsChildMenuOpen(false);
+      await dispatch(logout()).unwrap();
+      navigate("/login");
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
   };
 
   return (
     <aside className="bg-primary">
       <div className="bg-secundary pb-5">
-        <div className="flex justify-between pt-11 px-1 items-start ">
+        <div className="flex justify-between pt-11 px-7 items-start ">
           <div className="pb-[22px]">
             <Avatar
               avatarUrl={avatarUrl}
@@ -117,15 +121,15 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
             )}
           </div>
           <button onClick={handleCloseSidebar}>
-            <img src={Close} alt="close button" />
+            <img src={Close} alt="close button" className="w-8" />
           </button>
         </div>
-        <div className="px-1">
+        <div className="px-7">
           <h3>{username}</h3>
           <h3>@{usernameForAt}</h3>
         </div>
       </div>
-      <nav className="px-1 ">
+      <nav className="px-1">
         <SidebarMenu
           currentUser={currentUser}
           handleLogout={handleLogout}

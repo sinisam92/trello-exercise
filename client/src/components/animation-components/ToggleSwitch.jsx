@@ -3,7 +3,7 @@ import React from "react";
 import { useAnimation } from "../../contexts/AnimationContext";
 
 const ToggleSwitch = () => {
-  const { animationsEnabled, setAnimationsEnabled } = useAnimation();
+  const { animationsEnabled, setAnimationsEnabled } = useAnimation(true);
 
   const handleOnChange = () => {
     setAnimationsEnabled(!animationsEnabled);

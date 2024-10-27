@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { apiClient } from "../api/apiClient";
+
+// import { apiClient } from "../api/apiClient";
 import { getProjects } from "../api/projectServices";
 
 // const fetchProjects = createAsyncThunk("projects/fetchProjects", async () => {
@@ -10,16 +11,11 @@ export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
   async () => {
     const response = await getProjects();
-    console.log('response', response);
-    
-    return response;
-  }
-);
+    console.log("response", response);
 
-const loadProjectsFromLocalStorage = () => {
-  const projects = localStorage.getItem("projects");
-  return projects ? JSON.parse(projects) : [];
-};
+    return response;
+  },
+);
 
 const saveProjectsToLocalStorage = (projects) => {
   localStorage.setItem("projects", JSON.stringify(projects));
@@ -31,7 +27,6 @@ const initialState = {
   loading: false,
   error: null,
 };
-
 
 const projectSlice = createSlice({
   name: "projects",

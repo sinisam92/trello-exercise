@@ -21,7 +21,7 @@ const Header = ({ setIsChildMenuOpen }) => {
 
   const [location, navigate] = useLocation();
 
-  const { currentUser } = useSelector((state) => state.users);
+  const currentUser = useSelector((state) => state.auth.user);
 
   const { searchTerm, setSearchTerm } = useSearch();
   const { projects } = useSelector((state) => state.projects);
@@ -40,7 +40,7 @@ const Header = ({ setIsChildMenuOpen }) => {
 
     if (project) {
       setTitle(project.name);
-    } else if (location === `/user/${currentUser.id}/cards`) {
+    } else if (location === `/user/${currentUser._id}/cards`) {
       setTitle(`${currentUser.username}'s Cards`);
     } else {
       setTitle("Projects");
@@ -94,9 +94,9 @@ const Header = ({ setIsChildMenuOpen }) => {
 
   return (
     <>
-      <header className="relative border-b px-2 py-5 h-[104px] text-primaryTextColor ">
+      <header className="relative border-b px-2 py-5 h-[80px] items-center w-full text-primaryTextColor ">
         <div
-          className={`flex justify-between items-center ${isMenuOpen ? " blur-sm" : ""}`}
+          className={`flex justify-between items-center min-h-[42px] ${isMenuOpen ? " blur-sm" : ""}`}
         >
           <div className="flex items-center gap-x-4 flex-grow">
             {location === "/projects" ? (
@@ -107,19 +107,25 @@ const Header = ({ setIsChildMenuOpen }) => {
                       onClick={onBellClick}
                       src={Bell}
                       alt="Notification Bell"
+                      className="w-5"
                     />
                   </button>
                 </div>
                 <div>
                   <button onClick={onSearchClick}>
-                    <img src={Search} alt="Search Icon" />
+                    <img src={Search} alt="Search Icon" className="w-5" />
                   </button>
                 </div>
               </>
             ) : (
               <div>
                 <button>
-                  <img onClick={handleReturn} src={Return} alt="Return" />
+                  <img
+                    onClick={handleReturn}
+                    src={Return}
+                    alt="Return"
+                    className="w-5"
+                  />
                 </button>
               </div>
             )}
@@ -146,7 +152,7 @@ const Header = ({ setIsChildMenuOpen }) => {
           <div className={`flex-grow flex-end text-right `}>
             {location === "/projects" ? (
               <button onClick={onMenuClick}>
-                <img src={Menu} alt="Menu Icon" />
+                <img src={Menu} alt="Menu Icon" className="w-5" />
               </button>
             ) : (
               <div>
