@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { isUserLoggedIn } from "../middleware/authMiddleware.js";
 
 import {
   addUser,

@@ -1,7 +1,6 @@
 import { validationResult } from "express-validator";
 import List from "../models/List.js";
 import Project from "../models/Project.js";
-import { populate } from "dotenv";
 
 const getAllProjects = async (req, res) => {
   try {

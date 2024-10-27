@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import config from "../config/config.js";
+import bcrypt from "bcrypt";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -34,6 +35,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
@@ -61,6 +63,26 @@ const UserSchema = new mongoose.Schema(
     },
   }
 );
+// // will be used later on when changing password is implemented
+// TODO: implement password change
+// userSchema.pre('save', async function(next) {
+//   if (this.isModified('password')) {
+//     this.password = await bcrypt.hash(this.password, 8);
+//   }
+//   next();
+// });
+
+// userSchema.methods.comparePassword = async function(candidatePassword) {
+//   return bcrypt.compare(candidatePassword, this.password);
+// };
+
+// this is needed to compare passwords because the password is not returned in the response
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  if (!this.password) {
+    throw new Error("User password not set");
+  }
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
 UserSchema.virtual("fullName").get(function () {
   return this.firstName + " " + this.lastName;
@@ -72,7 +94,7 @@ UserSchema.statics.findByToken = function (token) {
   try {
     let decoded = jwt.verify(token, config.tokenSecret);
     console.log(`Decoded token: ${decoded._id}`);
-    return User.findOne({ _id: "0b0be344-fc2c-419c-b24e-483879e00f7b" });
+    return User.findOne({ _id: decoded._id });
   } catch (err) {
     return;
   }

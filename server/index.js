@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: "*",
+    origin: "http://localhost:5175",
   })
 );
 app.use(cookieParser());
@@ -34,9 +34,9 @@ dotenv.config();
 connectDB();
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/users", userRouter);
 app.use("/projects", projectRouter);
-app.use("/api/auth", authRoutes);
 app.use("/lists", listRoutes);
 app.use("/cards", cardRoutes);
 app.use("/comments", commentRoutes);
@@ -46,7 +46,8 @@ app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname + "/public/404.html"));
 });
 
-app.listen(port, () => {
+const PORT = process.env.PORT || 3044;
+app.listen(PORT, () => {
   console.log(`Server is running on port ${port}`);
 });
 
