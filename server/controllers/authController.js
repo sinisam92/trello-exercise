@@ -9,15 +9,14 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email })
+      .lean()
       .select("+password")
       .populate("createdProjects")
       .populate("memberProjects");
-    if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+    console.log("USER", user);
 
-    if (!user.password) {
-      return res.status(500).json({ message: "User account is not properly set up" });
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
     }
 
     let isPasswordValid;

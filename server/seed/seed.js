@@ -74,7 +74,7 @@ let usersCreated = [],
       } while (userName.length < 5);
 
       const userData = {
-        id: faker.string.uuid(),
+        // id: faker.string.uuid(),
         username: userName,
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),

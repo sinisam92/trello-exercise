@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: User and Project Management API
+  title: Project Pulse API
   version: 1.0.0
   description: API for managing users and projects.
 
