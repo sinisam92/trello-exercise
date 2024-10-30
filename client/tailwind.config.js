@@ -3,6 +3,15 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      animation: {
+        draw: "draw 5s linear forwards",
+      },
+      keyframes: {
+        draw: {
+          "0%": { strokeDashoffset: "1000" },
+          "100%": { strokeDashoffset: "0" },
+        },
+      },
       colors: {
         primary: "var(--primary)",
         secundary: "var(--secundary)",

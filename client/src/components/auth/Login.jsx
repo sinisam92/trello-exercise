@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import LifelineLogo from "../../assets/logo/logo-transparent.svg";
 import { loginUser } from "../../reducers/authSlice";
 import Button from "../common/Button";
+import AnimatedLogo from "../common/loaders/AnimatedLogo";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -70,13 +71,10 @@ const Login = () => {
   const handleLogin = async (values, { setSubmitting }) => {
     setSubmitting(true);
     try {
-      console.log("Logging in with values:", values);
-
       const action = await dispatch(loginUser(values));
 
       if (loginUser.fulfilled.match(action)) {
-        const userId = action.payload.user._id;
-        console.log("User ID:", userId);
+        // const userId = action.payload.user._id;
 
         // navigate(`${userId}/projects`);
         navigate(`projects`);
@@ -92,9 +90,15 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen ">
-      <div className="mb-8">
-        <img src={LifelineLogo} alt="Project Pulse Logo" />
+    <div className="relative flex flex-col justify-center items-center h-screen ">
+      <div className="absolute top-8 left-0">
+        <AnimatedLogo />
+        {/* <img
+          src={LifelineLogo}
+          alt="Project Pulse Logo"
+          width={450}
+          // className="w-[250px]"
+        /> */}
       </div>
       <div className="flex justify-center items-center sm:w-3/4 sm:mx-auto md:w-1/2">
         <div className="bg-white w-full rounded px-8 pt-6 pb-8 mb-4 md:shadow-md">
