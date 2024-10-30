@@ -9,7 +9,6 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email })
-      .lean()
       .select("+password")
       .populate("createdProjects")
       .populate("memberProjects");
