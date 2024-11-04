@@ -2,19 +2,21 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
-import { useLocation, useParams } from "wouter";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "wouter";
 
 import Comment from "../../assets/icons/comment.svg";
 import Dots from "../../assets/icons/dots.svg";
 import useClickOutside from "../../hooks/useClickOutside";
+import { fetchUsersByIds } from "../../reducers/userSlice";
 import Tag from "../card-details-components/Tag";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
 
 const Card = ({
   card,
-  users,
+  userId,
   list,
   setProjects,
   project,
@@ -25,17 +27,33 @@ const Card = ({
   setIsCardEditing,
   setSelectedCard,
   className,
+  projectId,
 }) => {
+  const dispatch = useDispatch();
+  const { usersByIds } = useSelector((state) => state.users);
   const [openCardOptionsId, setOpenCardOptionsId] = useState(null);
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
-  const { projectId, userId } = useParams();
   const [location, _] = useLocation();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);
   const moveMenuRef = useRef(null);
+
+  const getAssignedUsers = useCallback(async () => {
+    if (project && project.membersId) {
+      try {
+        await dispatch(fetchUsersByIds(project.membersId)).unwrap();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [dispatch, projectId]);
+
+  useEffect(() => {
+    getAssignedUsers();
+  }, [getAssignedUsers]);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -180,12 +198,8 @@ const Card = ({
             )}
           </div>
           <div className="flex gap-x-2 mt-6">
-            {card.assigned &&
-              card.assigned.map((username) => {
-                const assignedUser = users.find(
-                  (user) => user.username === username,
-                );
-
+            {usersByIds &&
+              usersByIds.map((assignedUser) => {
                 return (
                   <Avatar
                     key={assignedUser.id}
@@ -261,7 +275,8 @@ Card.propTypes = {
     dueDate: PropTypes.string,
     assigned: PropTypes.array,
   }),
-  users: PropTypes.array,
+  userId: PropTypes.string,
+  projectMembers: PropTypes.array,
   list: PropTypes.object,
   setProjects: PropTypes.func,
   project: PropTypes.object,
@@ -272,4 +287,5 @@ Card.propTypes = {
   setIsCardEditing: PropTypes.func,
   setSelectedCard: PropTypes.func,
   className: PropTypes.string,
+  projectId: PropTypes.string,
 };

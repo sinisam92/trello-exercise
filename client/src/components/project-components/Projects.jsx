@@ -29,28 +29,44 @@ const Projects = ({ isChildMenuOpen }) => {
   // const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.auth.user);
-  console.log("currentUser:", currentUser);
 
   const { projects } = useSelector((state) => state.projects);
-  const allCurrentUsersProjects = currentUser
-    ? [...currentUser.createdProjects, ...currentUser.memberProjects]
-    : [];
-  console.log("allCurrentUsersProjects:", allCurrentUsersProjects);
 
-  // const userProjects = allCurrentUsersProjects.filter((project) => {
-  //   return (
-  //     project.members?.includes(currentUser.username) ||
-  //     project.createdByUserId === currentUser._id
-  //   );
-  // });
+  // const allCurrentUsersProjects = useMemo(() => {
+  //   if (!currentUser) return [];
+  //   const uniqueProjects = new Map();
+
+  //   currentUser.createdProjects.forEach((project) => {
+  //     uniqueProjects.set(project._id, project);
+  //   });
+
+  //   currentUser.memberProjects.forEach((project) => {
+  //     uniqueProjects.set(project._id, project);
+  //   });
+
+  //   return Array.from(uniqueProjects.values());
+  // }, [currentUser]);
+
+  const getAllCurrentUsersProjects = () => {
+    if (!currentUser) return [];
+    const uniqueProjects = new Map();
+
+    currentUser.createdProjects.forEach((project) => {
+      uniqueProjects.set(project._id, project);
+    });
+
+    currentUser.memberProjects.forEach((project) => {
+      uniqueProjects.set(project._id, project);
+    });
+
+    return Array.from(uniqueProjects.values());
+  };
+
+  const allCurrentUsersProjects = getAllCurrentUsersProjects();
 
   const filteredProjects = allCurrentUsersProjects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  // useEffect(() => {
-  //   dispatch(fetchProjects());
-  // }, [dispatch]);
 
   useEffect(() => {
     if (showBanner) {

@@ -6,7 +6,7 @@ import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
 
-import { addProject, updateProject } from "../../reducers/projectSlice";
+import { createProject, updateProject } from "../../reducers/projectSlice";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -122,7 +122,7 @@ const ProjectForm = ({
         slug: projectSlug,
       };
 
-      dispatch(addProject(newProject));
+      dispatch(createProject(newProject));
       setIsAdding(false);
     }
 

@@ -1,81 +1,195 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-// import { apiClient } from "../api/apiClient";
-import { getProjects } from "../api/projectServices";
+import { getProjectById } from "../api/projectServices";
 
-// const fetchProjects = createAsyncThunk("projects/fetchProjects", async () => {
-//   const response = await getProjects();
-//   return response;
-// });
-export const fetchProjects = createAsyncThunk(
-  "projects/fetchProjects",
-  async () => {
-    const response = await getProjects();
-    console.log("response", response);
+export const fetchProject = createAsyncThunk(
+  "projects/fetchProject",
+  async (projectId, { rejectWithValue }) => {
+    try {
+      const data = await getProjectById(projectId);
 
-    return response;
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   },
 );
 
-const saveProjectsToLocalStorage = (projects) => {
-  localStorage.setItem("projects", JSON.stringify(projects));
-};
+export const fetchAllProjects = createAsyncThunk(
+  "projects/fetchAllProjects",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/projects");
+      if (!response.ok) {
+        throw new Error("Failed to fetch projects");
+      }
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-const initialState = {
-  // projects: loadProjectsFromLocalStorage(),
-  projects: [],
-  loading: false,
-  error: null,
-};
+export const createProject = createAsyncThunk(
+  "projects/createProject",
+  async (projectData, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create project");
+      }
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-const projectSlice = createSlice({
+export const updateProject = createAsyncThunk(
+  "projects/updateProject",
+  async ({ projectId, projectData }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update project");
+      }
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const deleteProject = createAsyncThunk(
+  "projects/deleteProject",
+  async (projectId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete project");
+      }
+      return projectId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+const projectsSlice = createSlice({
   name: "projects",
-  initialState,
+  initialState: {
+    projects: [],
+    currentProject: null,
+    loading: false,
+    error: null,
+  },
   reducers: {
-    addProject(state, action) {
-      state.projects.push(action.payload);
-      saveProjectsToLocalStorage(state.projects);
-    },
-    deleteProject(state, action) {
-      state.projects = state.projects.filter(
-        (project) => project.id !== action.payload,
-      );
-      saveProjectsToLocalStorage(state.projects);
-    },
-    updateProject(state, action) {
-      const updatedProjects = state.projects.map((project) =>
-        project.id === action.payload.id ? action.payload : project,
-      );
-      state.projects = updatedProjects;
-      saveProjectsToLocalStorage(state.projects);
-    },
-    saveProjects(state, action) {
-      state.projects = action.payload;
-      saveProjectsToLocalStorage(state.projects);
-    },
+    // setCurrentProject: (state, action) => {
+    //   state.currentProject = action.payload;
+    // },
+    // clearCurrentProject: (state) => {
+    //   state.currentProject = null;
+    // },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProjects.pending, (state) => {
+      // Fetch single project
+      .addCase(fetchProject.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProjects.fulfilled, (state, action) => {
-        state.projects = action.payload;
-
-        saveProjectsToLocalStorage(state.projects);
-
+      .addCase(fetchProject.fulfilled, (state, action) => {
         state.loading = false;
+        state.currentProject = action.payload;
+      })
+      .addCase(fetchProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch all projects
+      .addCase(fetchAllProjects.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProjects.rejected, (state, action) => {
+      .addCase(fetchAllProjects.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.projects = action.payload;
+      })
+      .addCase(fetchAllProjects.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Create project
+      .addCase(createProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projects.push(action.payload);
+        state.currentProject = action.payload;
+      })
+      .addCase(createProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Update project
+      .addCase(updateProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.projects.findIndex(
+          (p) => p.id === action.payload.id,
+        );
+        if (index !== -1) {
+          state.projects[index] = action.payload;
+        }
+        state.currentProject = action.payload;
+      })
+      .addCase(updateProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Delete project
+      .addCase(deleteProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projects = state.projects.filter((p) => p.id !== action.payload);
+        if (
+          state.currentProject &&
+          state.currentProject.id === action.payload
+        ) {
+          state.currentProject = null;
+        }
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { addProject, deleteProject, updateProject, saveProjects } =
-  projectSlice.actions;
+// export const { setCurrentProject, clearCurrentProject } = projectsSlice.actions;
 
-export default projectSlice.reducer;
+export default projectsSlice.reducer;

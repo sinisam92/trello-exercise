@@ -24,7 +24,8 @@ const Header = ({ setIsChildMenuOpen }) => {
   const currentUser = useSelector((state) => state.auth.user);
 
   const { searchTerm, setSearchTerm } = useSearch();
-  const { projects } = useSelector((state) => state.projects);
+  // const { projects } = useSelector((state) => state.projects);
+  const { currentProject } = useSelector((state) => state.projects);
   const { animationsEnabled } = useAnimation();
 
   const getParamsFromUrl = () => {
@@ -36,16 +37,14 @@ const Header = ({ setIsChildMenuOpen }) => {
   const { projectId, cardId } = getParamsFromUrl();
 
   useEffect(() => {
-    const project = projects.find((project) => project.id === projectId);
-
-    if (project) {
-      setTitle(project.name);
+    if (currentProject && location === `/projects/${currentProject._id}`) {
+      setTitle(currentProject.name);
     } else if (location === `/user/${currentUser._id}/cards`) {
       setTitle(`${currentUser.username}'s Cards`);
     } else {
       setTitle("Projects");
     }
-  }, [location]);
+  }, [location, currentProject, currentUser]);
 
   const onMenuClick = () => {
     setIsMenuOpen(true);

@@ -2,11 +2,10 @@ import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import { Link, useLocation } from "wouter";
 import * as Yup from "yup";
 
-import { registerUser } from "../../reducers/userSlice";
+import { fetchAllUsers, registerNewUser } from "../../reducers/userSlice";
 import Button from "../common/Button";
 
 const TextInput = ({ label, ...props }) => {
@@ -28,27 +27,45 @@ const TextInput = ({ label, ...props }) => {
 
 const Register = () => {
   const { users } = useSelector((state) => state.users);
+
   const [_, navigate] = useLocation();
   const dispatch = useDispatch();
 
-  const handleRegister = (values, { setSubmitting, setErrors, resetForm }) => {
-    const { username } = values;
+  const handleRegister = async (
+    values,
+    { setSubmitting, setErrors, resetForm },
+  ) => {
+    const { username, firstName, lastName, email, password } = values;
     setSubmitting(true);
 
-    if (users.some((user) => user.username === username)) {
-      setErrors({ username: "Username is already taken" });
-    } else {
+    try {
+      await dispatch(fetchAllUsers());
+
+      if (users.some((user) => user.email === email.toLowerCase())) {
+        setErrors({ email: "Email is already taken" });
+        return;
+      }
+
       const newUser = {
-        id: uuidv4(),
-        username: username,
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+        role: "user",
+        createdProjects: [],
+        memberProjects: [],
         defaultAvatar: username.charAt(0).toUpperCase(),
         avatarUrl: "",
       };
 
-      dispatch(registerUser(newUser));
+      await dispatch(registerNewUser(newUser));
       resetForm();
       navigate("/login");
+    } catch (error) {
+      setErrors({ email: error.message });
     }
+
     setSubmitting(false);
   };
 
@@ -59,22 +76,99 @@ const Register = () => {
           Sign Up
         </h1>
         <Formik
-          initialValues={{ username: "" }}
+          initialValues={{
+            username: "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            role: "user",
+            createdProjects: [],
+            memberProjects: [],
+            defaultAvatar: "",
+            avatarUrl: "",
+          }}
           validationSchema={Yup.object({
             username: Yup.string()
               .max(15, "Must be 15 characters or less")
               .min(3, "Must be 3 characters or more")
               .required("Required"),
+            firstName: Yup.string()
+              .max(30, "Must be 30 characters or less")
+              .min(2, "Must be 3 characters or more")
+              .required("Required"),
+            lastName: Yup.string()
+              .max(30, "Must be 30 characters or less")
+              .min(2, "Must be 3 characters or more")
+              .required("Required"),
+            email: Yup.string()
+              .email("Invalid email address")
+              .max(50, "Must be 50 characters or less")
+              .min(3, "Must be 3 characters or more")
+              .required("Required"),
+            password: Yup.string()
+              .min(6, "Password must be at least 6 characters")
+              .max(50, "Password must be at most 50 characters")
+              .required("This field is required")
+              .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+                "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+              ),
+            confirmPassword: Yup.string().when("password", {
+              is: (val) => (val && val.length > 0 ? true : false),
+              then: () =>
+                Yup.string().oneOf(
+                  [Yup.ref("password")],
+                  "Password and confirm password must match",
+                ),
+            }),
           })}
           onSubmit={handleRegister}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, isValid }) => (
             <Form>
               <TextInput
+                id="username"
                 label="Username"
                 name="username"
                 type="text"
                 placeholder="Enter your username"
+              />
+              <TextInput
+                id="firstName"
+                label="First Name"
+                name="firstName"
+                type="text"
+                placeholder="Enter your first name"
+              />
+              <TextInput
+                id="lastName"
+                label="Last Name"
+                name="lastName"
+                type="text"
+                placeholder="Enter your last name"
+              />
+              <TextInput
+                id="email"
+                label="Email"
+                name="email"
+                type="text"
+                placeholder="Enter your email"
+              />
+              <TextInput
+                id="password"
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+              />
+              <TextInput
+                id="confirmPassword"
+                label="Password Confirmation"
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
               />
               <div className="flex flex-col gap-y-6 items-center justify-between mt-10">
                 <Button
@@ -82,7 +176,9 @@ const Register = () => {
                   size="s"
                   label="Sign Up"
                   type="submit"
-                  disabled={isSubmitting}
+                  extraClasses={`${!isValid ? "cursor-not-allowed bg-gray-700 hover:bg-gray-700" : ""}`}
+                  disabled={!isValid}
+                  isLoading={isSubmitting}
                 />
                 <Link
                   href="login"

@@ -5,7 +5,7 @@ import { useLocation } from "wouter";
 
 import Close from "../../assets/icons/close.svg";
 import { logout } from "../../reducers/authSlice";
-import { setCurrentUser, setUsers } from "../../reducers/userSlice";
+// import { setUsers } from "../../reducers/userSlice";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
 import SidebarMenu from "./SidebarMenu";
@@ -15,7 +15,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [error, setError] = useState("");
 
-  const { users } = useSelector((state) => state.users);
+  // const { users } = useSelector((state) => state.users);
   const currentUser = useSelector((state) => state.auth.user);
 
   const username = currentUser ? currentUser.username : null;
@@ -41,22 +41,24 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   };
 
   const handleAvatarSubmit = (userId) => {
-    if (!newAvatarUrl) {
-      setError("Avatar URL is required.");
-      return;
-    }
-    if (currentUser && currentUser.id === userId) {
-      const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
-      dispatch(setCurrentUser(updatedUser));
+    console.log("userId", userId);
 
-      const updatedUsers = users.map((user) =>
-        user.id === userId ? updatedUser : user,
-      );
-      dispatch(setUsers(updatedUsers));
-      closeAvatarModal();
-    } else {
-      console.error("You can only change your own avatar.");
-    }
+    // if (!newAvatarUrl) {
+    //   setError("Avatar URL is required.");
+    //   return;
+    // }
+    // if (currentUser && currentUser.id === userId) {
+    //   const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
+    //   // dispatch(setCurrentUser(updatedUser));
+
+    //   const updatedUsers = users.map((user) =>
+    //     user.id === userId ? updatedUser : user,
+    //   );
+    //   // dispatch(setUsers(updatedUsers));
+    //   closeAvatarModal();
+    // } else {
+    //   console.error("You can only change your own avatar.");
+    // }
   };
 
   const handleLogout = async () => {

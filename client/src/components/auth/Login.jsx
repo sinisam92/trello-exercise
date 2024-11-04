@@ -7,7 +7,6 @@ import { useLocation } from "wouter";
 import { Link } from "wouter";
 import * as Yup from "yup";
 
-import LifelineLogo from "../../assets/logo/logo-transparent.svg";
 import { loginUser } from "../../reducers/authSlice";
 import Button from "../common/Button";
 import AnimatedLogo from "../common/loaders/AnimatedLogo";
@@ -74,13 +73,11 @@ const Login = () => {
       const action = await dispatch(loginUser(values));
 
       if (loginUser.fulfilled.match(action)) {
-        // const userId = action.payload.user._id;
-
-        // navigate(`${userId}/projects`);
         navigate(`projects`);
       } else if (loginUser.rejected.match(action)) {
         console.error("Login failed:", action.payload || action.error.message);
-        setError(action.payload?.message || action.error.message);
+        // setError(action.payload?.message || action.error.message);
+        setError("Incorect email or password");
       }
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
@@ -88,17 +85,12 @@ const Login = () => {
       setSubmitting(false);
     }
   };
+  console.log("Error:", error);
 
   return (
     <div className="relative flex flex-col justify-center items-center h-screen ">
       <div className="absolute top-8 left-0">
         <AnimatedLogo />
-        {/* <img
-          src={LifelineLogo}
-          alt="Project Pulse Logo"
-          width={450}
-          // className="w-[250px]"
-        /> */}
       </div>
       <div className="flex justify-center items-center sm:w-3/4 sm:mx-auto md:w-1/2">
         <div className="bg-white w-full rounded px-8 pt-6 pb-8 mb-4 md:shadow-md">

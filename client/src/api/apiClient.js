@@ -41,12 +41,6 @@ export const apiClient = async (endpoint, options = {}) => {
 
     return await response.json();
   } catch (error) {
-    if (error.name === "TypeError") {
-      console.error("Network error:", error);
-      throw new Error("Network error: Please check your internet connection.");
-    }
-
-    console.error("API Client error:", error);
-    throw new Error(error.message || "An unexpected error occurred.");
+    console.error("Network error:", error);
   }
 };

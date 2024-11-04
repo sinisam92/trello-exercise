@@ -1,61 +1,95 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const loadUsersFromLocalStorage = () => {
-  const users = localStorage.getItem("users");
-  return users ? JSON.parse(users) : [];
-};
+import { getAllUsers, getUsersByIds } from "../api/userServices";
+import { addNewUser } from "../api/userServices";
 
-const saveUsersToLocalStorage = (users) => {
-  localStorage.setItem("users", JSON.stringify(users));
-};
-const loadCurrentUserFromLocalStorage = () => {
-  const currentUser = localStorage.getItem("currentUser");
-  return currentUser ? JSON.parse(currentUser) : null;
-};
+export const fetchAllUsers = createAsyncThunk(
+  "users/fetchAllUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllUsers();
+      console.log("fetchAllUsers response", response);
 
-const saveCurrentUserToLocalStorage = (user) => {
-  localStorage.setItem("currentUser", JSON.stringify(user));
-};
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch all users:", error);
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-const removeCurrentUserFromLocalStorage = () => {
-  localStorage.removeItem("currentUser");
-};
+export const fetchUsersByIds = createAsyncThunk(
+  "users/fetchUsersByIds",
+  async (userIds, { rejectWithValue }) => {
+    try {
+      const response = await getUsersByIds(userIds);
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch users by IDs:", error);
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
-const registerNewUser = (newUser) => {
-  const users = loadUsersFromLocalStorage();
-  const updatedUsers = [...users, newUser];
-  saveUsersToLocalStorage(updatedUsers);
-  return updatedUsers;
-};
+export const registerNewUser = createAsyncThunk(
+  "users/registerNewUser",
+  async (newUser, { rejectWithValue }) => {
+    try {
+      const response = await addNewUser(newUser);
+      return response;
+    } catch (error) {
+      console.error("Failed to register new user:", error);
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 const initialState = {
-  users: loadUsersFromLocalStorage(),
-  currentUser: loadCurrentUserFromLocalStorage(),
+  users: null,
+  loading: false,
+  error: null,
+  usersByIds: null,
 };
 const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    setUsers(state, action) {
-      state.users = action.payload;
-      saveUsersToLocalStorage(state.users);
-    },
-    setCurrentUser(state, action) {
-      state.currentUser = action.payload;
-      saveCurrentUserToLocalStorage(action.payload);
-    },
-    removeCurrentUser(state) {
-      state.currentUser = null;
-      removeCurrentUserFromLocalStorage();
-    },
     registerUser(state, action) {
       state.users.push(action.payload);
       registerNewUser(action.payload);
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        console.log("fetchAllUsers.fulfilled", action);
+
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchUsersByIds.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUsersByIds.fulfilled, (state, action) => {
+        state.loading = false;
+        state.usersByIds = action.payload;
+      })
+      .addCase(fetchUsersByIds.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { setUsers, setCurrentUser, removeCurrentUser, registerUser } =
-  userSlice.actions;
+export const { registerUser } = userSlice.actions;
 
 export default userSlice.reducer;
