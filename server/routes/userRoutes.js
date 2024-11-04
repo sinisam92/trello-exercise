@@ -5,6 +5,7 @@ import {
   deleteUser,
   getAllUsers,
   getUserById,
+  getUsersByIds,
   updateUser,
 } from "../controllers/userController.js";
 import {
@@ -24,5 +25,7 @@ router.route("/:id")
   .get( getUserById)
   .delete( deleteUser)
   .put( updateUser);
+
+router.route("/many").post(getUsersByIds);
 
 export default router;

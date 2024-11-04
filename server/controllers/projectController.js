@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import List from "../models/List.js";
 import Project from "../models/Project.js";
 
-const getAllProjects = async (req, res) => {
+export const getAllProjects = async (req, res) => {
   try {
     // const projects = await Project.find({ createdByUserId: req.user._id });
     const projects = await Project.find();
@@ -13,7 +13,7 @@ const getAllProjects = async (req, res) => {
   }
 };
 
-const getProjectById = async (req, res) => {
+export const getProjectById = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
@@ -29,7 +29,7 @@ const getProjectById = async (req, res) => {
   }
 };
 
-const createProject = async (req, res) => {
+export const createProject = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
@@ -47,7 +47,7 @@ const createProject = async (req, res) => {
   }
 };
 
-const deleteProject = async (req, res) => {
+export const deleteProject = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
@@ -64,7 +64,7 @@ const deleteProject = async (req, res) => {
   }
 };
 
-const updateProject = async (req, res) => {
+export const updateProject = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
@@ -96,7 +96,7 @@ const updateProject = async (req, res) => {
   }
 };
 
-const addListToProject = async (req, res) => {
+export const addListToProject = async (req, res) => {
   const { projectId } = req.params;
   console.log("projectId", projectId);
 
@@ -123,8 +123,10 @@ const addListToProject = async (req, res) => {
   }
 };
 
-const getProjectWithListsAndCards = async (req, res) => {
+export const getProjectWithListsAndCards = async (req, res) => {
   const { projectId } = req.params;
+  console.log("projectId", projectId);
+  console.log("REQ", req);
 
   try {
     console.log(`Fetching project with ID: ${projectId}`);
@@ -145,14 +147,4 @@ const getProjectWithListsAndCards = async (req, res) => {
     console.error("Error fetching project with lists:", error);
     res.status(500).json({ error: "Error fetching project with lists!" });
   }
-};
-
-export {
-  addListToProject,
-  createProject,
-  deleteProject,
-  getAllProjects,
-  getProjectById,
-  getProjectWithListsAndCards,
-  updateProject,
 };

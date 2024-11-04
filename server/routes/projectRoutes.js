@@ -19,13 +19,13 @@ router.route("/")
     .post(projectValidation, createProject);
 
 // prettier-ignore
-router.route("/:id")
-  // .get(getProjectById)
-  .put( projectValidation, updateProject)
-  .delete( deleteProject)
+router.route("/:projectId")
+    // .get(getProjectById)
+    .get(getProjectWithListsAndCards)
+    .put( projectValidation, updateProject)
+    .delete( deleteProject)
 
 // prettier-ignore
 router.post("/:projectId/lists", addListToProject);
-router.get("/:projectId", getProjectWithListsAndCards);
 
 export default router;

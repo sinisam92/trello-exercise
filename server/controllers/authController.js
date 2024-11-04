@@ -12,7 +12,6 @@ const login = async (req, res) => {
       .select("+password")
       .populate("createdProjects")
       .populate("memberProjects");
-    console.log("USER", user);
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });

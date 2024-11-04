@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 
-const getAllUsers = async (_req, res) => {
+export const getAllUsers = async (_req, res) => {
   try {
     const users = await User.find().lean();
     res.status(200).json(users);
@@ -11,7 +11,7 @@ const getAllUsers = async (_req, res) => {
   }
 };
 
-const getCurrentUser = async (req, res) => {
+export const getCurrentUser = async (req, res) => {
   const userId = req.user.id;
   console.log("USER IN get USER", userId);
 
@@ -26,7 +26,7 @@ const getCurrentUser = async (req, res) => {
   }
 };
 
-const addUser = async (req, res) => {
+export const addUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
@@ -55,7 +55,7 @@ const addUser = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
@@ -71,7 +71,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
@@ -88,7 +88,7 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
@@ -114,4 +114,22 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { getAllUsers, addUser, getUserById, deleteUser, updateUser, getCurrentUser };
+export const getUsersByIds = async (req, res) => {
+  console.log("users by ids triggered");
+
+  try {
+    const { ids } = req.body;
+    console.log("ids", ids);
+
+    if (!Array.isArray(ids)) {
+      return res.status(400).json({ error: "IDs must be provided as an array." });
+    }
+
+    const users = await User.find({ _id: { $in: ids } });
+
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users by IDs:", error);
+    res.status(500).json({ error: "Failed to retrieve users." });
+  }
+};

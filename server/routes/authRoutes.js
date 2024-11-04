@@ -8,7 +8,7 @@ const router = Router();
 
 router.post("/register", registerValidation, addUser);
 router.post("/login", loginValidation, login);
-router.post("/logout",authCookie, logout);
+router.post("/logout", authCookie, logout);
 router.post("/refresh-token", refreshToken);
 router.get("/validate", authCookie, validate);
 
