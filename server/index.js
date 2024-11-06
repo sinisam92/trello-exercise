@@ -47,9 +47,11 @@ app.get("*", (_req, res) => {
 });
 
 const PORT = process.env.PORT || 3044;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${port}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
 
 app.use(function errorHandler(err, req, res, next) {
   res.status(err.status || 500).send({
@@ -58,3 +60,5 @@ app.use(function errorHandler(err, req, res, next) {
     },
   });
 });
+
+export default app;

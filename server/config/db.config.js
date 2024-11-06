@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 import config from "./config.js";
 
+// let connectionString = process.env.DEVELOPMENT
+//   ? process.env.ATLAS_URI_TEST
+//   : process.env.ATLAS_URI;
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(config.mongoUri);

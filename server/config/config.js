@@ -8,10 +8,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //if we are in production always load the .env
 if (process.env.NODE_ENV === "production") {
-  console.log = () => {}; 
-  console.error = () => {}; 
-  console.warn = () => {}; 
-  console.info = () => {}; 
+  console.log = () => {};
+  console.error = () => {};
+  console.warn = () => {};
+  console.info = () => {};
   dotenv.config();
 } else {
   //dev or staging or any other enviroment
@@ -26,13 +26,13 @@ if (process.env.NODE_ENV === "production") {
 
 const config = {
   env: env.NODE_ENV || "production",
-  tokenSecret: env.TOKEN_SECRET,
-  mongoUri: env.MONGO_URI,
-  jwtSecret: env.JWT_SECRET,
+  tokenSecret: env.JWT_SECRET,
+  mongoUri: env.NODE_ENV === "production" ? env.MONGO_URI : env.MONGO_URI_TEST,
+  jwtSecret: env.JWT_REFRESH_SECRET,
   // frontendOrigin
 };
 
-// console.log('ENV', config.env);
+// console.log("ENV", config.env);
 // console.log(config);
 
 export default config;

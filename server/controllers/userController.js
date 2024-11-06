@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 
-export const getAllUsers = async (_req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().lean();
     res.status(200).json(users);
