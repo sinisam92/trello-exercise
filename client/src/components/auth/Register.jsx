@@ -1,11 +1,11 @@
 import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useLocation } from "wouter";
 import * as Yup from "yup";
 
-import { fetchAllUsers, registerNewUser } from "../../reducers/userSlice";
+import { registerNewUser } from "../../reducers/userSlice";
 import Button from "../common/Button";
 
 const TextInput = ({ label, ...props }) => {
@@ -26,8 +26,6 @@ const TextInput = ({ label, ...props }) => {
 };
 
 const Register = () => {
-  const { users } = useSelector((state) => state.users);
-
   const [_, navigate] = useLocation();
   const dispatch = useDispatch();
 
@@ -39,13 +37,6 @@ const Register = () => {
     setSubmitting(true);
 
     try {
-      await dispatch(fetchAllUsers());
-
-      if (users.some((user) => user.email === email.toLowerCase())) {
-        setErrors({ email: "Email is already taken" });
-        return;
-      }
-
       const newUser = {
         username,
         firstName,
@@ -59,10 +50,22 @@ const Register = () => {
         avatarUrl: "",
       };
 
-      await dispatch(registerNewUser(newUser));
-      resetForm();
-      navigate("/login");
+      const resultAction = await dispatch(registerNewUser(newUser));
+      console.log("resultAction", resultAction);
+      if (
+        registerNewUser.fulfilled.match(resultAction) &&
+        !resultAction.payload.error
+      ) {
+        resetForm();
+        navigate("/login");
+      } else {
+        setErrors({
+          email: resultAction.payload.error || "An error occurred",
+        });
+      }
     } catch (error) {
+      console.log("Register error:", error);
+
       setErrors({ email: error.message });
     }
 
@@ -156,6 +159,7 @@ const Register = () => {
                 type="text"
                 placeholder="Enter your email"
               />
+
               <TextInput
                 id="password"
                 label="Password"
@@ -199,7 +203,7 @@ export default Register;
 
 Register.propTypes = {
   users: PropTypes.array,
-  registerUser: PropTypes.func,
+  registerNewUser: PropTypes.func,
 };
 
 TextInput.propTypes = {

@@ -76,7 +76,6 @@ const Login = () => {
         navigate(`projects`);
       } else if (loginUser.rejected.match(action)) {
         console.error("Login failed:", action.payload || action.error.message);
-        // setError(action.payload?.message || action.error.message);
         setError("Incorect email or password");
       }
     } catch (err) {
@@ -85,7 +84,6 @@ const Login = () => {
       setSubmitting(false);
     }
   };
-  console.log("Error:", error);
 
   return (
     <div className="relative flex flex-col justify-center items-center h-screen ">

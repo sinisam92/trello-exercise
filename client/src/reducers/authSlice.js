@@ -9,11 +9,6 @@ const setCookie = (name, value, options = {}) => {
   Cookies.set(name, value, { ...options, secure: true, sameSite: "strict" });
 };
 
-// removes cookies
-// const removeCookie = (name) => {
-//   Cookies.remove(name);
-// };
-
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (credentials, { rejectWithValue }) => {

@@ -38,14 +38,16 @@ export const registerNewUser = createAsyncThunk(
       const response = await addNewUser(newUser);
       return response;
     } catch (error) {
-      console.error("Failed to register new user:", error);
-      return rejectWithValue(error.message);
+      if (error.response && error.response.status === 400) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue("An unknown error occurred");
     }
   },
 );
 
 const initialState = {
-  users: null,
+  users: [],
   loading: false,
   error: null,
   usersByIds: null,
@@ -53,12 +55,7 @@ const initialState = {
 const userSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {
-    registerUser(state, action) {
-      state.users.push(action.payload);
-      registerNewUser(action.payload);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllUsers.pending, (state) => {
@@ -86,10 +83,23 @@ const userSlice = createSlice({
       .addCase(fetchUsersByIds.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(registerNewUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(registerNewUser.fulfilled, (state, action) => {
+        console.log("state before", state.users);
+        console.log("action.payload", action.payload);
+
+        state.users.push(action.payload);
+        console.log("state after", state.users);
+        state.status = "succeeded";
+      })
+      .addCase(registerNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });
-
-export const { registerUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -13,10 +13,8 @@ test("register with unique email", async ({ page }) => {
   await page.getByPlaceholder("Enter your email").fill(uniqueEmail);
   await page.getByPlaceholder("Enter your password").fill("John123");
   await page.getByPlaceholder("Confirm your password").fill("John123");
-
   await page.getByRole("button", { name: "Sign Up" }).click();
-  //   question: do I need to tell it where to go or it sgould be done automaticlly
-  await page.goto("http://localhost:5173/login");
+  await page.waitForURL("http://localhost:5173/login");
   await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
   await expect(page.getByText("Email")).toBeVisible();
   await expect(page.getByText("Password")).toBeVisible();

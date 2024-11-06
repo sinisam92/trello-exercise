@@ -8,11 +8,15 @@ export const apiClient = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, config);
+    console.log("response APi CLIENT", response);
 
     if (!response.ok) {
       let errorMessage;
 
       switch (response.status) {
+        case 400:
+          errorMessage = "User already exists with that email.";
+          break;
         case 401:
           errorMessage = "You must be logged in to access this resource.";
           break;
@@ -42,5 +46,6 @@ export const apiClient = async (endpoint, options = {}) => {
     return await response.json();
   } catch (error) {
     console.error("Network error:", error);
+    return { error: error.message };
   }
 };
