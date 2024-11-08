@@ -1,6 +1,5 @@
 import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "wouter";
 import * as Yup from "yup";
@@ -26,7 +25,7 @@ const TextInput = ({ label, ...props }) => {
 };
 
 const Register = () => {
-  const [_, navigate] = useLocation();
+  const [navigate] = useLocation();
   const dispatch = useDispatch();
 
   const handleRegister = async (

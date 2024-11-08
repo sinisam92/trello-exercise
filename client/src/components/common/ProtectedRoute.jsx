@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useRoute } from "wouter";
 
@@ -9,7 +9,7 @@ const ProtectedRoute = ({ component: Component, path }) => {
   const { isAuthenticated, isInitialized, status } = useSelector(
     (state) => state.auth,
   );
-  const [_, navigate] = useLocation();
+  const [navigate] = useLocation();
   const [match, params] = useRoute(path);
 
   useEffect(() => {

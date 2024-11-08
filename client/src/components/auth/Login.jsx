@@ -1,6 +1,6 @@
 import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useLocation } from "wouter";
@@ -49,7 +49,14 @@ const PasswordInput = ({ label, ...props }) => {
         />
         <div
           className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+          role="button"
+          tabIndex={0}
           onClick={togglePasswordVisibility}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              togglePasswordVisibility();
+            }
+          }}
         >
           {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
         </div>
@@ -63,7 +70,7 @@ const PasswordInput = ({ label, ...props }) => {
 
 const Login = () => {
   const [error, setError] = useState("");
-  const [_, navigate] = useLocation();
+  const [navigate] = useLocation();
   const dispatch = useDispatch();
   const formRef = useRef(null);
 

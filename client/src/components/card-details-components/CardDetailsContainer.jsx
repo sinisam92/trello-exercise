@@ -1,5 +1,3 @@
-import React from "react";
-
 import CardDetails from "../card-details-components/CardDetails";
 
 const CardDetailsContainer = () => {

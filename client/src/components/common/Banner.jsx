@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
 import { MdError } from "react-icons/md";
 import { PiInfoFill, PiWarningFill } from "react-icons/pi";
 import { twMerge } from "tailwind-merge";
