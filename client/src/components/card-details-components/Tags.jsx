@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
 
 import TagsIcon from "../../assets/icons/tags.svg";
 import Tag from "./Tag";

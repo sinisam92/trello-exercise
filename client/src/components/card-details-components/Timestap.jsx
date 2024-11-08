@@ -1,6 +1,5 @@
 import moment from "moment";
 import PropTypes from "prop-types";
-import React from "react";
 
 import Clock from "../../assets/icons/clock2.svg";
 

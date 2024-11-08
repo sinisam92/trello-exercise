@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
 import { twMerge } from "tailwind-merge";
 
 const Tag = ({ tag, handleSmallThingsToggle, smallTags, className }) => {
@@ -17,9 +16,14 @@ const Tag = ({ tag, handleSmallThingsToggle, smallTags, className }) => {
   );
 
   return (
-    <span key={tag} onClick={handleSmallThingsToggle} className={tagClasses}>
+    <button
+      key={tag}
+      onClick={handleSmallThingsToggle}
+      className={tagClasses}
+      aria-label={`Toggle ${tag}`}
+    >
       {smallTags ? null : tag}
-    </span>
+    </button>
   );
 };
 

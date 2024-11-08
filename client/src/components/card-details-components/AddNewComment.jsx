@@ -1,6 +1,6 @@
 import moment from "moment";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.bubble.css";
 import { useDispatch } from "react-redux";

@@ -1,0 +1,11 @@
+{
+    "plugins": ["jsx-a11y"],
+    "extends": ["plugin:jsx-a11y/recommended"],
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "warn",
+      "jsx-a11y/alt-text": "warn",
+      "jsx-a11y/aria-props": "warn",
+      "jsx-a11y/label-has-associated-control": "warn"
+    }
+  }
+  

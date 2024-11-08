@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
 
 import AssignedIcon from "../../assets/icons/assigned.svg";
 import Avatar from "../common/Avatar";

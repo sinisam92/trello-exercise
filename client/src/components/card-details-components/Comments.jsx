@@ -1,6 +1,5 @@
 import moment from "moment";
 import PropTypes from "prop-types";
-import React from "react";
 import { useDispatch } from "react-redux";
 
 import CommentIcon from "../../assets/icons/comment.svg";

@@ -1,6 +1,5 @@
 import moment from "moment";
 import PropTypes from "prop-types";
-import React from "react";
 import { useEffect, useRef, useState } from "react";
 // TODO: replace this with some other text editor as this one is return errors and not maintained
 import ReactQuill from "react-quill-new";
@@ -22,7 +21,7 @@ const AddCardModal = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState();
-  const [_, setTags] = useState([]);
+  const [setTags] = useState([]);
   const [assigned, setAssigned] = useState([]);
   const [dueDate, setDueDate] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
@@ -148,8 +147,11 @@ const AddCardModal = ({
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="mb-4">
-        <label className="block text-gray-700">Title</label>
+        <label htmlFor="card-title" className="block text-gray-700">
+          Title
+        </label>
         <input
+          id="card-title"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -160,8 +162,11 @@ const AddCardModal = ({
         {error && <div className="text-danger">{error}</div>}
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">Description</label>
+        <label htmlFor="card-description" className="block text-gray-700">
+          Description
+        </label>
         <ReactQuill
+          id="card-description"
           ref={quillRef}
           theme="snow"
           value={description}
@@ -188,9 +193,10 @@ const AddCardModal = ({
         </div>
       </div>
       <div className="mb-4">
-        <label className="block mb-2">
+        <label htmlFor="selectMembers" className="block mb-2">
           Assign to:
           <Select
+            id="selectMembers"
             isMulti
             options={currentProjectMembers}
             onChange={handleAssignedChange}
@@ -198,8 +204,11 @@ const AddCardModal = ({
         </label>
       </div>
       <div className="mb-4">
-        <label className="block text-gray-700">Due Date</label>
+        <label htmlFor="dueDate" className="block text-gray-700">
+          Due Date
+        </label>
         <input
+          id="dueDate"
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}

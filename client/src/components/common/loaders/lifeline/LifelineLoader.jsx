@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./life-line-loader.css";
 
 const LifelineLoader = () => {

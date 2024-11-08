@@ -2,7 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import moment from "moment";
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "wouter";
 
@@ -35,7 +35,7 @@ const Card = ({
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
-  const [location, _] = useLocation();
+  const [location] = useLocation();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);
@@ -49,7 +49,7 @@ const Card = ({
         console.error(error);
       }
     }
-  }, [dispatch, projectId]);
+  }, [dispatch, project]);
 
   useEffect(() => {
     getAssignedUsers();

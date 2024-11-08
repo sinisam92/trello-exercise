@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Component() {
   return (
     <div className="flex w-[450px]">
