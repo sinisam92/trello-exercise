@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { useSearch } from "../../contexts/SearchContext";
@@ -30,24 +30,11 @@ const Projects = ({ isChildMenuOpen }) => {
 
   const currentUser = useSelector((state) => state.auth.user);
 
+  console.log("currentUser", currentUser);
+
   const { projects } = useSelector((state) => state.projects);
 
-  // const allCurrentUsersProjects = useMemo(() => {
-  //   if (!currentUser) return [];
-  //   const uniqueProjects = new Map();
-
-  //   currentUser.createdProjects.forEach((project) => {
-  //     uniqueProjects.set(project._id, project);
-  //   });
-
-  //   currentUser.memberProjects.forEach((project) => {
-  //     uniqueProjects.set(project._id, project);
-  //   });
-
-  //   return Array.from(uniqueProjects.values());
-  // }, [currentUser]);
-
-  const getAllCurrentUsersProjects = () => {
+  const allCurrentUsersProjects = useMemo(() => {
     if (!currentUser) return [];
     const uniqueProjects = new Map();
 
@@ -60,9 +47,24 @@ const Projects = ({ isChildMenuOpen }) => {
     });
 
     return Array.from(uniqueProjects.values());
-  };
+  }, [currentUser]);
 
-  const allCurrentUsersProjects = getAllCurrentUsersProjects();
+  // const getAllCurrentUsersProjects = () => {
+  //   if (!currentUser) return [];
+  //   const uniqueProjects = new Map();
+
+  //   currentUser.createdProjects.forEach((project) => {
+  //     uniqueProjects.set(project._id, project);
+  //   });
+
+  //   currentUser.memberProjects.forEach((project) => {
+  //     uniqueProjects.set(project._id, project);
+  //   });
+
+  //   return Array.from(uniqueProjects.values());
+  // };
+
+  // const allCurrentUsersProjects = getAllCurrentUsersProjects();
 
   const filteredProjects = allCurrentUsersProjects.filter((project) =>
     project.name.toLowerCase().includes(searchTerm.toLowerCase()),

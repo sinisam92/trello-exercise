@@ -1,7 +1,7 @@
 import { apiClient } from "./apiClient";
 
 export const getProjects = async () => {
-  return await apiClient("projects");
+  return apiClient("projects");
 };
 
 export const getProjectById = async (projectId) => {
@@ -12,22 +12,25 @@ export const getProjectById = async (projectId) => {
 };
 
 export const createProject = async (project) => {
-  return await apiClient("projects", {
+  return apiClient("projects", {
     method: "POST",
     body: JSON.stringify(project),
-    //credentials: 'include'
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // credentials: "include",
   });
 };
 
-export const updateProject = async (project) => {
-  return await apiClient(`projects/${project.id}`, {
+export const updateProjectService = async (project) => {
+  return apiClient(`projects/${project.id}`, {
     method: "PUT",
     body: JSON.stringify(project),
   });
 };
 
-export const deleteProject = async (projectId) => {
-  return await apiClient(`projects/${projectId}`, {
+export const deleteProjectService = async (projectId) => {
+  return apiClient(`projects/${projectId}`, {
     method: "DELETE",
   });
 };

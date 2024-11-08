@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { getProjectById } from "../api/projectServices";
+import {
+  createProject,
+  deleteProjectService,
+  getProjectById,
+  getProjects,
+  updateProjectService,
+} from "../api/projectServices";
 
 export const fetchProject = createAsyncThunk(
   "projects/fetchProject",
@@ -19,32 +25,29 @@ export const fetchAllProjects = createAsyncThunk(
   "projects/fetchAllProjects",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/projects");
-      if (!response.ok) {
-        throw new Error("Failed to fetch projects");
-      }
-      return await response.json();
+      const data = await getProjects();
+
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   },
 );
 
-export const createProject = createAsyncThunk(
-  "projects/createProject",
+export const createNewProject = createAsyncThunk(
+  "projects/createNewProject",
   async (projectData, { rejectWithValue }) => {
+    console.log("projectData", projectData);
+
     try {
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(projectData),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create project");
+      const response = await createProject(projectData);
+      console.log("response", response);
+
+      if (response.error) {
+        return rejectWithValue(response.error);
       }
-      return await response.json();
+
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -55,17 +58,9 @@ export const updateProject = createAsyncThunk(
   "projects/updateProject",
   async ({ projectId, projectData }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(projectData),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update project");
-      }
-      return await response.json();
+      const response = await updateProjectService(projectId, projectData);
+
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -76,13 +71,8 @@ export const deleteProject = createAsyncThunk(
   "projects/deleteProject",
   async (projectId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete project");
-      }
-      return projectId;
+      const response = await deleteProjectService(projectId);
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -134,16 +124,16 @@ const projectsSlice = createSlice({
         state.error = action.payload;
       })
       // Create project
-      .addCase(createProject.pending, (state) => {
+      .addCase(createNewProject.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createProject.fulfilled, (state, action) => {
+      .addCase(createNewProject.fulfilled, (state, action) => {
         state.loading = false;
         state.projects.push(action.payload);
         state.currentProject = action.payload;
       })
-      .addCase(createProject.rejected, (state, action) => {
+      .addCase(createNewProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

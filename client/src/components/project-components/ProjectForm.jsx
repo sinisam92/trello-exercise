@@ -6,7 +6,7 @@ import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
 import * as Yup from "yup";
 
-import { createProject, updateProject } from "../../reducers/projectSlice";
+import { createNewProject, updateProject } from "../../reducers/projectSlice";
 
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -47,11 +47,12 @@ const ProjectForm = ({
   const formRef = useRef(null);
   const dispatch = useDispatch();
 
-  const { users, currentUser } = useSelector((state) => state.users);
-  const currentProject = useSelector((state) =>
-    state.projects.projects.find((project) => project.id === editingProjectId),
-  );
-
+  const { users } = useSelector((state) => state.users);
+  const { user } = useSelector((state) => state.auth);
+  // const currentProject = useSelector((state) =>
+  //   state.projects.projects.find((project) => project.id === editingProjectId),
+  // );
+  const { currentProject } = useSelector((state) => state.projects);
   /**
    *  Dummy data when new list is added
    */
@@ -118,11 +119,11 @@ const ProjectForm = ({
         coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
         lists: [dummyData],
         members: members,
-        createdBy: currentUser.username,
+        createdByUserId: user._id,
         slug: projectSlug,
       };
 
-      dispatch(createProject(newProject));
+      dispatch(createNewProject(newProject));
       setIsAdding(false);
     }
 
