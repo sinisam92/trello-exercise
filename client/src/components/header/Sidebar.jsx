@@ -22,7 +22,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const avatarUrl = currentUser ? currentUser.avatarUrl : "";
   const usernameForAt = username?.toLowerCase().replace(" ", "-");
   const dispatch = useDispatch();
-  const [, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const openAvatarModal = () => {
     setIsAvatarModalOpen(true);

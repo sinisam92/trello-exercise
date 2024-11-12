@@ -7,7 +7,7 @@ import Logout from "../../assets/icons/logout.svg";
 import Settings from "../../assets/icons/settings.svg";
 
 const SidebarMenu = ({ currentUser, handleLogout, handleCloseSidebar }) => {
-  const [, navigate] = useLocation();
+  const [_, navigate] = useLocation();
 
   const sidebarItems = [
     {

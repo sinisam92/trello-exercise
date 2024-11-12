@@ -9,7 +9,7 @@ const ProtectedRoute = ({ component: Component, path }) => {
   const { isAuthenticated, isInitialized, status } = useSelector(
     (state) => state.auth,
   );
-  const [, navigate] = useLocation();
+  const [_, navigate] = useLocation();
   const [match, params] = useRoute(path);
 
   useEffect(() => {

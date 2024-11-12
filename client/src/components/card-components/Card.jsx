@@ -31,16 +31,12 @@ const Card = ({
 }) => {
   const dispatch = useDispatch();
   const { usersByIds } = useSelector((state) => state.users);
-  const [openCardOptionsId, setOpenCardOptionsId] = useState(null);
-  const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
-  const [selectedCardId, setSelectedCardId] = useState(null);
 
-  // eslint-disable-next-line no-unused-vars
+  const [openCardOptionsId, setOpenCardOptionsId] = useState(null);
+
   const [_, location] = useLocation();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
-  const moveIconRef = useRef(null);
-  const moveMenuRef = useRef(null);
 
   const getAssignedUsers = useCallback(async () => {
     if (project && project.membersId) {
@@ -69,7 +65,6 @@ const Card = ({
   useClickOutside([cardOptionsRef, optionsIconRef], () =>
     setOpenCardOptionsId(null),
   );
-  useClickOutside([moveMenuRef, moveIconRef], () => setIsMoveMenuOpen(false));
 
   const openModal = (e, card, list) => {
     e.preventDefault();
@@ -113,45 +108,6 @@ const Card = ({
   const handleSmallThingsToggle = (e) => {
     e.preventDefault();
     setSmallTags((prev) => !prev);
-  };
-
-  const handleMoveCard = (e, listId) => {
-    e.preventDefault();
-    if (selectedCardId) {
-      setProjects((prevProjects) => {
-        return prevProjects.map((proj) => {
-          if (proj.id === projectId) {
-            let cardToMove;
-            // let sourceListId;
-
-            const updatedLists = proj.lists.map((list) => {
-              const cardIndex = list.cards.findIndex(
-                (card) => card.id === selectedCardId,
-              );
-              if (cardIndex !== -1) {
-                cardToMove = list.cards[cardIndex];
-                // sourceListId = list.id;
-                return {
-                  ...list,
-                  cards: list.cards.filter((_, index) => index !== cardIndex),
-                };
-              }
-              return list;
-            });
-
-            const targetList = updatedLists.find((list) => list.id === listId);
-            if (targetList) {
-              targetList.cards.push({ ...cardToMove, status: targetList.name });
-            }
-
-            return { ...proj, lists: updatedLists };
-          }
-          return proj;
-        });
-      });
-      setIsMoveMenuOpen(false);
-      setSelectedCardId(null);
-    }
   };
 
   const isPastDue = moment(card.dueDate).isBefore(moment(), "day");
@@ -228,24 +184,6 @@ const Card = ({
             </button>
           </div>
         )}
-        {isMoveMenuOpen && (
-          <div
-            ref={moveMenuRef}
-            className="absolute top-0 right-10 bg-white text-black border rounded "
-          >
-            <ul className="list-none px-2">
-              {project.lists.map((list) => (
-                <ListItem
-                  key={list.id}
-                  text={list.name}
-                  onClick={(e) => handleMoveCard(e, list.id)}
-                  className="px-2 py-1 cursor-pointer hover:bg-gray-200"
-                />
-              ))}
-            </ul>
-          </div>
-        )}
-
         {openCardOptionsId === card.id && (
           <div
             ref={cardOptionsRef}
