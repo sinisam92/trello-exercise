@@ -48,6 +48,7 @@ jobs:
       if: always() 
       uses:  davelosert/vitest-coverage-report-action@v2
       with:
+          json-final-path: ./client/coverage/coverage-final.json
           vite-config-path: ./client/vite.config.js
           json-summary-compare-path: ./client/coverage/coverage-final.json
           json-summary-path: ./client/coverage/coverage-final.json
