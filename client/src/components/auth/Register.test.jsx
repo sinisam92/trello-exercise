@@ -20,7 +20,7 @@ describe("Register", () => {
     const passwordInput = screen.getByLabelText("Password");
     const registerButton = screen.getByRole("button", { name: /Sign up/i });
 
-    expect(usernameInput).toBeInTheDocument();
+    expect(usernameInput).not.toBeInTheDocument();
     expect(firstNameInput).toBeInTheDocument();
     expect(lastNameInput).toBeInTheDocument();
     expect(emailInput).toBeInTheDocument();
