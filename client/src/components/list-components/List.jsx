@@ -1,7 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import PropTypes from "prop-types";
-import React from "react";
 import { Link } from "wouter";
 
 import Dots from "../../assets/icons/dots.svg";
@@ -105,7 +104,7 @@ const ListSection = ({
               onKeyDown={(event) => handleKeyPress(event, list.id)}
               placeholder="Enter list name"
               className="p-2 ml-4 w-[96%] bg-primaryDark border-0 border-b-2 border-white text-white rounded-t-[12px] text-2xl focus:outline-none focus:ring-0"
-              autoFocus
+              // autoFocus
             />
           </form>
         ) : (

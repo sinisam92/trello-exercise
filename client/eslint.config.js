@@ -32,36 +32,22 @@ export default [
       ...reactHooks.configs.recommended.rules,
       ...jsxA11y.configs.recommended.rules,
       "react/jsx-no-target-blank": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
-      // disable prop type checking for whole project
-      // "react/prop-types": "off",
-      // enable stricter rule for JSX
     },
   },
-  //   { files: ["**/*.{js,mjs,cjs,jsx}"] ,
-
-  //     languageOptions: {
-  //       globals: globals.browser,
-  //     },
-
-  //     rules: {
-  //       "no-unused-vars": [
-  //         "error",
-  //         {
-  //           args: "all",
-  //           argsIgnorePattern: "^_",
-  //           caughtErrors: "all",
-  //           caughtErrorsIgnorePattern: "^_",
-  //           destructuredArrayIgnorePattern: "^_",
-  //           varsIgnorePattern: "^_",
-  //           ignoreRestSiblings: true,
-  //         },
-  //       ],
-  //     },
-  //   pluginJs.configs.recommended,
-  //   pluginReact.configs.flat.recommended
-  // },
 ];

@@ -70,7 +70,7 @@ const PasswordInput = ({ label, ...props }) => {
 
 const Login = () => {
   const [error, setError] = useState("");
-  const [, navigate] = useLocation();
+  const [_, navigate] = useLocation();
   const dispatch = useDispatch();
   const formRef = useRef(null);
 

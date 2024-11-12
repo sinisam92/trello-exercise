@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, Route, Switch } from "wouter";
 
@@ -36,13 +36,6 @@ const App = () => {
     dispatch(initializeAuth());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const projects = JSON.parse(localStorage.getItem("projects"));
-  //   if (!projects || projects.length === 0) {
-  //     dispatch(fetchProjects());
-  //   }
-  // }, [dispatch]);
-
   if (!isInitialized || status === "loading") {
     return <LifelineLoader />;
   }
@@ -61,7 +54,6 @@ const App = () => {
           component={() => <Projects isChildMenuOpen={isChildMenuOpen} />}
         />
         <ProtectedRoute path="projects/:projectId" component={ProjectDetails} />
-        {/* <Route path="projects/:projectId" component={ProjectDetails} /> */}
         <ProtectedRoute
           path="projects/:projectId/card/:cardId"
           component={CardDetailsContainer}

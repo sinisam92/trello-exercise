@@ -1,13 +1,12 @@
 import PropTypes from "prop-types";
-import React from "react";
 
 const ListItem = ({ onClick, text, className }) => (
-  <li
+  <button
     onClick={onClick}
     className={`flex items-center hover:bg-primary p-2 rounded ${className}`}
   >
     {text}
-  </li>
+  </button>
 );
 
 export default ListItem;
