@@ -8,14 +8,14 @@ on:
     branches: [ "main", "cicd-test" ]
   pull_request:
     branches: [ "main", "cicd-test" ]
-
+    
+defaults:
+  run:
+    working-directory: ./client
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./client
      # for coverage
     permissions:
       # Required to checkout the code
@@ -35,7 +35,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd client
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
