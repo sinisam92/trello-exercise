@@ -43,9 +43,11 @@ jobs:
     # Coverage
     - name: 'Test coverage'
       run: npx vitest --coverage 
-      working-directory: ./client
     - name: 'Report Coverage'
     # Only works if you set `reportOnFailure: true` in your vite config as specified above
       if: always() 
       uses:  davelosert/vitest-coverage-report-action@v2
+      with:
+          config: ./client/vite.config.js
+
 
