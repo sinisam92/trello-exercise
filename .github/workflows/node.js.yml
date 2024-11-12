@@ -48,6 +48,6 @@ jobs:
       if: always() 
       uses:  davelosert/vitest-coverage-report-action@v2
       with:
-          config: ./client/vite.config.js
+          vite-config-path: ./client/vite.config.js
 
 
