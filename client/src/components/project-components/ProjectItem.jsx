@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "wouter";
 
@@ -131,7 +131,7 @@ const ProjectItem = ({
           <img
             src={project.coverImage}
             onError={(e) => handleError(e, project.name)}
-            alt="cover image"
+            alt={project.name}
             className="absolute -z-10 h-full w-full object-cover"
           />
           <div className="flex justify-between items-center h-full md:pl-[20%]">

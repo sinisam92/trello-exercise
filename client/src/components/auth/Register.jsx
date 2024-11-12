@@ -25,7 +25,7 @@ const TextInput = ({ label, ...props }) => {
 };
 
 const Register = () => {
-  const [navigate] = useLocation();
+  const [, navigate] = useLocation();
   const dispatch = useDispatch();
 
   const handleRegister = async (

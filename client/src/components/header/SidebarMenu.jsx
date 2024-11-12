@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
 import { useLocation } from "wouter";
 
 import Cards from "../../assets/icons/cards.svg";
@@ -8,14 +7,14 @@ import Logout from "../../assets/icons/logout.svg";
 import Settings from "../../assets/icons/settings.svg";
 
 const SidebarMenu = ({ currentUser, handleLogout, handleCloseSidebar }) => {
-  const [_, navigate] = useLocation();
+  const [, navigate] = useLocation();
 
   const sidebarItems = [
     {
       id: 1,
       icon: Cards,
       text: "My Cards",
-      path: `/user/${currentUser.id}/cards`,
+      path: `/user/${currentUser?.id}/cards`,
     },
     { id: 2, icon: Settings, text: "Settings", path: "/settings" },
     { id: 3, icon: Info, text: "Info", path: "/info" },

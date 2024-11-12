@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { useSearch } from "../../contexts/SearchContext";
@@ -19,7 +19,7 @@ const Projects = ({ isChildMenuOpen }) => {
   const [alertTheme, setAlertTheme] = useState("");
   const [bannerMessage, setBannerMessage] = useState("");
 
-  const [_, setIsEditing] = useState(false);
+  const [, setIsEditing] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);

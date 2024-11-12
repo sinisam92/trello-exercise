@@ -35,7 +35,7 @@ const Card = ({
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
-  const [location] = useLocation();
+  const [, location] = useLocation();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);

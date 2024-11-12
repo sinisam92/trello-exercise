@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "wouter";
 
 import Close from "../../assets/icons/close.svg";
 import { logout } from "../../reducers/authSlice";
-// import { setUsers } from "../../reducers/userSlice";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
 import SidebarMenu from "./SidebarMenu";
@@ -15,14 +14,13 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [error, setError] = useState("");
 
-  // const { users } = useSelector((state) => state.users);
   const currentUser = useSelector((state) => state.auth.user);
 
   const username = currentUser ? currentUser.username : null;
 
   const defaultAvatar = currentUser && currentUser.defaultAvatar;
   const avatarUrl = currentUser ? currentUser.avatarUrl : "";
-  const usernameForAt = username.toLowerCase().replace(" ", "-");
+  const usernameForAt = username?.toLowerCase().replace(" ", "-");
   const dispatch = useDispatch();
   const [, navigate] = useLocation();
 

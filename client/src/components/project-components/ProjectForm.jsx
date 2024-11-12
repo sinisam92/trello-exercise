@@ -1,6 +1,6 @@
 import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";

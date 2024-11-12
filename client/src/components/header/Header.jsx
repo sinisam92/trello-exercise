@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "wouter";
 
@@ -16,7 +16,7 @@ import Sidebar from "./Sidebar";
 const Header = ({ setIsChildMenuOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [_, setIsNotificationOpen] = useState(false);
+  const [setIsNotificationOpen] = useState(false);
   const [title, setTitle] = useState("");
 
   const [location, navigate] = useLocation();
@@ -37,9 +37,9 @@ const Header = ({ setIsChildMenuOpen }) => {
   const { projectId, cardId } = getParamsFromUrl();
 
   useEffect(() => {
-    if (currentProject && location === `/projects/${currentProject._id}`) {
+    if (currentProject && location === `/projects/${currentProject?._id}`) {
       setTitle(currentProject.name);
-    } else if (location === `/user/${currentUser._id}/cards`) {
+    } else if (location === `/user/${currentUser?._id}/cards`) {
       setTitle(`${currentUser.username}'s Cards`);
     } else {
       setTitle("Projects");
@@ -100,16 +100,9 @@ const Header = ({ setIsChildMenuOpen }) => {
           <div className="flex items-center gap-x-4 flex-grow">
             {location === "/projects" ? (
               <>
-                <div>
-                  <button>
-                    <img
-                      onClick={onBellClick}
-                      src={Bell}
-                      alt="Notification Bell"
-                      className="w-5"
-                    />
-                  </button>
-                </div>
+                <button onClick={onBellClick} aria-label="Notification Bell">
+                  <img src={Bell} alt="Notification Bell" className="w-5" />
+                </button>
                 <div>
                   <button onClick={onSearchClick}>
                     <img src={Search} alt="Search Icon" className="w-5" />
@@ -117,16 +110,15 @@ const Header = ({ setIsChildMenuOpen }) => {
                 </div>
               </>
             ) : (
-              <div>
-                <button>
-                  <img
-                    onClick={handleReturn}
-                    src={Return}
-                    alt="Return"
-                    className="w-5"
-                  />
-                </button>
-              </div>
+              <button
+                onClick={handleReturn}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") handleReturn();
+                }}
+                aria-label="Return"
+              >
+                <img src={Return} alt="Return" className="w-5" />
+              </button>
             )}
           </div>
           <div className="flex-grow-[2] w-1/2 text-center">
@@ -154,24 +146,24 @@ const Header = ({ setIsChildMenuOpen }) => {
                 <img src={Menu} alt="Menu Icon" className="w-5" />
               </button>
             ) : (
-              <div>
-                <button>
-                  <img
-                    onClick={onBellClick}
-                    src={Bell}
-                    alt="Notification Bell"
-                  />
-                </button>
-              </div>
+              <button onClick={onBellClick} aria-label="Notification Bell">
+                <img src={Bell} alt="Notification Bell" className="w-5" />
+              </button>
             )}
           </div>
         </div>
-        <div
+        <button
           className={
             isMenuOpen ? "absolute top-0 left-0 h-screen w-screen z-20" : ""
           }
           onClick={handleCloseSidebar}
-        ></div>
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              handleCloseSidebar();
+            }
+          }}
+          aria-label="Close Sidebar"
+        ></button>
         <motion.section
           className={`${!isMenuOpen && "hidden"} absolute z-40 right-0 top-0 w-[320px] h-screen bg-primary border-l border-primaryTextColor `}
           animate={

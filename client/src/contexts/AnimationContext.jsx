@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AnimationContext = createContext();
 
