@@ -27,7 +27,7 @@ const TextInput = ({ label, ...props }) => {
 const Register = () => {
   const [, navigate] = useLocation();
   const dispatch = useDispatch();
-
+  console.log("cicd test in Register");
   const handleRegister = async (
     values,
     { setSubmitting, setErrors, resetForm },
