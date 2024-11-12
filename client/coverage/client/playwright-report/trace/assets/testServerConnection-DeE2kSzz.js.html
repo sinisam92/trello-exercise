@@ -1,0 +1,88 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for client/playwright-report/trace/assets/testServerConnection-DeE2kSzz.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">client/playwright-report/trace/assets</a> testServerConnection-DeE2kSzz.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >var c;(a=&gt;{function e(s){for(const t of s.splice(0))t.dispose()}a.disposeAll=e})(c||(c={}));class r{constructor(){this._listeners=new Set,this.event=(e,s)=&gt;{this._listeners.add(e);let t=!1;const i=this,n={dispose(){t||(t=!0,i._listeners.delete(e))}};return s&amp;&amp;s.push(n),n}}fire(e){const s=!this._deliveryQueue;this._deliveryQueue||(this._deliveryQueue=[]);for(const t of this._listeners)this._deliveryQueue.push({listener:t,event:e});if(s){for(let t=0;t&lt;this._deliveryQueue.length;t++){const{listener:i,event:n}=this._deliveryQueue[t];i.call(null,n)}this._deliveryQueue=void 0}}dispose(){this._listeners.clear(),this._deliveryQueue&amp;&amp;(this._deliveryQueue=[])}}class u{constructor(e){this._ws=new WebSocket(e)}onmessage(e){this._ws.addEventListener("message",s=&gt;e(s.data))}onopen(e){this._ws.addEventListener("open",e)}onerror(e){this._ws.addEventListener("error",e)}onclose(e){this._ws.addEventListener("close",e)}send(e){this._ws.send(e)}close(){this._ws.close()}}class p{constructor(e){this._onCloseEmitter=new r,this._onReportEmitter=new r,this._onStdioEmitter=new r,this._onTestFilesChangedEmitter=new r,this._onLoadTraceRequestedEmitter=new r,this._lastId=0,this._callbacks=new Map,this._isClosed=!1,this.onClose=this._onCloseEmitter.event,this.onReport=this._onReportEmitter.event,this.onStdio=this._onStdioEmitter.event,this.onTestFilesChanged=this._onTestFilesChangedEmitter.event,this.onLoadTraceRequested=this._onLoadTraceRequestedEmitter.event,this._transport=e,this._transport.onmessage(t=&gt;{const i=JSON.parse(t),{id:n,result:l,error:o,method:d,params:_}=i;if(n){const h=this._callbacks.get(n);if(!h)return;this._callbacks.delete(n),o?h.reject(new Error(o)):h.resolve(l)}else this._dispatchEvent(d,_)});const s=setInterval(()=&gt;this._sendMessage("ping").catch(()=&gt;{}),3e4);this._connectedPromise=new Promise((t,i)=&gt;{this._transport.onopen(t),this._transport.onerror(i)}),this._transport.onclose(()=&gt;{this._isClosed=!0,this._onCloseEmitter.fire(),clearInterval(s)})}isClosed(){return this._isClosed}async _sendMessage(e,s){const t=globalThis.__logForTest;t==null||t({method:e,params:s}),await this._connectedPromise;const i=++this._lastId,n={id:i,method:e,params:s};return this._transport.send(JSON.stringify(n)),new Promise((l,o)=&gt;{this._callbacks.set(i,{resolve:l,reject:o})})}_sendMessageNoReply(e,s){this._sendMessage(e,s).catch(()=&gt;{})}_dispatchEvent(e,s){e==="report"?this._onReportEmitter.fire(s):e==="stdio"?this._onStdioEmitter.fire(s):e==="testFilesChanged"?this._onTestFilesChangedEmitter.fire(s):e==="loadTraceRequested"&amp;&amp;this._onLoadTraceRequestedEmitter.fire(s)}async initialize(e){await this._sendMessage("initialize",e)}async ping(e){await this._sendMessage("ping",e)}async pingNoReply(e){this._sendMessageNoReply("ping",e)}async watch(e){await this._sendMessage("watch",e)}watchNoReply(e){this._sendMessageNoReply("watch",e)}async open(e){await this._sendMessage("open",e)}openNoReply(e){this._sendMessageNoReply("open",e)}async resizeTerminal(e){await this._sendMessage("resizeTerminal",e)}resizeTerminalNoReply(e){this._sendMessageNoReply("resizeTerminal",e)}async checkBrowsers(e){return await this._sendMessage("checkBrowsers",e)}async installBrowsers(e){await this._sendMessage("installBrowsers",e)}async runGlobalSetup(e){return await this._sendMessage("runGlobalSetup",e)}async runGlobalTeardown(e){return await this._sendMessage("runGlobalTeardown",e)}async startDevServer(e){return await this._sendMessage("startDevServer",e)}async stopDevServer(e){return await this._sendMessage("stopDevServer",e)}async clearCache(e){return await this._sendMessage("clearCache",e)}async listFiles(e){return await this._sendMessage("listFiles",e)}async listTests(e){return await this._sendMessage("listTests",e)}async runTests(e){return await this._sendMessage("runTests",e)}async findRelatedTestFiles(e){return await this._sendMessage("findRelatedTestFiles",e)}async stopTests(e){await this._sendMessage("stopTests",e)}stopTestsNoReply(e){this._sendMessageNoReply("stopTests",e)}async closeGracefully(e){await this._sendMessage("closeGracefully",e)}close(){try{this._transport.close()}catch{}}}export{p as T,u as W};<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2024-11-12T09:09:16.165Z
+            </div>
+        <script src="../../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
+    </body>
+</html>
+    

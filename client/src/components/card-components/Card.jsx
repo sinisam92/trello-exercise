@@ -35,7 +35,8 @@ const Card = ({
   const [isMoveMenuOpen, setIsMoveMenuOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
 
-  const [, location] = useLocation();
+  // eslint-disable-next-line no-unused-vars
+  const [_, location] = useLocation();
   const cardOptionsRef = useRef(null);
   const optionsIconRef = useRef(null);
   const moveIconRef = useRef(null);
