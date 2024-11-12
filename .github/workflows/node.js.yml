@@ -50,6 +50,7 @@ jobs:
       with:
           # json-final-path: ./client/coverage/coverage-final.json
           vite-config-path: ./client/vite.config.js
+          working-directory: ./client
           # json-summary-compare-path: ./client/coverage/coverage-final.json
           # json-summary-path: ./client/coverage/coverage-final.json
 
