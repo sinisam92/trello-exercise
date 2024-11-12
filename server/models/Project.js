@@ -22,11 +22,11 @@ const projectSchema = new mongoose.Schema(
       required: true,
       maxLength: 50,
     },
-    description: {
-      type: String,
-      required: true,
-      maxLength: 500,
-    },
+    // description: {
+    //   type: String,
+    //   required: true,
+    //   maxLength: 500,
+    // },
     lists: [{ type: String, required: true, ref: "List" }],
     coverImage: {
       type: String,

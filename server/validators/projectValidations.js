@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 
 const projectValidation = [
   // param("_id").isUUID().withMessage("ID must be a valid and unique UUID"),
@@ -11,14 +11,14 @@ const projectValidation = [
     .withMessage("Title must not exceed 50 characters")
     .trim()
     .escape(),
-  body("description")
-    .isString()
-    .withMessage("Description must be a string")
-    .isLength({ max: 550 })
-    .withMessage("Description must not exceed 550 characters")
-    .optional()
-    .trim()
-    .escape(),
+  // body("description")
+  //   .isString()
+  //   .withMessage("Description must be a string")
+  //   .isLength({ max: 550 })
+  //   .withMessage("Description must not exceed 550 characters")
+  //   .optional()
+  //   .trim()
+  //   .escape(),
   body("dueDate")
     .isDate()
     .withMessage("Due date must be a valid date")

@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import List from "../models/List.js";
 import Project from "../models/Project.js";
+import User from "../models/User.js";
 
 export const getAllProjects = async (req, res) => {
   try {
@@ -36,9 +37,20 @@ export const createProject = async (req, res) => {
   }
 
   const newProject = req.body;
+  const userId = newProject.createdByUserId;
+  console.log("newProject", newProject);
 
   try {
     const projectToAdd = new Project(newProject);
+    console.log("projectToAdd", projectToAdd);
+
+    const user = await User.findById(userId);
+
+    if (userId === user._id) {
+      user.createdProjects.push(projectToAdd._id);
+      await user.save();
+    }
+
     await projectToAdd.save();
     res.status(201).json(newProject);
   } catch (error) {

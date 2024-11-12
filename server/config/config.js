@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "production") {
 const config = {
   env: env.NODE_ENV || "production",
   tokenSecret: env.JWT_SECRET,
-  mongoUri: env.NODE_ENV === "production" ? env.MONGO_URI : env.MONGO_URI_TEST,
+  mongoUri: env.MONGO_URI,
   jwtSecret: env.JWT_REFRESH_SECRET,
   // frontendOrigin
 };
