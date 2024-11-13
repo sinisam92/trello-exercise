@@ -119,7 +119,7 @@ const Card = ({
       {...listeners}
       {...attributes}
       id={card.id}
-      className={`bg-secundary min-w-[250px] max-w-[250px] text-white p-4 rounded-lg m-4 ${className}`}
+      className={` bg-secundary min-w-[250px] max-w-[250px] text-white p-4 rounded-lg m-4 ${className}`}
     >
       <div className=" flex justify-between items-center">
         <div>
