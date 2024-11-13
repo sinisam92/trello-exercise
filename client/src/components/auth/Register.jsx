@@ -50,7 +50,7 @@ const Register = () => {
       };
 
       const resultAction = await dispatch(registerNewUser(newUser));
-      console.log("resultAction12344566", resultAction);
+      console.log("resultAction", resultAction);
       if (
         registerNewUser.fulfilled.match(resultAction) &&
         !resultAction.payload.error
