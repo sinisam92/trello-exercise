@@ -1,21 +1,19 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { useParams } from "wouter";
 
+// import { useParams } from "wouter";
 import Plus from "../../assets/icons/plus.svg";
+import { updateProject } from "../../reducers/projectSlice";
 
-const AddNewList = ({
-  isAdding,
-  setIsAdding,
-  newListName,
-  setNewListName,
-  handleInputChange,
-  handleCancel,
-  setProjects,
-}) => {
+const AddNewList = ({ projectId, currentProject, user }) => {
   const [error, setError] = useState("");
-  const { projectId } = useParams();
+  const [isAdding, setIsAdding] = useState(false);
+  const [newListName, setNewListName] = useState("");
+
+  const dispatch = useDispatch();
+  // const { projectId } = useParams();
 
   /**
    * Handles adding a new list to the project
@@ -30,26 +28,40 @@ const AddNewList = ({
       newListName.charAt(0).toUpperCase() + newListName.slice(1);
     const formattedSlug = newListName.toLowerCase().replace(/\s/g, "-");
     const newList = {
-      id: uuidv4(),
+      _id: uuidv4(),
+      prodjectId: projectId,
+      createdByUserId: user._id,
       name: formattedName,
       cards: [],
       slug: formattedSlug,
     };
 
-    setProjects((prevProjects) =>
-      prevProjects.map((project) =>
-        project.id === projectId
-          ? { ...project, lists: [...project.lists, newList] }
-          : project,
-      ),
-    );
+    "newList", newList;
+
+    const updatedProject = {
+      ...currentProject,
+      lists: [...currentProject.lists, newList],
+    };
+
+    dispatch(updateProject(updatedProject));
 
     setNewListName("");
     setIsAdding(false);
   };
 
+  const handleCancel = () => {
+    setIsAdding(false);
+    setNewListName("");
+    setError("");
+  };
+
   const handleCancelNewList = () => {
     handleCancel();
+    setError("");
+  };
+
+  const handleInputChange = (e) => {
+    setNewListName(e.target.value);
     setError("");
   };
 
@@ -68,7 +80,7 @@ const AddNewList = ({
           <input
             type="text"
             value={newListName}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputChange(e)}
             required
             placeholder={error ? error : "Enter list name"}
             className={`border p-2 rounded mr-2 ${error ? "placeholder:text-red-500 border-red-500 focus:ring-red-500" : "placeholder:text-sm"} `}
@@ -94,11 +106,7 @@ const AddNewList = ({
 export default AddNewList;
 
 AddNewList.propTypes = {
-  isAdding: PropTypes.bool,
-  setIsAdding: PropTypes.func,
-  newListName: PropTypes.string,
-  setNewListName: PropTypes.func,
-  handleInputChange: PropTypes.func,
-  handleCancel: PropTypes.func,
-  setProjects: PropTypes.func,
+  projectId: PropTypes.string,
+  user: PropTypes.object,
+  currentProject: PropTypes.object,
 };

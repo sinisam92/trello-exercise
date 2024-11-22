@@ -37,11 +37,8 @@ export const fetchAllProjects = createAsyncThunk(
 export const createNewProject = createAsyncThunk(
   "projects/createNewProject",
   async (projectData, { rejectWithValue }) => {
-    console.log("projectData", projectData);
-
     try {
       const response = await createProject(projectData);
-      console.log("response", response);
 
       if (response.error) {
         return rejectWithValue(response.error);
@@ -56,9 +53,9 @@ export const createNewProject = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
-  async ({ projectId, projectData }, { rejectWithValue }) => {
+  async (projectData, { rejectWithValue }) => {
     try {
-      const response = await updateProjectService(projectId, projectData);
+      const response = await updateProjectService(projectData);
 
       return response;
     } catch (error) {
@@ -84,16 +81,27 @@ const projectsSlice = createSlice({
   initialState: {
     projects: [],
     currentProject: null,
+    status: "idle",
     loading: false,
     error: null,
   },
   reducers: {
-    // setCurrentProject: (state, action) => {
-    //   state.currentProject = action.payload;
-    // },
-    // clearCurrentProject: (state) => {
-    //   state.currentProject = null;
-    // },
+    setCurrentProject: (state, action) => {
+      const projectId = action.payload;
+
+      const currProject = state.projects.find(
+        (project) => project._id === projectId,
+      );
+
+      if (currProject) {
+        state.currentProject = currProject;
+      } else {
+        console.warn(`Project with ID ${projectId} not found in state`);
+      }
+    },
+    clearCurrentProject: (state) => {
+      state.currentProject = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -113,14 +121,17 @@ const projectsSlice = createSlice({
       // Fetch all projects
       .addCase(fetchAllProjects.pending, (state) => {
         state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchAllProjects.fulfilled, (state, action) => {
         state.loading = false;
+        state.status = "succeeded";
         state.projects = action.payload;
       })
       .addCase(fetchAllProjects.rejected, (state, action) => {
         state.loading = false;
+        state.status = "failed";
         state.error = action.payload;
       })
       // Create project
@@ -144,14 +155,26 @@ const projectsSlice = createSlice({
         state.error = null;
       })
       .addCase(updateProject.fulfilled, (state, action) => {
-        state.loading = false;
-        const index = state.projects.findIndex(
-          (p) => p.id === action.payload.id,
-        );
+        const updatedProject = action.payload;
+
+        const index = state.projects.findIndex((project) => {
+          return project._id === updatedProject._id;
+        });
+
         if (index !== -1) {
-          state.projects[index] = action.payload;
+          state.projects = [
+            ...state.projects.slice(0, index),
+            updatedProject,
+            ...state.projects.slice(index + 1),
+          ];
+        } else {
+          console.log("Project not found in state");
         }
-        state.currentProject = action.payload;
+        if (state.currentProject?._id === updatedProject._id) {
+          state.currentProject = updatedProject;
+        }
+
+        state.loading = false;
       })
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;
@@ -180,6 +203,6 @@ const projectsSlice = createSlice({
   },
 });
 
-// export const { setCurrentProject, clearCurrentProject } = projectsSlice.actions;
+export const { setCurrentProject, clearCurrentProject } = projectsSlice.actions;
 
 export default projectsSlice.reducer;

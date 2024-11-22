@@ -2,11 +2,15 @@ import PropTypes from "prop-types";
 
 import Plus from "../../assets/icons/plus.svg";
 
-const AddNewProject = ({ setIsAdding, isAdding }) => {
+const AddNewProject = ({ setIsAdding, isAdding, setIsEditing }) => {
+  const handleAddProject = () => {
+    setIsEditing(false);
+    setIsAdding((prevState) => !prevState);
+  };
   return (
     <div className="fixed bottom-32 right-10 z-40">
       <button
-        onClick={() => setIsAdding((prevState) => !prevState)}
+        onClick={() => handleAddProject()}
         className=" text-white p-3 rounded-full h-[100px] w-[100px] flex justify-center items-center bg-success"
       >
         <img
@@ -23,5 +27,6 @@ export default AddNewProject;
 
 AddNewProject.propTypes = {
   setIsAdding: PropTypes.func,
+  setIsEditing: PropTypes.func,
   isAdding: PropTypes.bool,
 };

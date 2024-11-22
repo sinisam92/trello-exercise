@@ -14,6 +14,7 @@ import ProjectDetails from "./components/project-components/ProjectDetails";
 import Projects from "./components/project-components/Projects";
 import Settings from "./components/settings-components/Settings";
 import { initializeAuth } from "./reducers/authSlice";
+import { fetchAllProjects } from "./reducers/projectSlice";
 
 // Disables loging in production
 // TODO: Make more robust in the future, this was just a quick one to test
@@ -34,6 +35,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeAuth());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchAllProjects());
   }, [dispatch]);
 
   if (!isInitialized || status === "loading") {

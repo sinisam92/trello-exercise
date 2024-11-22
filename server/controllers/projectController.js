@@ -38,11 +38,9 @@ export const createProject = async (req, res) => {
 
   const newProject = req.body;
   const userId = newProject.createdByUserId;
-  console.log("newProject", newProject);
 
   try {
     const projectToAdd = new Project(newProject);
-    console.log("projectToAdd", projectToAdd);
 
     const user = await User.findById(userId);
 
@@ -60,10 +58,10 @@ export const createProject = async (req, res) => {
 };
 
 export const deleteProject = async (req, res) => {
-  const paramsId = req.params.id;
+  const { projectId } = req.params;
 
   try {
-    const project = await Project.findByIdAndDelete(paramsId);
+    const project = await Project.findByIdAndDelete(projectId);
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
@@ -81,15 +79,12 @@ export const updateProject = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errror: errors.array() });
   }
-  const paramsId = req.params.id;
+  const { projectId } = req.params;
   const updatedData = req.body;
-
-  console.log("paramsId", paramsId);
-  console.log("updatedData", updatedData);
 
   try {
     const updatedProject = await Project.findOneAndUpdate(
-      { _id: paramsId },
+      { _id: projectId },
       updatedData,
       {
         new: true,
@@ -110,7 +105,6 @@ export const updateProject = async (req, res) => {
 
 export const addListToProject = async (req, res) => {
   const { projectId } = req.params;
-  console.log("projectId", projectId);
 
   const listData = req.body;
 
@@ -123,8 +117,7 @@ export const addListToProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    console.log("project.lists", project.lists);
-    project.lists.push(newList._id);
+    //     project.lists.push(newList._id);
 
     await project.save();
 
@@ -137,11 +130,8 @@ export const addListToProject = async (req, res) => {
 
 export const getProjectWithListsAndCards = async (req, res) => {
   const { projectId } = req.params;
-  console.log("projectId", projectId);
-  console.log("REQ", req);
 
   try {
-    console.log(`Fetching project with ID: ${projectId}`);
     const project = await Project.findById(projectId).populate({
       path: "lists",
       populate: {
@@ -150,7 +140,6 @@ export const getProjectWithListsAndCards = async (req, res) => {
     });
 
     if (!project) {
-      console.log("Project not found");
       return res.status(404).json({ message: "Project not found" });
     }
 

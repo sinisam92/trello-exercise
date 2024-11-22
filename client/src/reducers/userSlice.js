@@ -8,7 +8,6 @@ export const fetchAllUsers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getAllUsers();
-      console.log("fetchAllUsers response", response);
 
       return response;
     } catch (error) {
@@ -63,8 +62,6 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAllUsers.fulfilled, (state, action) => {
-        console.log("fetchAllUsers.fulfilled", action);
-
         state.loading = false;
         state.users = action.payload;
       })
@@ -88,11 +85,7 @@ const userSlice = createSlice({
         state.status = "loading";
       })
       .addCase(registerNewUser.fulfilled, (state, action) => {
-        console.log("state before", state.users);
-        console.log("action.payload", action.payload);
-
         state.users.push(action.payload);
-        console.log("state after", state.users);
         state.status = "succeeded";
       })
       .addCase(registerNewUser.rejected, (state, action) => {

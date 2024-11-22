@@ -93,7 +93,6 @@ UserSchema.statics.findByToken = function (token) {
   const User = this;
   try {
     let decoded = jwt.verify(token, config.tokenSecret);
-    console.log(`Decoded token: ${decoded._id}`);
     return User.findOne({ _id: decoded._id });
   } catch (err) {
     return;

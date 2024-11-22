@@ -27,7 +27,6 @@ const TextInput = ({ label, ...props }) => {
 const Register = () => {
   const [_, navigate] = useLocation();
   const dispatch = useDispatch();
-  console.log("cicd test in Register");
   const handleRegister = async (
     values,
     { setSubmitting, setErrors, resetForm },
@@ -50,7 +49,6 @@ const Register = () => {
       };
 
       const resultAction = await dispatch(registerNewUser(newUser));
-      console.log("resultAction", resultAction);
       if (
         registerNewUser.fulfilled.match(resultAction) &&
         !resultAction.payload.error
@@ -63,8 +61,6 @@ const Register = () => {
         });
       }
     } catch (error) {
-      console.log("Register error:", error);
-
       setErrors({ email: error.message });
     }
 

@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { useSearch } from "../../contexts/SearchContext";
-// import { fetchProjects } from "../../reducers/projectSlice";
 import Banner from "../common/Banner";
 import AddNewProject from "./AddNewProject";
 import AlertModal from "./AlertModal";
@@ -18,26 +17,26 @@ const Projects = ({ isChildMenuOpen }) => {
   const [showBanner, setShowBanner] = useState(false);
   const [alertTheme, setAlertTheme] = useState("");
   const [bannerMessage, setBannerMessage] = useState("");
+  const [allCurrentUsersProjects, setAllCurrentUsersProjects] = useState([]);
 
-  const [, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
   const { searchTerm } = useSearch();
-  // const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.auth.user);
+  const currentProjects = useSelector((state) => state.projects.projects);
 
-  console.log("currentUser", currentUser);
+  useEffect(() => {
+    if (!currentUser) {
+      setAllCurrentUsersProjects([]);
+      return;
+    }
 
-  const { projects } = useSelector((state) => state.projects);
-
-  const allCurrentUsersProjects = useMemo(() => {
-    if (!currentUser) return [];
     const uniqueProjects = new Map();
-
     currentUser.createdProjects.forEach((project) => {
       uniqueProjects.set(project._id, project);
     });
@@ -46,29 +45,14 @@ const Projects = ({ isChildMenuOpen }) => {
       uniqueProjects.set(project._id, project);
     });
 
-    return Array.from(uniqueProjects.values());
+    setAllCurrentUsersProjects(Array.from(uniqueProjects.values()));
   }, [currentUser]);
 
-  // const getAllCurrentUsersProjects = () => {
-  //   if (!currentUser) return [];
-  //   const uniqueProjects = new Map();
-
-  //   currentUser.createdProjects.forEach((project) => {
-  //     uniqueProjects.set(project._id, project);
-  //   });
-
-  //   currentUser.memberProjects.forEach((project) => {
-  //     uniqueProjects.set(project._id, project);
-  //   });
-
-  //   return Array.from(uniqueProjects.values());
-  // };
-
-  // const allCurrentUsersProjects = getAllCurrentUsersProjects();
-
-  const filteredProjects = allCurrentUsersProjects.filter((project) =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredProjects = useMemo(() => {
+    return allCurrentUsersProjects.filter((project) =>
+      project.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [allCurrentUsersProjects, searchTerm]);
 
   useEffect(() => {
     if (showBanner) {
@@ -111,9 +95,10 @@ const Projects = ({ isChildMenuOpen }) => {
           filteredProjects.map((project) => {
             return (
               <ProjectItem
-                key={project.id}
+                key={project._id}
                 project={project}
-                projects={projects}
+                projects={filteredProjects}
+                setProjects={setAllCurrentUsersProjects}
                 currentUser={currentUser}
                 setNewProjectName={setNewProjectName}
                 setCoverImageUrl={setCoverImageUrl}
@@ -141,11 +126,17 @@ const Projects = ({ isChildMenuOpen }) => {
           message={modalMessage}
         />
       </div>
-      <AddNewProject isAdding={isAdding} setIsAdding={setIsAdding} />
+      <AddNewProject
+        isAdding={isAdding}
+        setIsAdding={setIsAdding}
+        setIsEditing={setIsEditing}
+      />
       {isAdding && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 flex justify-center items-center bg-primaryHover px-20 py-10 rounded-lg">
           <ProjectForm
-            projects={projects}
+            project={currentProjects}
+            projects={allCurrentUsersProjects}
+            setProjects={setAllCurrentUsersProjects}
             setNewProjectName={setNewProjectName}
             setCoverImageUrl={setCoverImageUrl}
             newProjectName={newProjectName}
@@ -153,7 +144,7 @@ const Projects = ({ isChildMenuOpen }) => {
             currentProject
             editingProjectId={editingProjectId}
             setIsEditing={setIsEditing}
-            isEditing={editingProjectId !== null}
+            isEditing={isEditing}
             setIsAdding={setIsAdding}
             setEditingProjectId={setEditingProjectId}
           />

@@ -13,7 +13,6 @@ export const getAllUsers = async (req, res) => {
 
 export const getCurrentUser = async (req, res) => {
   const userId = req.user.id;
-  console.log("USER IN get USER", userId);
 
   try {
     const user = await User.findById(userId);
@@ -115,11 +114,8 @@ export const updateUser = async (req, res) => {
 };
 
 export const getUsersByIds = async (req, res) => {
-  console.log("users by ids triggered");
-
   try {
     const { ids } = req.body;
-    console.log("ids", ids);
 
     if (!Array.isArray(ids)) {
       return res.status(400).json({ error: "IDs must be provided as an array." });

@@ -5,13 +5,13 @@ import { Link } from "wouter";
 
 import DotsTiel from "../../assets/icons/menu-tile.svg";
 import useClickOutside from "../../hooks/useClickOutside";
-import { deleteProject } from "../../reducers/projectSlice";
+import { deleteProject, setCurrentProject } from "../../reducers/projectSlice";
 import ListItem from "../list-components/ListItem";
 
 const ProjectItem = ({
   project,
   projects,
-  // setProjects,
+  setProjects,
   currentUser,
   setNewProjectName,
   setCoverImageUrl,
@@ -54,11 +54,13 @@ const ProjectItem = ({
    */
   const handleProjectEdit = (e, projectId) => {
     e.preventDefault();
-    const projectToEdit = projects.find((project) => project.id === projectId);
+    const projectToEdit = projects.find((project) => project._id === projectId);
+
+    dispatch(setCurrentProject(projectId));
     if (projectToEdit) {
       setIsEditing(true);
-      setNewProjectName(projectToEdit.name);
-      setCoverImageUrl(projectToEdit.coverImage);
+      setNewProjectName(project.name);
+      setCoverImageUrl(project.coverImage);
       setIsAdding(true);
       setEditingProjectId(projectId);
       setOpenProjectMenuId(null);
@@ -75,12 +77,12 @@ const ProjectItem = ({
    */
   const handleProjectDelete = (e, projectId) => {
     e.preventDefault();
-    const project = projects.find((project) => project.id === projectId);
-
-    if (project.createdBy === currentUser.username) {
+    // TODO: Fix confirmation and error handling
+    if (project.createdByUserId === currentUser._id) {
       let confirmeText = `Are you sure you want to delete project ${project.name}`;
       if (confirm(confirmeText) === true) {
         dispatch(deleteProject(projectId));
+        setProjects(projects.filter((project) => project._id !== projectId));
         const storedErrors =
           JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
         const updatedErrors = storedErrors.filter((id) => id !== projectId);
@@ -111,12 +113,12 @@ const ProjectItem = ({
     e.target.src = "/src/assets/images/project3.jpg";
     const storedErrors =
       JSON.parse(sessionStorage.getItem("triggeredErrors")) || [];
-    if (!storedErrors.includes(project.id)) {
+    if (!storedErrors.includes(project._id)) {
       triggerAlert(
         "warning",
         `Image URL is not existant or not reachable! We applied our default cover image to project ${projectName}. You can always edit project and replace it with valid image url. 😉`,
       );
-      storedErrors.push(project.id);
+      storedErrors.push(project._id);
       sessionStorage.setItem("triggeredErrors", JSON.stringify(storedErrors));
     }
   };
@@ -124,50 +126,52 @@ const ProjectItem = ({
   return (
     <div
       className={`${isChildMenuOpen ? "blur-sm" : ""} max-h-24 h-24 mb-4 `}
-      key={project.id}
+      key={project._id}
     >
-      <Link href={`projects/${project.id}`}>
-        <div className="relative h-full">
-          <img
-            src={project.coverImage}
-            onError={(e) => handleError(e, project.name)}
-            alt={project.name}
-            className="absolute -z-10 h-full w-full object-cover"
-          />
-          <div className="flex justify-between items-center h-full md:pl-[20%]">
+      <div className="relative h-full">
+        <img
+          src={project.coverImage}
+          onError={(e) => handleError(e, project.name)}
+          alt={project.name}
+          className="absolute -z-10 h-full w-full object-cover"
+        />
+        <div className="flex justify-between items-center h-full md:pl-[20%]">
+          <Link
+            href={`projects/${project._id}`}
+            className="w-full flex justify-between"
+          >
             <h1 className="relative z-10 text-white pl-4 tracking-widest flex items-center h-full drop-shadow-xl text-2xl md:text-center w-full">
               {project.name}
             </h1>
             <div className="w-10 h-full z-30 flex items-center mr-4">
-              <button onClick={(e) => toggleProjectMenu(e, project.id)}>
+              <button onClick={(e) => toggleProjectMenu(e, project._id)}>
                 <img ref={iconRef} src={DotsTiel} alt="menu icon" />
               </button>
             </div>
-
-            {openProjectMenuId === project.id && (
-              <div
-                ref={optionsRef}
-                className="absolute right-10 top-14 py-6 rounded-lg shadow-lg bg-primaryHover z-50"
-              >
-                <div>
-                  <ul className="py-2  text-white text-lg">
-                    <ListItem
-                      text="Edit"
-                      onClick={(e) => handleProjectEdit(e, project.id)}
-                      className="hover:bg-primary w-full px-8"
-                    />
-                    <ListItem
-                      text="Delete"
-                      onClick={(e) => handleProjectDelete(e, project.id)}
-                      className="hover:bg-primary w-full px-8"
-                    />
-                  </ul>
-                </div>
+          </Link>
+          {openProjectMenuId === project._id && (
+            <div
+              ref={optionsRef}
+              className="absolute right-10 top-14 py-6 rounded-lg shadow-lg bg-primaryHover z-50"
+            >
+              <div>
+                <ul className="py-2  text-white text-lg">
+                  <ListItem
+                    text="Edit"
+                    onClick={(e) => handleProjectEdit(e, project._id)}
+                    className="hover:bg-primary w-full px-8"
+                  />
+                  <ListItem
+                    text="Delete"
+                    onClick={(e) => handleProjectDelete(e, project._id)}
+                    className="hover:bg-primary w-full px-8"
+                  />
+                </ul>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-      </Link>
+      </div>
     </div>
   );
 };

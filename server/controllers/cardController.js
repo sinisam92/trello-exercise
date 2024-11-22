@@ -86,11 +86,9 @@ const getCardsWithComments = async (req, res) => {
   const { id: cardId } = req.params;
 
   try {
-    console.log(`Fetching card with ID: ${cardId}`);
     const card = await Card.findById(cardId).populate("comments");
 
     if (!card) {
-      console.log("Card not found");
       return res.status(404).json({ message: "Card not found" });
     }
 

@@ -1,6 +1,6 @@
 import { Form, Formik, useField } from "formik";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
@@ -31,6 +31,7 @@ const TextInput = ({ label, ...props }) => {
 
 const ProjectForm = ({
   projects,
+  setProjects,
   newProjectName,
   setNewProjectName,
   setCoverImageUrl,
@@ -53,36 +54,14 @@ const ProjectForm = ({
   //   state.projects.projects.find((project) => project.id === editingProjectId),
   // );
   const { currentProject } = useSelector((state) => state.projects);
-  /**
-   *  Dummy data when new list is added
-   */
-  const dummyData = {
-    id: uuidv4(),
-    name: "Testing",
-    slug: "testing",
-    cards: [
-      {
-        id: uuidv4(),
-        title: "Planning Task 1",
-        description: "Description of task 1",
-        dueDate: "2024-09-22",
-        assigned: [],
-        status: "planning",
-        tags: ["important", "critical"],
-        comments: [],
-      },
-      {
-        id: uuidv4(),
-        title: "Planning Task 2",
-        description: "Description of task 2",
-        dueDate: "2024-02-23",
-        assigned: [],
-        status: "planning",
-        tags: ["urgent", "feature"],
-        comments: [],
-      },
-    ],
-  };
+
+  useEffect(() => {
+    if (currentProject) {
+      setNewProjectName(currentProject.name);
+      setCoverImageUrl(currentProject.coverImage);
+      setMembers(currentProject.members);
+    }
+  }, [currentProject, setNewProjectName, setCoverImageUrl]);
 
   const usersArray = users.map((user) => ({
     value: user.username,
@@ -114,16 +93,16 @@ const ProjectForm = ({
     if (newProjectName !== "") {
       let projectSlug = newProjectName.toLowerCase().replace(/\s/g, "-");
       const newProject = {
-        id: uuidv4(),
+        _id: uuidv4(),
         name: newProjectName,
         coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
-        lists: [dummyData],
+        lists: [],
         members: members,
         createdByUserId: user._id,
         slug: projectSlug,
       };
-
       dispatch(createNewProject(newProject));
+      setProjects([...projects, newProject]);
       setIsAdding(false);
     }
 
@@ -147,10 +126,13 @@ const ProjectForm = ({
   const handleSaveEditedProject = (values) => {
     const { newProjectName, coverImageUrl } = values;
 
-    if (editingProjectId !== null && currentProject) {
+    if (editingProjectId && currentProject) {
+      let projectSlug = newProjectName.toLowerCase().replace(/\s/g, "-");
+
       const updatedProject = {
         ...currentProject,
         name: newProjectName,
+        slug: projectSlug,
         coverImage: coverImageUrl || "/src/assets/images/project3.jpg",
       };
 
@@ -158,7 +140,23 @@ const ProjectForm = ({
         updatedProject.members = members;
       }
 
+      // if (user._id == updatedProject.createdByUserId) {
       dispatch(updateProject(updatedProject));
+
+      // const updatedProjects = projects.map((project) =>
+      //   project._id === editingProjectId ? updatedProject : project,
+      // );
+      // setProjects(updatedProjects);
+      setProjects((prevProjects) =>
+        prevProjects.map((project) =>
+          project._id === updatedProject._id ? updatedProject : project,
+        ),
+      );
+      // } else {
+      //   setError("You do not have permission to edit this project");
+      //   return;
+      // }
+
       setEditingProjectId(null);
     }
     setIsEditing(false);
@@ -174,6 +172,9 @@ const ProjectForm = ({
     setMembers(updatedMembers);
   };
 
+  // if (!currentProject) {
+  //   return <div>Loading project...</div>;
+  // }
   return (
     <div className="flex flex-col gap-y-2 justify-center">
       <Formik
@@ -254,6 +255,7 @@ export default ProjectForm;
 
 ProjectForm.propTypes = {
   projects: PropTypes.array.isRequired,
+  setProjects: PropTypes.func.isRequired,
   newProjectName: PropTypes.string.isRequired,
   setNewProjectName: PropTypes.func.isRequired,
   setCoverImageUrl: PropTypes.func.isRequired,

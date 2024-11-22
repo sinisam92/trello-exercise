@@ -133,7 +133,6 @@ const ProjectDetails = ({ projectId }) => {
     const card = currentProject.lists
       .flatMap((list) => list.cards)
       .find((card) => card._id === cardId);
-    console.log("card", card);
 
     if (!card) return null;
 
@@ -198,7 +197,11 @@ const ProjectDetails = ({ projectId }) => {
             {activeId ? renderCard(activeId) : null}
           </DragOverlay>
 
-          <AddNewList projectId={projectId} />
+          <AddNewList
+            projectId={projectId}
+            user={user}
+            currentProject={currentProject}
+          />
         </div>
         <div className="fixed bottom-6 right-12">
           <button onClick={() => setZoom(!zoom)}>

@@ -23,9 +23,12 @@ export const createProject = async (project) => {
 };
 
 export const updateProjectService = async (project) => {
-  return apiClient(`projects/${project.id}`, {
+  return apiClient(`projects/${project._id}`, {
     method: "PUT",
     body: JSON.stringify(project),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
