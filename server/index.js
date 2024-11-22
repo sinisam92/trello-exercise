@@ -24,7 +24,12 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "http://localhost:3044", "http://127.0.0.1:5500"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3044",
+      "http://127.0.0.1:5500",
+      "https://team-managment-client.vercel.app/",
+    ],
   })
 );
 app.use(cookieParser());
