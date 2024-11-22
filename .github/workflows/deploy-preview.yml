@@ -1,0 +1,104 @@
+name: Deploy Preview
+
+on:
+  push:
+    branches-ignore: ["main"]
+
+jobs:
+  deploy-client-preview:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+
+    environment:
+      name: Preview
+      # for coverage
+    permissions:
+      # Required to checkout the code
+      contents: write
+      # Required to put a comment into the pull-request
+      pull-requests: write
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: client/package-lock.json
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: "Install dependencies"
+        run: npm ci
+      - name: List installed packages
+        run: npm list
+      - name: "Build Client"
+        run: npm run build --if-present
+      - name: "Run tests"
+        run: npm test
+      # Coverage
+      - name: "Test coverage"
+        run: npx vitest --coverage
+      - name: "Report Coverage"
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          working-directory: ./client
+      - name: "Deploy client preview to Vercel"
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_CLIENT_PROJECT_ID }}
+          working-directory: ./client
+
+  deploy-server-preview:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+    environment:
+      name: Preview
+
+    permissions:
+      # Required to checkout the code
+      contents: write
+      # Required to put a comment into the pull-request
+      pull-requests: write
+      # actions: read
+      issues: write
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: server/package-lock.json
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: "Install dependencies"
+        run: npm ci
+
+      - name: "Run tests"
+        run: npm test
+
+      - name: "Deploy server preview to Vercel"
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_SERVER_PROJECT_ID }}
+          # working-directory: ./server
