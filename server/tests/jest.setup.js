@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-
+import config from "../config/config.js";
 beforeAll(async () => {
-  await mongoose.connect(process.env.ATLAS_URI_TEST);
-  // await User.deleteMany();
+  await mongoose.connect(config.mongoUri);
 });
 
 /* Closing database connection after each test. */
