@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
+import useClickOutside from "../../hooks/useClickOutside";
 import { fetchCardsByListsIds } from "../../reducers/cardSlice";
 import { fetchListByProjectId } from "../../reducers/listSlice";
 import { fetchProject, updateProject } from "../../reducers/projectSlice";
@@ -46,10 +47,11 @@ const ProjectDetails = ({ projectId }) => {
   const [currProject, setCurrProject] = useState(null);
   const [projectsLists, setProjectsLists] = useState([]);
   const [projectCards, setProjectCards] = useState([]);
+  const [dropdownListId, setDropdownListId] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // const [listsWithCards, setListsWithCards] = useState([]);
-  // const [isDataFetched, setIsDataFetched] = useState(false);
-
+  const listMenuRef = useRef(null);
+  const listMenuIconRef = useRef(null);
   const zoomAreaRef = useRef(null);
 
   const getProject = useCallback(async () => {
@@ -81,7 +83,6 @@ const ProjectDetails = ({ projectId }) => {
               fetchCardsByListsIds(listIds),
             ).unwrap();
             if (cards) {
-              console.log("cards", cards);
               setProjectCards(cards);
             }
           }
@@ -95,68 +96,6 @@ const ProjectDetails = ({ projectId }) => {
   useEffect(() => {
     getData();
   }, [getData]);
-
-  // const getProject = useCallback(async () => {
-  //   if (!projectId) return;
-  //   try {
-  //     const action = await dispatch(fetchProject(projectId));
-  //     setCurrProject(action.payload);
-  //   } catch (err) {
-  //     console.error("Error fetching project:", err);
-  //   }
-  // }, [dispatch, projectId]);
-
-  // const getData = useCallback(async () => {
-  //   if (!projectId) return;
-  //   try {
-  //     const lists = await dispatch(fetchListByProjectId(projectId)).unwrap();
-  //     setProjectsLists(lists);
-
-  //     const listIds = lists.map((list) => list._id);
-  //     console.log("listIds", listIds);
-
-  //     if (listIds.length > 0) {
-  //       const cards = await dispatch(fetchCardsByListsIds(listIds)).unwrap();
-  //       console.log("cardsPROJECT CARDS", cards);
-
-  //       setProjectCards(cards);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // }, [dispatch, projectId]);
-
-  // const combineListsAndCards = useCallback(() => {
-  //   const cardsById = Object.fromEntries(
-  //     projectCards.map((card) => [card._id, card]),
-  //   );
-
-  //   const combined = projectsLists.map((list) => ({
-  //     ...list,
-  //     cards: list.cardIds.map((cardId) => cardsById[cardId]).filter(Boolean),
-  //   }));
-
-  //   setListsWithCards(combined);
-  //   setIsDataFetched(true);
-  // }, [projectsLists, projectCards]);
-
-  // useEffect(() => {
-  //   getProject();
-  //   getData();
-  // }, [getProject, getData]);
-
-  // useEffect(() => {
-  //   if (projectsLists.length > 0 && projectCards.length > 0) {
-  //     combineListsAndCards();
-  //   }
-  // }, [projectsLists, projectCards, combineListsAndCards]);
-
-  // useEffect(() => {
-  //   console.log("Current Project:", currProject);
-  //   console.log("Projects Lists:", projectsLists);
-  //   console.log("Project Cards:", projectCards);
-  //   console.log("Combined Lists With Cards:", listsWithCards);
-  // }, [currProject, projectsLists, projectCards, listsWithCards]);
 
   useEffect(() => {
     const areaToZoom = zoomAreaRef.current;
@@ -233,12 +172,32 @@ const ProjectDetails = ({ projectId }) => {
       dispatch(updateProject(updatedProject));
     }
   };
+  /**
+   * Handles closing the project menu when clicking outside of it
+   * @param {Event} event
+   */
+  useClickOutside([listMenuRef, listMenuIconRef], () =>
+    setDropdownListId(null),
+  );
+
+  const onDeleteList = (listId) => {
+    const updatedLists = projectsLists.filter((list) => list._id !== listId);
+    setProjectsLists(updatedLists);
+  };
+
+  const toggleDropdown = (listId) => {
+    setDropdownListId((prevId) => (prevId === listId ? null : listId));
+    setIsOpen(!isOpen);
+  };
+  console.log(isOpen);
 
   const renderCard = (cardId) => {
     const card = projectsLists
       .flatMap((list) => list.cards)
       .find((card) => card._id === cardId);
-
+    // const card = projectsLists.find((list) =>
+    //   list.cards.some((c) => list._id === c.listId),
+    // );
     if (!card) return null;
 
     const isDragging = activeId === cardId;
@@ -247,9 +206,6 @@ const ProjectDetails = ({ projectId }) => {
       <Card
         card={card}
         userId={user._id}
-        // list={currentProject.lists.find((list) =>
-        //   list.cards.some((c) => c.id === cardId),
-        // )}
         list={projectsLists.find((list) =>
           list.cards.some((c) => c._id === cardId),
         )}
@@ -293,15 +249,23 @@ const ProjectDetails = ({ projectId }) => {
             >
               <List
                 list={list}
+                cards={projectCards.filter((card) => card.listId === list._id)}
                 projectId={projectId}
                 currentProject={currentProject}
-                // users={users}
                 setSmallTags={setSmallTags}
                 smallTags={smallTags}
                 setSelectedList={setSelectedList}
                 setIsModalOpen={setIsModalOpen}
                 setIsCardEditing={setIsCardEditing}
                 setSelectedCard={setSelectedCard}
+                toggleDropdown={toggleDropdown}
+                dropdownListId={dropdownListId}
+                setDropdownListId={setDropdownListId}
+                listMenuRef={listMenuRef}
+                listMenuIconRef={listMenuIconRef}
+                onDeleteList={onDeleteList}
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
               />
             </SortableContext>
           ))}
@@ -313,6 +277,8 @@ const ProjectDetails = ({ projectId }) => {
             projectId={projectId}
             user={user}
             currentProject={currentProject}
+            setProjectsLists={setProjectsLists}
+            projectsLists={projectsLists}
           />
         </div>
         <div className="fixed bottom-6 right-12">

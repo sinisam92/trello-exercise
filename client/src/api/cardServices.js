@@ -6,7 +6,6 @@ export const getCards = async () => {
 
 export const getCardsByListsIds = async (listIds) => {
   const encodedListIds = encodeURIComponent(JSON.stringify(listIds));
-  console.log("encodedListIds----->", encodedListIds);
 
   return apiClient(`cards/by-list-ids?listIds=${encodedListIds}`, {
     method: "GET",

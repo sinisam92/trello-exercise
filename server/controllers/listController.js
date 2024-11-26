@@ -1,5 +1,7 @@
 import { validationResult } from "express-validator";
 import List from "../models/List.js";
+import Card from "../models/Card.js";
+import Project from "../models/Project.js";
 
 export const getAllLists = async (_req, res) => {
   try {
@@ -44,10 +46,26 @@ export const getListsByProjectId = async (req, res) => {
 };
 
 export const createList = async (req, res) => {
-  const newList = req.body;
+  // const { projectId } = req.body.newList;
+  console.log("BODY", req.body);
+  // console.log("newList PROJECT ID", projectId);
 
   try {
+    const newList = req.body;
+    console.log("newList123", newList);
+
     const listToAdd = new List(newList);
+    console.log("listToAdd", listToAdd);
+
+    const project = await Project.findById(newList.projectId);
+    console.log("project", project);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found!" });
+    }
+
+    project.lists.push(listToAdd._id);
+    await project.save();
 
     await listToAdd.save();
     res.status(201).json(listToAdd);
@@ -61,6 +79,7 @@ export const deleteList = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
+    await Card.deleteMany({ listId: paramsId });
     const list = await List.findOneAndDelete({ _id: paramsId });
 
     if (!list) {

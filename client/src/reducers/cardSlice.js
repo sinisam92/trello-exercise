@@ -25,8 +25,6 @@ export const fetchAllCards = createAsyncThunk(
 export const fetchCardsByListsIds = createAsyncThunk(
   "cards/fetchCardById",
   async (listIds, { rejectWithValue }) => {
-    console.log("listIds----->", listIds);
-
     try {
       const response = await getCardsByListsIds(listIds);
       return response;

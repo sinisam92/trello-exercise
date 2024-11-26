@@ -81,6 +81,7 @@ export const updateProject = async (req, res) => {
   }
   const { projectId } = req.params;
   const updatedData = req.body;
+  console.log("updatedData", updatedData);
 
   try {
     const updatedProject = await Project.findOneAndUpdate(

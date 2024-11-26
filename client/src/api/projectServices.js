@@ -23,6 +23,8 @@ export const createProject = async (project) => {
 };
 
 export const updateProjectService = async (project) => {
+  console.log("projec in SERVISEt", project);
+
   return apiClient(`projects/${project._id}`, {
     method: "PUT",
     body: JSON.stringify(project),

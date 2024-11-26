@@ -13,13 +13,11 @@ export const getAllCard = async (_req, res) => {
 
 export const getCardByListsIds = async (req, res) => {
   const { listIds } = req.query;
-  console.log("listIds----->", listIds);
   try {
     const listIdsDecoded = await JSON.parse(decodeURIComponent(listIds));
     const card = await Card.find({
       listId: { $in: listIdsDecoded },
     });
-    console.log("cards----->", card);
 
     if (!card) {
       return res.status(404).json({ message: "Card not found" });

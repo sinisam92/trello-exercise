@@ -15,7 +15,7 @@ import chalk from "chalk";
 
 const totalUsers = 10;
 const totalProjects = 30;
-const totalLists = 50;
+const totalLists = 100;
 const totalCards = 150;
 const totalComments = 200;
 

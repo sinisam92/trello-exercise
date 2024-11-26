@@ -3,17 +3,22 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 
-// import { useParams } from "wouter";
 import Plus from "../../assets/icons/plus.svg";
+import { createNewList } from "../../reducers/listSlice";
 import { updateProject } from "../../reducers/projectSlice";
 
-const AddNewList = ({ projectId, currentProject, user }) => {
+const AddNewList = ({
+  projectId,
+  currentProject,
+  user,
+  setProjectsLists,
+  projectsLists,
+}) => {
   const [error, setError] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [newListName, setNewListName] = useState("");
 
   const dispatch = useDispatch();
-  // const { projectId } = useParams();
 
   /**
    * Handles adding a new list to the project
@@ -29,21 +34,20 @@ const AddNewList = ({ projectId, currentProject, user }) => {
     const formattedSlug = newListName.toLowerCase().replace(/\s/g, "-");
     const newList = {
       _id: uuidv4(),
-      prodjectId: projectId,
+      projectId: projectId,
       createdByUserId: user._id,
       name: formattedName,
       cards: [],
       slug: formattedSlug,
     };
 
-    console.log("newList => newList", newList);
-
     const updatedProject = {
       ...currentProject,
-      lists: [...currentProject.lists, newList],
+      lists: [...currentProject.lists, newList._id],
     };
-    console.log("updatedProject => updatedProject", updatedProject);
 
+    setProjectsLists([...projectsLists, newList]);
+    dispatch(createNewList(newList));
     dispatch(updateProject(updatedProject));
 
     setNewListName("");
@@ -110,4 +114,6 @@ AddNewList.propTypes = {
   projectId: PropTypes.string,
   user: PropTypes.object,
   currentProject: PropTypes.object,
+  setProjectsLists: PropTypes.func,
+  projectsLists: PropTypes.array,
 };

@@ -12,13 +12,15 @@ export const getListByProjectId = async (projectId) => {
 };
 
 export const createList = async (list) => {
+  console.log("list ListService", list);
+
   return apiClient("lists", {
     method: "POST",
     body: JSON.stringify(list),
     headers: {
       "Content-Type": "application/json",
     },
-    // credentials: "include",
+    credentials: "include",
   });
 };
 
@@ -33,6 +35,8 @@ export const updateListService = async (list) => {
 };
 
 export const deleteListService = async (listId) => {
+  console.log("listId", listId);
+
   return apiClient(`lists/${listId}`, {
     method: "DELETE",
   });

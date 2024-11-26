@@ -22,7 +22,7 @@ router.route("/")
 router.route("/:projectId")
     .get(getProjectById)
     // .get(getProjectWithListsAndCards)
-    .put( projectValidation, updateProject)
+    .put(projectValidation, updateProject)
     .delete( deleteProject)
 
 // prettier-ignore
