@@ -4,7 +4,7 @@ import {
   createProject,
   deleteProject,
   getAllProjects,
-  getProjectWithListsAndCards,
+  getProjectById,
   updateProject,
 } from "../controllers/projectController.js";
 import authCookie from "../middleware/authCookie.js";
@@ -20,8 +20,8 @@ router.route("/")
 
 // prettier-ignore
 router.route("/:projectId")
-    // .get(getProjectById)
-    .get(getProjectWithListsAndCards)
+    .get(getProjectById)
+    // .get(getProjectWithListsAndCards)
     .put( projectValidation, updateProject)
     .delete( deleteProject)
 

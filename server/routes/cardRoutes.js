@@ -2,13 +2,15 @@ import { Router } from "express";
 import {
   createCard,
   getAllCard,
-  getCardById,
+  // getCardById,
+  getCardByListsIds,
   updateCard,
   deleteCard,
   getCardsWithComments,
 } from "../controllers/cardController.js";
 
 const router = Router();
+router.route("/by-list-ids").get(getCardByListsIds);
 
 // prettier-ignore
 router.route("/")

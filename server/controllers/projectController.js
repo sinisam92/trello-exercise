@@ -15,10 +15,10 @@ export const getAllProjects = async (req, res) => {
 };
 
 export const getProjectById = async (req, res) => {
-  const paramsId = req.params.id;
+  const { projectId } = req.params;
 
   try {
-    const project = await Project.findById(paramsId);
+    const project = await Project.findById(projectId);
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
@@ -128,24 +128,24 @@ export const addListToProject = async (req, res) => {
   }
 };
 
-export const getProjectWithListsAndCards = async (req, res) => {
-  const { projectId } = req.params;
+// export const getProjectWithListsAndCards = async (req, res) => {
+//   const { projectId } = req.params;
 
-  try {
-    const project = await Project.findById(projectId).populate({
-      path: "lists",
-      populate: {
-        path: "cards",
-      },
-    });
+//   try {
+//     const project = await Project.findById(projectId).populate({
+//       path: "lists",
+//       populate: {
+//         path: "cards",
+//       },
+//     });
 
-    if (!project) {
-      return res.status(404).json({ message: "Project not found" });
-    }
+//     if (!project) {
+//       return res.status(404).json({ message: "Project not found" });
+//     }
 
-    res.json(project);
-  } catch (error) {
-    console.error("Error fetching project with lists:", error);
-    res.status(500).json({ error: "Error fetching project with lists!" });
-  }
-};
+//     res.json(project);
+//   } catch (error) {
+//     console.error("Error fetching project with lists:", error);
+//     res.status(500).json({ error: "Error fetching project with lists!" });
+//   }
+// };

@@ -54,6 +54,8 @@ export const createNewProject = createAsyncThunk(
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
   async (projectData, { rejectWithValue }) => {
+    console.log("projectData", projectData);
+
     try {
       const response = await updateProjectService(projectData);
 

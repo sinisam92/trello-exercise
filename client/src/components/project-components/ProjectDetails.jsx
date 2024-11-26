@@ -20,6 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ZoomIn from "../../assets/icons/zoomIn.svg";
 import ZoomOut from "../../assets/icons/zoomOut.svg";
+import { fetchCardsByListsIds } from "../../reducers/cardSlice";
+import { fetchListByProjectId } from "../../reducers/listSlice";
 import { fetchProject, updateProject } from "../../reducers/projectSlice";
 import AddCardModalContainer from "../card-components/AddCardModalContainer";
 import Card from "../card-components/Card";
@@ -32,6 +34,7 @@ const ProjectDetails = ({ projectId }) => {
   const { currentProject, loading, error } = useSelector(
     (state) => state.projects,
   );
+
   const { user } = useSelector((state) => state.auth);
   const [zoom, setZoom] = useState(false);
   const [activeId, setActiveId] = useState(null);
@@ -40,18 +43,120 @@ const ProjectDetails = ({ projectId }) => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isCardEditing, setIsCardEditing] = useState(false);
   const [smallTags, setSmallTags] = useState(false);
+  const [currProject, setCurrProject] = useState(null);
+  const [projectsLists, setProjectsLists] = useState([]);
+  const [projectCards, setProjectCards] = useState([]);
+
+  // const [listsWithCards, setListsWithCards] = useState([]);
+  // const [isDataFetched, setIsDataFetched] = useState(false);
 
   const zoomAreaRef = useRef(null);
 
-  const getProjects = useCallback(async () => {
+  const getProject = useCallback(async () => {
     if (projectId) {
-      await dispatch(fetchProject(projectId)).unwrap();
+      try {
+        const action = await dispatch(fetchProject(projectId));
+        const currProject = action.payload;
+        setCurrProject(currProject);
+      } catch (err) {
+        console.error("Error fetching project:", err);
+      }
     }
   }, [dispatch, projectId]);
 
   useEffect(() => {
-    getProjects();
-  }, [getProjects]);
+    getProject();
+  }, [getProject]);
+
+  const getData = useCallback(async () => {
+    if (projectId) {
+      try {
+        const lists = await dispatch(fetchListByProjectId(projectId)).unwrap();
+        if (lists) {
+          setProjectsLists(lists);
+          const listIds = lists.map((list) => list._id);
+
+          if (listIds.length > 0) {
+            const cards = await dispatch(
+              fetchCardsByListsIds(listIds),
+            ).unwrap();
+            if (cards) {
+              console.log("cards", cards);
+              setProjectCards(cards);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+  }, [dispatch, projectId]);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
+
+  // const getProject = useCallback(async () => {
+  //   if (!projectId) return;
+  //   try {
+  //     const action = await dispatch(fetchProject(projectId));
+  //     setCurrProject(action.payload);
+  //   } catch (err) {
+  //     console.error("Error fetching project:", err);
+  //   }
+  // }, [dispatch, projectId]);
+
+  // const getData = useCallback(async () => {
+  //   if (!projectId) return;
+  //   try {
+  //     const lists = await dispatch(fetchListByProjectId(projectId)).unwrap();
+  //     setProjectsLists(lists);
+
+  //     const listIds = lists.map((list) => list._id);
+  //     console.log("listIds", listIds);
+
+  //     if (listIds.length > 0) {
+  //       const cards = await dispatch(fetchCardsByListsIds(listIds)).unwrap();
+  //       console.log("cardsPROJECT CARDS", cards);
+
+  //       setProjectCards(cards);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // }, [dispatch, projectId]);
+
+  // const combineListsAndCards = useCallback(() => {
+  //   const cardsById = Object.fromEntries(
+  //     projectCards.map((card) => [card._id, card]),
+  //   );
+
+  //   const combined = projectsLists.map((list) => ({
+  //     ...list,
+  //     cards: list.cardIds.map((cardId) => cardsById[cardId]).filter(Boolean),
+  //   }));
+
+  //   setListsWithCards(combined);
+  //   setIsDataFetched(true);
+  // }, [projectsLists, projectCards]);
+
+  // useEffect(() => {
+  //   getProject();
+  //   getData();
+  // }, [getProject, getData]);
+
+  // useEffect(() => {
+  //   if (projectsLists.length > 0 && projectCards.length > 0) {
+  //     combineListsAndCards();
+  //   }
+  // }, [projectsLists, projectCards, combineListsAndCards]);
+
+  // useEffect(() => {
+  //   console.log("Current Project:", currProject);
+  //   console.log("Projects Lists:", projectsLists);
+  //   console.log("Project Cards:", projectCards);
+  //   console.log("Combined Lists With Cards:", listsWithCards);
+  // }, [currProject, projectsLists, projectCards, listsWithCards]);
 
   useEffect(() => {
     const areaToZoom = zoomAreaRef.current;
@@ -130,7 +235,7 @@ const ProjectDetails = ({ projectId }) => {
   };
 
   const renderCard = (cardId) => {
-    const card = currentProject.lists
+    const card = projectsLists
       .flatMap((list) => list.cards)
       .find((card) => card._id === cardId);
 
@@ -142,8 +247,11 @@ const ProjectDetails = ({ projectId }) => {
       <Card
         card={card}
         userId={user._id}
-        list={currentProject.lists.find((list) =>
-          list.cards.some((c) => c.id === cardId),
+        // list={currentProject.lists.find((list) =>
+        //   list.cards.some((c) => c.id === cardId),
+        // )}
+        list={projectsLists.find((list) =>
+          list.cards.some((c) => c._id === cardId),
         )}
         project={currentProject}
         setSmallTags={setSmallTags}
@@ -156,6 +264,10 @@ const ProjectDetails = ({ projectId }) => {
       />
     );
   };
+
+  // if (!isDataFetched) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (loading) return <LifelineLoader />;
   if (error) return <div>Error: {error}</div>;
@@ -173,10 +285,10 @@ const ProjectDetails = ({ projectId }) => {
           ref={zoomAreaRef}
           className="flex overflow-x-auto overscroll-y-none smooth-scroll"
         >
-          {currentProject.lists.map((list) => (
+          {projectsLists.map((list) => (
             <SortableContext
-              key={list.id}
-              items={list.cards.map((card) => card.id)}
+              key={list._id}
+              items={projectCards.map((card) => card._id)}
               strategy={verticalListSortingStrategy}
             >
               <List

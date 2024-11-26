@@ -36,12 +36,13 @@ const AddNewList = ({ projectId, currentProject, user }) => {
       slug: formattedSlug,
     };
 
-    "newList", newList;
+    console.log("newList => newList", newList);
 
     const updatedProject = {
       ...currentProject,
       lists: [...currentProject.lists, newList],
     };
+    console.log("updatedProject => updatedProject", updatedProject);
 
     dispatch(updateProject(updatedProject));
 

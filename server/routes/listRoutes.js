@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   createList,
   getAllLists,
-  getListById,
+  getListsByProjectId,
   updateList,
   deleteList,
 } from "../controllers/listController.js";
@@ -16,7 +16,8 @@ router.route("/")
 
 // prettier-ignore
 router.route("/:id")
-    .get(getListById)
+    // .get(getListById)
+    .get(getListsByProjectId)
     .put(updateList)
     .delete(deleteList);
 
