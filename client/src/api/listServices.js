@@ -25,6 +25,7 @@ export const createList = async (list) => {
 };
 
 export const updateListService = async (list) => {
+  console.log("list ListService", list);
   return apiClient(`lists/${list._id}`, {
     method: "PUT",
     body: JSON.stringify(list),

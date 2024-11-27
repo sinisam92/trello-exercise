@@ -38,11 +38,8 @@ export const fetchListByProjectId = createAsyncThunk(
 export const createNewList = createAsyncThunk(
   "lists/createNewList",
   async (listData, { rejectWithValue }) => {
-    console.log("listData SLIce", listData);
-
     try {
       const response = await createList(listData);
-      console.log("response", response);
 
       return response;
     } catch (error) {
@@ -55,6 +52,8 @@ export const createNewList = createAsyncThunk(
 export const updateList = createAsyncThunk(
   "lists/updateList",
   async (listData, { rejectWithValue }) => {
+    console.log("listData SLIce", listData);
+
     try {
       const response = await updateListService(listData);
       return response;

@@ -13,6 +13,8 @@ const AddCardModalContainer = ({
   selectedCard,
   isCardEditing,
   setIsCardEditing,
+  setProjectCards,
+  projectCards,
 }) => {
   if (!isOpen) return null;
   return (
@@ -28,6 +30,8 @@ const AddCardModalContainer = ({
           selectedCard={selectedCard}
           isCardEditing={isCardEditing}
           setIsCardEditing={setIsCardEditing}
+          setProjectCards={setProjectCards}
+          projectCards={projectCards}
         />
       </div>
     </div>
@@ -47,4 +51,6 @@ AddCardModalContainer.propTypes = {
   selectedCard: PropTypes.object,
   isCardEditing: PropTypes.bool,
   setIsCardEditing: PropTypes.func,
+  setProjectCards: PropTypes.func,
+  projectCards: PropTypes.array,
 };

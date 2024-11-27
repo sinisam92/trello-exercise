@@ -46,19 +46,12 @@ export const getListsByProjectId = async (req, res) => {
 };
 
 export const createList = async (req, res) => {
-  // const { projectId } = req.body.newList;
-  console.log("BODY", req.body);
-  // console.log("newList PROJECT ID", projectId);
-
   try {
     const newList = req.body;
-    console.log("newList123", newList);
 
     const listToAdd = new List(newList);
-    console.log("listToAdd", listToAdd);
 
     const project = await Project.findById(newList.projectId);
-    console.log("project", project);
 
     if (!project) {
       return res.status(404).json({ error: "Project not found!" });

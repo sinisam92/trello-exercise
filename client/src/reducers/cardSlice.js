@@ -38,6 +38,8 @@ export const fetchCardsByListsIds = createAsyncThunk(
 export const createNewCard = createAsyncThunk(
   "cards/createNewCard",
   async (cardData, { rejectWithValue }) => {
+    console.log("cardData SLIce", cardData);
+
     try {
       const response = await createCard(cardData);
       return response;

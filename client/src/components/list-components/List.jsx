@@ -15,7 +15,6 @@ import ListItem from "./ListItem";
 const List = ({
   list,
   cards,
-  // projects,
   projectId,
   currentProject,
   users,
@@ -28,21 +27,14 @@ const List = ({
   setSelectedCard,
   toggleDropdown,
   dropdownListId,
-  // handleEditList,
   listMenuIconRef,
   listMenuRef,
-  // isEditing,
-  // setIsEditing,
-  // openListId,
-  // setOpenListId,
-  // newListName,
-  // setNewListName,
-  // handleInputChange,
   setDropdownListId,
   activeId,
   onDeleteList,
   isOpen,
   setIsOpen,
+  setProjectCards,
 }) => {
   const [openListId, setOpenListId] = useState(null);
   const [newListName, setNewListName] = useState("");
@@ -71,6 +63,7 @@ const List = ({
     const updatedList = {
       ...list,
       name: newListName,
+      slug: newListName.toLowerCase().replace(/\s/g, "-"),
     };
     list.name = newListName;
     dispatch(updateList(updatedList));
@@ -137,7 +130,6 @@ const List = ({
             className="pr-3"
           />
         </button>
-        {/* FIX THIS */}
         {dropdownListId === list._id && isOpen ? (
           <div
             ref={listMenuRef}
@@ -170,7 +162,7 @@ const List = ({
           {cards.map((card) => (
             <div key={card._id}>
               <Link to={`/projects/${projectId}/card/${card._id}`}>
-                {activeId !== card.id && (
+                {activeId !== card._id && (
                   <div className="relative">
                     <Card
                       card={card}
@@ -185,6 +177,7 @@ const List = ({
                       setIsModalOpen={setIsModalOpen}
                       setIsCardEditing={setIsCardEditing}
                       setSelectedCard={setSelectedCard}
+                      setProjectCards={setProjectCards}
                       className="overflow-visible"
                     />
                   </div>
@@ -226,14 +219,10 @@ List.propTypes = {
   handleEditList: PropTypes.func,
   listMenuIconRef: PropTypes.object,
   listMenuRef: PropTypes.object,
-  // isEditing: PropTypes.bool,
-  // setIsEditing: PropTypes.func,
-  // openListId: PropTypes.string,
-  // setOpenListId: PropTypes.func,
-  // newListName: PropTypes.string,
-  // setNewListName: PropTypes.func,
-  // handleInputChange: PropTypes.func,
   setDropdownListId: PropTypes.func,
   activeId: PropTypes.string,
   onDeleteList: PropTypes.func,
+  isOpen: PropTypes.bool,
+  setIsOpen: PropTypes.func,
+  setProjectCards: PropTypes.func,
 };

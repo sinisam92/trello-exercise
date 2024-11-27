@@ -8,24 +8,30 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
 
-import { updateProject } from "../../reducers/projectSlice";
+// import { updateProject } from "../../reducers/projectSlice";
+import { createNewCard } from "../../reducers/cardSlice";
+import { fetchUsersByIds } from "../../reducers/userSlice";
 
 const AddCardModal = ({
   onClose,
-  users,
+  // users,
   list,
   projectId,
   selectedCard,
   isCardEditing,
   setIsCardEditing,
+  setProjectCards,
+  projectCards,
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState();
-  const [setTags] = useState([]);
+  const [_, setTags] = useState([]);
   const [assigned, setAssigned] = useState([]);
   const [dueDate, setDueDate] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [error, setError] = useState("");
+  const [currentProjectMembers, setCurrentProjectMembers] = useState([]);
+  const [assignedUsersOptions, setAssignedUsersOptions] = useState([]);
 
   const quillRef = useRef();
   const dispatch = useDispatch();
@@ -42,18 +48,19 @@ const AddCardModal = ({
   const currentProject = useSelector((state) =>
     state.projects.projects.find((project) => project.id === projectId),
   );
-
-  console.log("currentProject => currentProject", currentProject);
-
-  const currentProjectMembers = currentProject.members.map((member) => {
-    const members = users.find((user) => user.username === member);
-    return members
-      ? {
-          value: members.username,
-          label: members.username,
-        }
-      : null;
-  });
+  const { user } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (currentProject.membersId.length > 0) {
+      dispatch(fetchUsersByIds(currentProject.membersId)).then((response) => {
+        setCurrentProjectMembers(response.payload);
+      });
+      const assignedUsersOptions = currentProjectMembers.map((member) => ({
+        value: member.username,
+        label: member.username,
+      }));
+      setAssignedUsersOptions(assignedUsersOptions);
+    }
+  }, [currentProject.membersId, dispatch, currentProjectMembers.length]);
 
   const handleAddOrEditCard = () => {
     if (!title) {
@@ -62,12 +69,15 @@ const AddCardModal = ({
     }
 
     const newCard = {
-      id: isCardEditing ? selectedCard?.id : uuidv4(),
+      _id: isCardEditing ? selectedCard?._id : uuidv4(),
+      listId: list._id,
+      createdByUserId: user._id,
       title,
       description: description || "",
       tags: selectedTags,
       assigned,
       comments: isCardEditing ? selectedCard?.comments : [],
+      commentsCount: isCardEditing ? selectedCard?.commentsCount : 0,
       status: list.name,
       dateAdded: isCardEditing
         ? selectedCard?.dateAdded
@@ -75,30 +85,20 @@ const AddCardModal = ({
       dueDate: dueDate || "",
     };
 
-    console.log("ADD CARD MODAL => newCard", newCard);
+    // setProjectCards((prevCards) => {
+    //   console.log("prevCards", prevCards);
 
-    const updateListCards = (lst) => {
-      console.log("lst.id", lst.id);
-      console.log("list.id", list.id);
-      console.log("is card editing", isCardEditing);
-      return lst.id === list.id
-        ? {
-            ...lst,
-            cards: isCardEditing
-              ? lst.cards.map((card) =>
-                  card.id === selectedCard?.id ? { ...card, ...newCard } : card,
-                )
-              : [...lst.cards, newCard],
-          }
-        : lst;
-    };
+    //   if (isCardEditing) {
+    //     const updatedCards = prevCards.map((card) =>
+    //       card._id === selectedCard._id ? newCard : card,
+    //     );
+    //     return updatedCards;
+    //   }
+    //   return [...prevCards, newCard];
+    // });
+    setProjectCards([...projectCards, newCard]);
 
-    const updatedProject = {
-      ...currentProject,
-      lists: currentProject.lists.map(updateListCards),
-    };
-
-    dispatch(updateProject(updatedProject));
+    dispatch(createNewCard(newCard));
     resetForm();
     onClose();
   };
@@ -198,7 +198,7 @@ const AddCardModal = ({
           <Select
             id="selectMembers"
             isMulti
-            options={currentProjectMembers}
+            options={assignedUsersOptions}
             onChange={handleAssignedChange}
           />
         </label>
@@ -245,4 +245,6 @@ AddCardModal.propTypes = {
   selectedCard: PropTypes.object,
   isCardEditing: PropTypes.bool,
   setIsCardEditing: PropTypes.func,
+  setProjectCards: PropTypes.func,
+  projectCards: PropTypes.array,
 };

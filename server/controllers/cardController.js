@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import Card from "../models/Card.js";
+import List from "../models/List.js";
 
 export const getAllCard = async (_req, res) => {
   try {
@@ -24,19 +25,27 @@ export const getCardByListsIds = async (req, res) => {
     }
     res.status(200).json(card);
   } catch (error) {
-    console.error("Error during fetching list:", error);
-    res.status(500).json({ error: "Error fetching list!" });
+    console.error("Error during fetching cards:", error);
+    res.status(500).json({ error: "Error fetching cards!" });
   }
 };
 
 export const createCard = async (req, res) => {
-  const newCard = req.body;
-
   try {
-    const listToAdd = new Card(newCard);
+    const newCard = req.body;
+    const cardToAdd = new Card(newCard);
 
-    await listToAdd.save();
-    res.status(201).json(listToAdd);
+    const list = await List.findById(newCard.listId);
+
+    if (!list) {
+      return res.status(404).json({ error: "List not found!" });
+    }
+
+    list.cards.push(cardToAdd._id);
+
+    await list.save();
+    await cardToAdd.save();
+    res.status(201).json(cardToAdd);
   } catch (error) {
     console.error("Error during list creation:", error);
     res.status(500).json({ error: "Error creating list!" });
@@ -47,16 +56,16 @@ export const deleteCard = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
-    const list = await Card.findOneAndDelete({ _id: paramsId });
+    const card = await Card.findOneAndDelete({ _id: paramsId });
 
-    if (!list) {
+    if (!card) {
       return res.status(404).json({ message: "Card not found" });
     }
 
     res.status(204).end();
   } catch (error) {
-    console.error("Error during list deletion:", error);
-    res.status(500).json({ error: "Error deleting list!" });
+    console.error("Error during card deletion:", error);
+    res.status(500).json({ error: "Error deleting card!" });
   }
 };
 
@@ -67,6 +76,10 @@ export const updateCard = async (req, res) => {
   //   }
   const paramsId = req.params.id;
   const updatedData = req.body;
+
+  console.log("updatedData UPDATE", updatedData);
+  console.log("paramsId", paramsId);
+
   try {
     const updatedCard = await Card.findOneAndUpdate({ _id: paramsId }, updatedData, {
       new: true,
@@ -79,8 +92,8 @@ export const updateCard = async (req, res) => {
 
     res.status(200).json(updatedCard);
   } catch (error) {
-    console.error("Error during list update:", error);
-    res.status(500).json({ error: "Error updating list!" });
+    console.error("Error during card update:", error);
+    res.status(500).json({ error: "Error updating card!" });
   }
 };
 
@@ -96,7 +109,7 @@ export const getCardsWithComments = async (req, res) => {
 
     res.json(card);
   } catch (error) {
-    console.error("Error fetching card with lists:", error);
-    res.status(500).json({ error: "Error fetching card with lists!" });
+    console.error("Error fetching card with cards:", error);
+    res.status(500).json({ error: "Error fetching card with cards!" });
   }
 };

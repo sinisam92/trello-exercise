@@ -44,7 +44,7 @@ const ProjectDetails = ({ projectId }) => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isCardEditing, setIsCardEditing] = useState(false);
   const [smallTags, setSmallTags] = useState(false);
-  const [currProject, setCurrProject] = useState(null);
+  const [_, setCurrProject] = useState(null);
   const [projectsLists, setProjectsLists] = useState([]);
   const [projectCards, setProjectCards] = useState([]);
   const [dropdownListId, setDropdownListId] = useState(null);
@@ -53,6 +53,8 @@ const ProjectDetails = ({ projectId }) => {
   const listMenuRef = useRef(null);
   const listMenuIconRef = useRef(null);
   const zoomAreaRef = useRef(null);
+
+  console.log("projectsCards", projectCards);
 
   const getProject = useCallback(async () => {
     if (projectId) {
@@ -133,16 +135,16 @@ const ProjectDetails = ({ projectId }) => {
 
     if (activeId !== overId) {
       const activeList = currentProject.lists.find((list) =>
-        list.cards.some((card) => card.id === activeId),
+        list.cards.some((card) => card._id === activeId),
       );
       const overList = currentProject.lists.find((list) => list.id === overId);
 
       if (!activeList || !overList) return;
 
       const activeIndex = activeList.cards.findIndex(
-        (card) => card.id === activeId,
+        (card) => card._id === activeId,
       );
-      const overIndex = overList.cards.findIndex((card) => card.id === overId);
+      const overIndex = overList.cards.findIndex((card) => card._id === overId);
 
       const updatedProject = {
         ...currentProject,
@@ -153,7 +155,7 @@ const ProjectDetails = ({ projectId }) => {
               cards:
                 list.id === overList.id
                   ? arrayMove(list.cards, activeIndex, overIndex)
-                  : list.cards.filter((card) => card.id !== activeId),
+                  : list.cards.filter((card) => card._id !== activeId),
             };
           } else if (list.id === overList.id && list.id !== activeList.id) {
             return {
@@ -186,18 +188,20 @@ const ProjectDetails = ({ projectId }) => {
   };
 
   const toggleDropdown = (listId) => {
-    setDropdownListId((prevId) => (prevId === listId ? null : listId));
-    setIsOpen(!isOpen);
+    if (dropdownListId === listId && isOpen) {
+      setIsOpen(false);
+      setDropdownListId(null);
+    } else {
+      setDropdownListId((prevId) => (prevId === listId ? null : listId));
+      setIsOpen(true);
+    }
   };
-  console.log(isOpen);
 
   const renderCard = (cardId) => {
     const card = projectsLists
       .flatMap((list) => list.cards)
       .find((card) => card._id === cardId);
-    // const card = projectsLists.find((list) =>
-    //   list.cards.some((c) => list._id === c.listId),
-    // );
+
     if (!card) return null;
 
     const isDragging = activeId === cardId;
@@ -220,10 +224,6 @@ const ProjectDetails = ({ projectId }) => {
       />
     );
   };
-
-  // if (!isDataFetched) {
-  //   return <div>Loading...</div>;
-  // }
 
   if (loading) return <LifelineLoader />;
   if (error) return <div>Error: {error}</div>;
@@ -266,6 +266,7 @@ const ProjectDetails = ({ projectId }) => {
                 onDeleteList={onDeleteList}
                 setIsOpen={setIsOpen}
                 isOpen={isOpen}
+                setProjectCards={setProjectCards}
               />
             </SortableContext>
           ))}
@@ -292,10 +293,13 @@ const ProjectDetails = ({ projectId }) => {
         onClose={() => setIsModalOpen(false)}
         // users={users}
         list={selectedList}
-        projectId={currentProject.id}
+        projectId={currentProject._id}
         isCardEditing={isCardEditing}
         selectedCard={selectedCard}
         setIsCardEditing={setIsCardEditing}
+        setProjectCards={setProjectCards}
+        projectCards={projectCards}
+        setProjectsLists={setProjectsLists}
       />
     </DndContext>
   );

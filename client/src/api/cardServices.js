@@ -14,6 +14,8 @@ export const getCardsByListsIds = async (listIds) => {
 };
 
 export const createCard = async (card) => {
+  console.log("card in service", card);
+
   return apiClient("cards", {
     method: "POST",
     body: JSON.stringify(card),

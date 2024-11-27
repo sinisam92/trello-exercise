@@ -9,6 +9,7 @@ import { useLocation } from "wouter";
 import Comment from "../../assets/icons/comment.svg";
 import Dots from "../../assets/icons/dots.svg";
 import useClickOutside from "../../hooks/useClickOutside";
+import { deleteCard } from "../../reducers/cardSlice";
 import { fetchUsersByIds } from "../../reducers/userSlice";
 import Tag from "../card-details-components/Tag";
 import Avatar from "../common/Avatar";
@@ -18,7 +19,7 @@ const Card = ({
   card,
   userId,
   list,
-  setProjects,
+  // setProjects,
   project,
   setSmallTags,
   smallTags,
@@ -27,7 +28,8 @@ const Card = ({
   setIsCardEditing,
   setSelectedCard,
   className,
-  projectId,
+  setProjectCards,
+  // projectId,
 }) => {
   const dispatch = useDispatch();
   const { usersByIds } = useSelector((state) => state.users);
@@ -50,11 +52,18 @@ const Card = ({
 
   useEffect(() => {
     getAssignedUsers();
+    // if (project && project.membersId) {
+    //   try {
+    //     dispatch(fetchUsersByIds(project.membersId)).unwrap();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
   }, [getAssignedUsers]);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
-      id: card.id,
+      id: card._id,
     });
 
   const style = {
@@ -77,30 +86,13 @@ const Card = ({
 
   const handleCardOptions = (e, cardId) => {
     e.preventDefault();
-    e.stopPropagation();
     setOpenCardOptionsId((prev) => (prev === cardId ? null : cardId));
   };
 
-  const handleDeleteCard = (e, listId, cardId) => {
+  const handleDeleteCard = (e, cardId) => {
     e.preventDefault();
-
-    setProjects((prevProjects) =>
-      prevProjects.map((project) =>
-        project.id === projectId
-          ? {
-              ...project,
-              lists: project.lists.map((list) =>
-                list.id === listId
-                  ? {
-                      ...list,
-                      cards: list.cards.filter((card) => card.id !== cardId),
-                    }
-                  : list,
-              ),
-            }
-          : project,
-      ),
-    );
+    setProjectCards((prev) => prev.filter((card) => card._id !== cardId));
+    dispatch(deleteCard(cardId));
 
     setOpenCardOptionsId(null);
   };
@@ -113,12 +105,12 @@ const Card = ({
   const isPastDue = moment(card.dueDate).isBefore(moment(), "day");
   return (
     <div
-      key={card.id}
+      key={card._id}
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      id={card.id}
+      id={card._id}
       className={` bg-secundary min-w-[250px] max-w-[250px] text-white p-4 rounded-lg m-4 ${className}`}
     >
       <div className=" flex justify-between items-center">
@@ -159,7 +151,7 @@ const Card = ({
               usersByIds.map((assignedUser) => {
                 return (
                   <Avatar
-                    key={assignedUser.id}
+                    key={assignedUser._id}
                     avatarUrl={assignedUser.avatarUrl}
                     username={assignedUser.username}
                     defaultAvatar={assignedUser.defaultAvatar}
@@ -172,7 +164,7 @@ const Card = ({
         {location === `/user/${userId}/cards` ? null : (
           <div className="relative h-full flex flex-col justify-between">
             <button
-              onClick={(e) => handleCardOptions(e, card.id)}
+              onClick={(e) => handleCardOptions(e, card._id)}
               className="flex flex-shrink-0"
             >
               <img
@@ -184,7 +176,7 @@ const Card = ({
             </button>
           </div>
         )}
-        {openCardOptionsId === card.id && (
+        {openCardOptionsId === card._id && (
           <div
             ref={cardOptionsRef}
             className="absolute top-10 right-[80px] w-24 bg-primaryHover rounded-lg z-50"
@@ -192,7 +184,7 @@ const Card = ({
             <ul className="py-2 text-white text-lg">
               <ListItem onClick={(e) => openModal(e, card, list)} text="Edit" />
               <ListItem
-                onClick={(e) => handleDeleteCard(e, list.id, card.id)}
+                onClick={(e) => handleDeleteCard(e, card._id)}
                 text="Delete"
               />
             </ul>
@@ -207,7 +199,7 @@ export default Card;
 
 Card.propTypes = {
   card: PropTypes.shape({
-    id: PropTypes.string,
+    _id: PropTypes.string,
     title: PropTypes.string,
     tags: PropTypes.array,
     comments: PropTypes.array,
@@ -227,4 +219,5 @@ Card.propTypes = {
   setSelectedCard: PropTypes.func,
   className: PropTypes.string,
   projectId: PropTypes.string,
+  setProjectCards: PropTypes.func,
 };

@@ -57,6 +57,7 @@ export const createProject = async (req, res) => {
   }
 };
 
+// TODO: Implement delete lists, cards, comments related to projects to be deleted when deleting a project
 export const deleteProject = async (req, res) => {
   const { projectId } = req.params;
 
