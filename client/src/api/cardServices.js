@@ -27,6 +27,8 @@ export const createCard = async (card) => {
 };
 
 export const updateCardService = async (card) => {
+  console.log("card in service", card);
+
   return apiClient(`cards/${card._id}`, {
     method: "PUT",
     body: JSON.stringify(card),

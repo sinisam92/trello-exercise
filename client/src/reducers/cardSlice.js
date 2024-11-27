@@ -53,6 +53,8 @@ export const createNewCard = createAsyncThunk(
 export const updateCard = createAsyncThunk(
   "cards/updateCard",
   async (cardData, { rejectWithValue }) => {
+    console.log("cardData SLIce", cardData);
+
     try {
       const response = await updateCardService(cardData);
       return response;

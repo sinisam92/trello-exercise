@@ -86,6 +86,7 @@ const Card = ({
 
   const handleCardOptions = (e, cardId) => {
     e.preventDefault();
+
     setOpenCardOptionsId((prev) => (prev === cardId ? null : cardId));
   };
 

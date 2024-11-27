@@ -8,13 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
 
-// import { updateProject } from "../../reducers/projectSlice";
 import { createNewCard } from "../../reducers/cardSlice";
+import { updateCard } from "../../reducers/cardSlice";
 import { fetchUsersByIds } from "../../reducers/userSlice";
 
 const AddCardModal = ({
   onClose,
-  // users,
   list,
   projectId,
   selectedCard,
@@ -24,7 +23,7 @@ const AddCardModal = ({
   projectCards,
 }) => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState();
+  const [description, setDescription] = useState("");
   const [_, setTags] = useState([]);
   const [assigned, setAssigned] = useState([]);
   const [dueDate, setDueDate] = useState("");
@@ -85,20 +84,19 @@ const AddCardModal = ({
       dueDate: dueDate || "",
     };
 
-    // setProjectCards((prevCards) => {
-    //   console.log("prevCards", prevCards);
+    if (isCardEditing) {
+      setProjectCards((prevCards) =>
+        prevCards.map((card) =>
+          card._id === selectedCard._id ? newCard : card,
+        ),
+      );
 
-    //   if (isCardEditing) {
-    //     const updatedCards = prevCards.map((card) =>
-    //       card._id === selectedCard._id ? newCard : card,
-    //     );
-    //     return updatedCards;
-    //   }
-    //   return [...prevCards, newCard];
-    // });
-    setProjectCards([...projectCards, newCard]);
+      dispatch(updateCard(newCard));
+    } else {
+      setProjectCards([...projectCards, newCard]);
 
-    dispatch(createNewCard(newCard));
+      dispatch(createNewCard(newCard));
+    }
     resetForm();
     onClose();
   };
@@ -121,11 +119,11 @@ const AddCardModal = ({
 
   useEffect(() => {
     if (isCardEditing && selectedCard) {
-      setTitle(selectedCard.title);
-      setDescription(selectedCard.description);
-      setSelectedTags(selectedCard.tags);
-      setAssigned(selectedCard.assigned);
-      setDueDate(selectedCard.dueDate);
+      setTitle(selectedCard.title || "");
+      setDescription(selectedCard.description || "");
+      setSelectedTags(selectedCard.tags || []);
+      setAssigned(selectedCard.assigned || []);
+      setDueDate(selectedCard.dueDate || "");
     }
   }, [isCardEditing, selectedCard]);
 
@@ -169,7 +167,7 @@ const AddCardModal = ({
           id="card-description"
           ref={quillRef}
           theme="snow"
-          value={description}
+          value={description || ""}
           onChange={setDescription}
           placeholder="Card Description"
         />

@@ -47,8 +47,8 @@ export const createCard = async (req, res) => {
     await cardToAdd.save();
     res.status(201).json(cardToAdd);
   } catch (error) {
-    console.error("Error during list creation:", error);
-    res.status(500).json({ error: "Error creating list!" });
+    console.error("Error during card creation:", error);
+    res.status(500).json({ error: "Error creating card!" });
   }
 };
 
