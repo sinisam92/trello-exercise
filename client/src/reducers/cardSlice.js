@@ -99,6 +99,22 @@ const cardSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Fetch all cards
+      .addCase(fetchAllCards.pending, (state) => {
+        state.status = "loading";
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllCards.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.loading = false;
+        state.cards = action.payload;
+      })
+      .addCase(fetchAllCards.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Fetch cards by list IDs
       .addCase(fetchCardsByListsIds.pending, (state) => {
         state.status = "loading";
         state.loading = true;

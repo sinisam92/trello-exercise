@@ -25,3 +25,15 @@ export const addNewUser = async (userData) => {
     },
   });
 };
+
+export const updateUserService = async (userData) => {
+  console.log("userData SERVICE", userData);
+
+  return apiClient(`users/${userData.id}`, {
+    method: "PUT",
+    body: JSON.stringify(userData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};

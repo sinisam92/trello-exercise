@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "wouter";
 
 import Close from "../../assets/icons/close.svg";
 import { logout } from "../../reducers/authSlice";
+import { updateUser } from "../../reducers/userSlice";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
 import SidebarMenu from "./SidebarMenu";
@@ -13,17 +14,23 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [error, setError] = useState("");
+  const [userData, setUserData] = useState(null);
 
-  const currentUser = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
 
-  const username = currentUser ? currentUser.username : null;
+  const username = userData ? userData.username : null;
 
-  const defaultAvatar = currentUser && currentUser.defaultAvatar;
-  const avatarUrl = currentUser ? currentUser.avatarUrl : "";
+  const defaultAvatar = userData && userData.defaultAvatar;
+  const avatarUrl = userData ? userData.avatarUrl : "";
   const usernameForAt = username?.toLowerCase().replace(" ", "-");
   const dispatch = useDispatch();
   const [_, navigate] = useLocation();
 
+  useEffect(() => {
+    if (user) {
+      setUserData(user);
+    }
+  }, [user]);
   const openAvatarModal = () => {
     setIsAvatarModalOpen(true);
   };
@@ -39,24 +46,20 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
   };
 
   const handleAvatarSubmit = (userId) => {
-    console.log("userId", userId);
+    if (!newAvatarUrl) {
+      setError("Avatar URL is required.");
+      return;
+    }
+    if (userData && userData._id === userId) {
+      const updatedUser = { ...userData, avatarUrl: newAvatarUrl };
+      console.log("updatedUser", updatedUser);
+      setUserData(updatedUser);
+      dispatch(updateUser(updatedUser));
 
-    // if (!newAvatarUrl) {
-    //   setError("Avatar URL is required.");
-    //   return;
-    // }
-    // if (currentUser && currentUser.id === userId) {
-    //   const updatedUser = { ...currentUser, avatarUrl: newAvatarUrl };
-    //   // dispatch(setCurrentUser(updatedUser));
-
-    //   const updatedUsers = users.map((user) =>
-    //     user.id === userId ? updatedUser : user,
-    //   );
-    //   // dispatch(setUsers(updatedUsers));
-    //   closeAvatarModal();
-    // } else {
-    //   console.error("You can only change your own avatar.");
-    // }
+      closeAvatarModal();
+    } else {
+      console.error("You can only change your own avatar.");
+    }
   };
 
   const handleLogout = async () => {
@@ -107,7 +110,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
                   <ul className="flex justify-end gap-4">
                     <ListItem
                       text="Save"
-                      onClick={() => handleAvatarSubmit(currentUser.id)}
+                      onClick={() => handleAvatarSubmit(user.id)}
                       className="bg-blue-500 text-white px-4 py-2 rounded"
                     />
                     <ListItem
@@ -131,7 +134,7 @@ const Sidebar = ({ setIsChildMenuOpen, handleCloseSidebar, setIsMenuOpen }) => {
       </div>
       <nav className="px-1">
         <SidebarMenu
-          currentUser={currentUser}
+          currentUser={user}
           handleLogout={handleLogout}
           handleCloseSidebar={handleCloseSidebar}
         />

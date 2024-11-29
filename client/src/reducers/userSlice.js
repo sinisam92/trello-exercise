@@ -1,6 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { getAllUsers, getUsersByIds } from "../api/userServices";
+import {
+  getAllUsers,
+  getUsersByIds,
+  updateUserService,
+} from "../api/userServices";
 import { addNewUser } from "../api/userServices";
 
 export const fetchAllUsers = createAsyncThunk(
@@ -41,6 +45,20 @@ export const registerNewUser = createAsyncThunk(
         return rejectWithValue(error.response.data);
       }
       return rejectWithValue("An unknown error occurred");
+    }
+  },
+);
+
+export const updateUser = createAsyncThunk(
+  "users/updateUser",
+  async (updatedUser, { rejectWithValue }) => {
+    console.log("updatedUser reducer", updatedUser);
+
+    try {
+      const response = await updateUserService(updatedUser);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   },
 );
@@ -89,6 +107,19 @@ const userSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(registerNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.users = state.users.map((user) =>
+          user.id === action.payload.id ? action.payload : user,
+        );
+        state.status = "succeeded";
+      })
+      .addCase(updateUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
