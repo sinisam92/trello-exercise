@@ -1,7 +1,8 @@
 import { validationResult } from "express-validator";
 import Comment from "../models/Comment.js";
+import Card from "../models/Card.js";
 
-const getAllComment = async (_req, res) => {
+export const getAllComment = async (_req, res) => {
   try {
     const comments = await Comment.find();
     res.status(200).json(comments);
@@ -11,54 +12,85 @@ const getAllComment = async (_req, res) => {
   }
 };
 
-const getCommentById = async (req, res) => {
+export const getCommentById = async (req, res) => {
   const paramsId = req.params.id;
 
   try {
-    const list = await Comment.findById(paramsId);
+    const comment = await Comment.findById(paramsId);
 
-    if (!list) {
+    if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-    res.status(200).json(list);
+    res.status(200).json(comment);
   } catch (error) {
-    console.error("Error during fetching list:", error);
-    res.status(500).json({ error: "Error fetching list!" });
+    console.error("Error during fetching comment:", error);
+    res.status(500).json({ error: "Error fetching comment!" });
   }
 };
 
-const createComment = async (req, res) => {
-  const newComment = req.body;
+export const getCommentByCardCommentsIds = async (req, res) => {
+  const { commentIds } = req.query;
 
   try {
-    const listToAdd = new Comment(newComment);
+    const commentIdsDecoded = await JSON.parse(decodeURIComponent(commentIds));
 
-    await listToAdd.save();
-    res.status(201).json(listToAdd);
+    const comment = await Comment.find({
+      _id: { $in: commentIdsDecoded },
+    });
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+    res.status(200).json(comment);
   } catch (error) {
-    console.error("Error during list creation:", error);
-    res.status(500).json({ error: "Error creating list!" });
+    console.error("Error during fetching comments:", error);
+    res.status(500).json({ error: "Error fetching comments!" });
   }
 };
 
-const deleteComment = async (req, res) => {
+export const createComment = async (req, res) => {
+  try {
+    const newComment = req.body;
+
+    const card = await Card.findOne({ _id: newComment.cardId });
+
+    if (!card) {
+      return res.status(404).json({ error: "Card not found!" });
+    }
+
+    const commentToAdd = new Comment(newComment);
+
+    card.comments.push(commentToAdd._id);
+
+    await card.save();
+    await commentToAdd.save();
+
+    res.status(201).json(commentToAdd);
+  } catch (error) {
+    console.error("Error during comment creation:", error);
+    res.status(500).json({ error: "Error creating comment!" });
+  }
+};
+
+export const deleteComment = async (req, res) => {
   const paramsId = req.params.id;
+  console.log("paramsId", paramsId);
 
   try {
-    const list = await Comment.findOneAndDelete({ _id: paramsId });
+    const comment = await Comment.findOneAndDelete({ _id: paramsId });
 
-    if (!list) {
+    if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
 
     res.status(204).end();
   } catch (error) {
-    console.error("Error during list deletion:", error);
-    res.status(500).json({ error: "Error deleting list!" });
+    console.error("Error during comment deletion:", error);
+    res.status(500).json({ error: "Error deleting comment!" });
   }
 };
 
-const updateComment = async (req, res) => {
+export const updateComment = async (req, res) => {
   //   const errors = validationResult(req);
   //   if (!errors.isEmpty()) {
   //     return res.status(400).json({ errror: errors.array() });
@@ -81,9 +113,7 @@ const updateComment = async (req, res) => {
 
     res.status(200).json(updatedComment);
   } catch (error) {
-    console.error("Error during list update:", error);
-    res.status(500).json({ error: "Error updating list!" });
+    console.error("Error during comment update:", error);
+    res.status(500).json({ error: "Error updating comment!" });
   }
 };
-
-export { getAllComment, getCommentById, createComment, deleteComment, updateComment };

@@ -54,8 +54,6 @@ export const createNewProject = createAsyncThunk(
 export const updateProject = createAsyncThunk(
   "projects/updateProject",
   async (projectData, { rejectWithValue }) => {
-    console.log("projectData", projectData);
-
     try {
       const response = await updateProjectService(projectData);
 
@@ -87,24 +85,7 @@ const projectsSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {
-    setCurrentProject: (state, action) => {
-      const projectId = action.payload;
-
-      const currProject = state.projects.find(
-        (project) => project._id === projectId,
-      );
-
-      if (currProject) {
-        state.currentProject = currProject;
-      } else {
-        console.warn(`Project with ID ${projectId} not found in state`);
-      }
-    },
-    clearCurrentProject: (state) => {
-      state.currentProject = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Fetch single project
@@ -170,7 +151,7 @@ const projectsSlice = createSlice({
             ...state.projects.slice(index + 1),
           ];
         } else {
-          console.log("Project not found in state");
+          console.warn("Project not found in state");
         }
         if (state.currentProject?._id === updatedProject._id) {
           state.currentProject = updatedProject;

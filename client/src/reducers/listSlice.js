@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createList,
   deleteListService,
+  getListById,
   getListByProjectId,
   getLists,
   updateListService,
@@ -22,8 +23,21 @@ export const fetchAllLists = createAsyncThunk(
 );
 
 // Fetch a single list by ID
-export const fetchListByProjectId = createAsyncThunk(
+export const fetchListById = createAsyncThunk(
   "lists/fetchListById",
+  async (listId, { rejectWithValue }) => {
+    try {
+      const response = await getListById(listId);
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+// Fetch a lists by project ID
+export const fetchListByProjectId = createAsyncThunk(
+  "lists/fetchListByProjectId",
   async (projectId, { rejectWithValue }) => {
     try {
       const response = await getListByProjectId(projectId);
@@ -52,8 +66,6 @@ export const createNewList = createAsyncThunk(
 export const updateList = createAsyncThunk(
   "lists/updateList",
   async (listData, { rejectWithValue }) => {
-    console.log("listData SLIce", listData);
-
     try {
       const response = await updateListService(listData);
       return response;
@@ -80,6 +92,7 @@ const listSlice = createSlice({
   name: "lists",
   initialState: {
     lists: [],
+    currentList: null,
     status: "idle",
     loading: false,
     error: null,
@@ -103,19 +116,19 @@ const listSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // // Fetch single list
-      // .addCase(getListByProjectId.pending, (state) => {
-      //   state.loading = true;
-      //   state.error = null;
-      // })
-      // .addCase(getListByProjectId.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.currentList = action.payload;
-      // })
-      // .addCase(getListByProjectId.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.payload;
-      // })
+      // Fetch single list
+      .addCase(fetchListById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchListById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentList = action.payload;
+      })
+      .addCase(fetchListById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Create new list
       .addCase(createNewList.pending, (state) => {
         state.loading = true;

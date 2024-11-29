@@ -13,7 +13,7 @@ import cliProgress from "cli-progress";
 import _colors from "ansi-colors";
 import chalk from "chalk";
 
-const totalUsers = 10;
+const totalUsers = 15;
 const totalProjects = 30;
 const totalLists = 100;
 const totalCards = 150;
@@ -226,21 +226,28 @@ let usersCreated = [],
     .fill(null)
     .map(async () => {
       const listId = faker.helpers.arrayElement(listIds);
+      const createdByUserId = faker.helpers.arrayElement(userIds);
+
+      const generateAssignedMembers = () => {
+        const additionalUsersCount = faker.helpers.rangeToNumber({ min: 0, max: 2 });
+
+        const additionalUsers = faker.helpers
+          .shuffle(userIds)
+          .slice(0, additionalUsersCount);
+
+        return [createdByUserId, ...additionalUsers];
+      };
       const cardData = {
         id: faker.string.uuid(),
         title: faker.lorem.words(),
         description: faker.lorem.sentence(),
-        createdByUserId: faker.helpers.arrayElement(userIds),
+        createdByUserId: createdByUserId,
         listId: listId,
         duoDate: faker.date.future(),
         status: faker.helpers.arrayElement(cardStatus),
         comments: [],
         commentsCount: 0,
-        assigned: [
-          faker.helpers.arrayElement(userIds),
-          faker.helpers.arrayElement(userIds),
-          faker.helpers.arrayElement(userIds),
-        ],
+        assigned: generateAssignedMembers(),
         tags: faker.helpers.arrayElements([
           "important",
           "urgent",

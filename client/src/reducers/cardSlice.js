@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createCard,
   deleteCardService,
+  getCardById,
   getCards,
   getCardsByListsIds,
   updateCardService,
@@ -21,9 +22,22 @@ export const fetchAllCards = createAsyncThunk(
   },
 );
 
+export const fetchCardById = createAsyncThunk(
+  "cards/fetchCardById",
+  async (cardId, { rejectWithValue }) => {
+    try {
+      const response = await getCardById(cardId);
+      console.log("response COMMENT in slice", response);
+
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 // Fetch a single card by ID
 export const fetchCardsByListsIds = createAsyncThunk(
-  "cards/fetchCardById",
+  "cards/fetchCardsByListsIds",
   async (listIds, { rejectWithValue }) => {
     try {
       const response = await getCardsByListsIds(listIds);
@@ -38,8 +52,6 @@ export const fetchCardsByListsIds = createAsyncThunk(
 export const createNewCard = createAsyncThunk(
   "cards/createNewCard",
   async (cardData, { rejectWithValue }) => {
-    console.log("cardData SLIce", cardData);
-
     try {
       const response = await createCard(cardData);
       return response;
@@ -53,8 +65,6 @@ export const createNewCard = createAsyncThunk(
 export const updateCard = createAsyncThunk(
   "cards/updateCard",
   async (cardData, { rejectWithValue }) => {
-    console.log("cardData SLIce", cardData);
-
     try {
       const response = await updateCardService(cardData);
       return response;
@@ -84,6 +94,7 @@ const cardSlice = createSlice({
     status: "idle",
     loading: false,
     error: null,
+    currentCard: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -104,19 +115,19 @@ const cardSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // // Fetch single card
-      // .addCase(getCardByProjectId.pending, (state) => {
-      //   state.loading = true;
-      //   state.error = null;
-      // })
-      // .addCase(getCardByProjectId.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.currentCard = action.payload;
-      // })
-      // .addCase(getCardByProjectId.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.payload;
-      // })
+      // Fetch single card
+      .addCase(fetchCardById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCardById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentCard = action.payload;
+      })
+      .addCase(fetchCardById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Create new card
       .addCase(createNewCard.pending, (state) => {
         state.loading = true;

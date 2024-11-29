@@ -12,6 +12,23 @@ export const getAllCard = async (_req, res) => {
   }
 };
 
+export const getCardById = async (req, res) => {
+  const cardId = req.params.id;
+
+  try {
+    const card = await Card.findById(cardId);
+
+    if (!card) {
+      return res.status(404).json({ message: "Card not found" });
+    }
+
+    res.status(200).json(card);
+  } catch (error) {
+    console.error("Error during fetching card:", error);
+    res.status(500).json({ error: "Error fetching card!" });
+  }
+};
+
 export const getCardByListsIds = async (req, res) => {
   const { listIds } = req.query;
   try {
@@ -33,6 +50,7 @@ export const getCardByListsIds = async (req, res) => {
 export const createCard = async (req, res) => {
   try {
     const newCard = req.body;
+
     const cardToAdd = new Card(newCard);
 
     const list = await List.findById(newCard.listId);
@@ -77,9 +95,6 @@ export const updateCard = async (req, res) => {
   const paramsId = req.params.id;
   const updatedData = req.body;
 
-  console.log("updatedData UPDATE", updatedData);
-  console.log("paramsId", paramsId);
-
   try {
     const updatedCard = await Card.findOneAndUpdate({ _id: paramsId }, updatedData, {
       new: true,
@@ -97,8 +112,8 @@ export const updateCard = async (req, res) => {
   }
 };
 
-export const getCardsWithComments = async (req, res) => {
-  const { id: cardId } = req.params;
+export const getCardWithComments = async (req, res) => {
+  const { cardId } = req.params;
 
   try {
     const card = await Card.findById(cardId).populate("comments");
@@ -107,7 +122,7 @@ export const getCardsWithComments = async (req, res) => {
       return res.status(404).json({ message: "Card not found" });
     }
 
-    res.json(card);
+    res.status(201).json(card);
   } catch (error) {
     console.error("Error fetching card with cards:", error);
     res.status(500).json({ error: "Error fetching card with cards!" });

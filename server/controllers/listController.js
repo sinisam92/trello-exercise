@@ -13,21 +13,21 @@ export const getAllLists = async (_req, res) => {
   }
 };
 
-// export const getListById = async (req, res) => {
-//   const paramsId = req.params.id;
+export const getListById = async (req, res) => {
+  const { listId } = req.params;
 
-//   try {
-//     const list = await List.findById(paramsId);
+  try {
+    const list = await List.findById(listId);
 
-//     if (!list) {
-//       return res.status(404).json({ message: "List not found" });
-//     }
-//     res.status(200).json(list);
-//   } catch (error) {
-//     console.error("Error during fetching list:", error);
-//     res.status(500).json({ error: "Error fetching list!" });
-//   }
-// };
+    if (!list) {
+      return res.status(404).json({ message: "List not found" });
+    }
+    res.status(200).json(list);
+  } catch (error) {
+    console.error("Error during fetching list:", error);
+    res.status(500).json({ error: "Error fetching list!" });
+  }
+};
 
 export const getListsByProjectId = async (req, res) => {
   const { id } = req.params;

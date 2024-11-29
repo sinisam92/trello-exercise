@@ -54,8 +54,6 @@ const ProjectDetails = ({ projectId }) => {
   const listMenuIconRef = useRef(null);
   const zoomAreaRef = useRef(null);
 
-  console.log("projectsCards", projectCards);
-
   const getProject = useCallback(async () => {
     if (projectId) {
       try {
@@ -236,7 +234,7 @@ const ProjectDetails = ({ projectId }) => {
       onDragStart={handleDragStart}
       collisionDetection={closestCorners}
     >
-      <div>
+      <div className="mt-5">
         <div
           ref={zoomAreaRef}
           className="flex overflow-x-auto overscroll-y-none smooth-scroll"

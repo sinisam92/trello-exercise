@@ -5,9 +5,11 @@ import {
   getCommentById,
   updateComment,
   deleteComment,
+  getCommentByCardCommentsIds,
 } from "../controllers/commentController.js";
 
 const router = Router();
+router.route("/by-comment-ids").get(getCommentByCardCommentsIds);
 
 // prettier-ignore
 router.route("/")

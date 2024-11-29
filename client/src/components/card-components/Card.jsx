@@ -61,6 +61,8 @@ const Card = ({
     // }
   }, [getAssignedUsers]);
 
+  // console.log("card", card);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: card._id,
@@ -150,20 +152,21 @@ const Card = ({
           <div className="flex gap-x-2 mt-6">
             {usersByIds &&
               usersByIds.map((assignedUser) => {
-                return (
-                  <Avatar
-                    key={assignedUser._id}
-                    avatarUrl={assignedUser.avatarUrl}
-                    username={assignedUser.username}
-                    defaultAvatar={assignedUser.defaultAvatar}
-                    size={2.3} // in rem
-                  />
-                );
+                if (card.assigned.includes(assignedUser._id))
+                  return (
+                    <Avatar
+                      key={assignedUser._id}
+                      avatarUrl={assignedUser.avatarUrl}
+                      username={assignedUser.username}
+                      defaultAvatar={assignedUser.defaultAvatar}
+                      size={2.3} // in rem
+                    />
+                  );
               })}
           </div>
         </div>
         {location === `/user/${userId}/cards` ? null : (
-          <div className="relative h-full flex flex-col justify-between">
+          <div className="relative h-full flex flex-col justify-between min-w-7">
             <button
               onClick={(e) => handleCardOptions(e, card._id)}
               className="flex flex-shrink-0"

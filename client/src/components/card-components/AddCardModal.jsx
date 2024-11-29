@@ -54,7 +54,7 @@ const AddCardModal = ({
         setCurrentProjectMembers(response.payload);
       });
       const assignedUsersOptions = currentProjectMembers.map((member) => ({
-        value: member.username,
+        value: member._id,
         label: member.username,
       }));
       setAssignedUsersOptions(assignedUsersOptions);
@@ -74,7 +74,7 @@ const AddCardModal = ({
       title,
       description: description || "",
       tags: selectedTags,
-      assigned,
+      assigned: assigned,
       comments: isCardEditing ? selectedCard?.comments : [],
       commentsCount: isCardEditing ? selectedCard?.commentsCount : 0,
       status: list.name,
@@ -198,6 +198,15 @@ const AddCardModal = ({
             isMulti
             options={assignedUsersOptions}
             onChange={handleAssignedChange}
+            value={assigned.map((user) => {
+              const matchedMember = currentProjectMembers.find(
+                (currUser) => currUser._id === user,
+              );
+              return {
+                value: user,
+                label: matchedMember ? matchedMember.username : "Unknown user",
+              };
+            })}
           />
         </label>
       </div>
@@ -208,7 +217,7 @@ const AddCardModal = ({
         <input
           id="dueDate"
           type="date"
-          value={dueDate}
+          value={isCardEditing ? selectedCard.dueDate : dueDate}
           onChange={(e) => setDueDate(e.target.value)}
           className="w-full p-2 border rounded"
         />

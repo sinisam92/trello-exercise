@@ -4,46 +4,30 @@ import { useDispatch } from "react-redux";
 
 import CommentIcon from "../../assets/icons/comment.svg";
 import DotsSmall from "../../assets/icons/dots-small.svg";
-import { updateProject } from "../../reducers/projectSlice";
+import { deleteComment } from "../../reducers/commentSlice";
 import Avatar from "../common/Avatar";
 import ListItem from "../list-components/ListItem";
 
 const Comments = ({
   thisCard,
-  users,
   currentUser,
   toggleOptions,
   commentsIconRef,
   openOptions,
   commentsOptionsRef,
-  currentProject,
+  usersByIds,
+  setCurrCard,
 }) => {
   const dispatch = useDispatch();
+  // console.log("usersByIds", usersByIds);
 
-  const handleDeleteComment = (cardId, commentId) => {
-    const updatedLists = currentProject.lists.map((list) => ({
-      ...list,
-      cards: list.cards.map((card) => {
-        if (card.id === cardId) {
-          const updatedComments = card.comments.filter(
-            (comment) =>
-              !(
-                comment.user === currentUser.username &&
-                comment.id === commentId
-              ),
-          );
-          return { ...card, comments: updatedComments };
-        }
-        return card;
-      }),
-    }));
+  const handleDeleteComment = (commentId) => {
+    const updatedComments = thisCard.comments.filter(
+      (comment) => comment._id !== commentId,
+    );
+    setCurrCard({ ...thisCard, comments: updatedComments });
 
-    const updatedProject = {
-      ...currentProject,
-      lists: updatedLists,
-    };
-
-    dispatch(updateProject(updatedProject));
+    dispatch(deleteComment(commentId));
   };
 
   return (
@@ -62,28 +46,32 @@ const Comments = ({
         ) : (
           <ul>
             {thisCard.comments.map((comment) => {
-              const commentUser = users.find(
-                (user) => user.username === comment.user,
+              const commentUser = usersByIds.find(
+                (user) => user._id === comment.createdByUserId,
               );
               return (
-                <li key={comment.id} className="flex mb-4">
-                  {commentUser && (
+                <li key={comment._id} className="flex mb-4">
+                  {commentUser ? (
                     <Avatar
                       avatarUrl={commentUser.avatarUrl}
                       username={commentUser.username}
                       defaultAvatar={commentUser.defaultAvatar}
                       size={3}
                     />
+                  ) : (
+                    <div className="flex items-center justify-center w-10 h-10 bg-gray-300 rounded-full aspect-square mr-4">
+                      <span className="text-3xl text-black font-bold">?</span>
+                    </div>
                   )}
                   <div className="flex w-full justify-between items-start">
                     <div className="break-words">
-                      <h3>{commentUser.username}</h3>
+                      <h3>{commentUser?.username || "Unknown user"}</h3>
 
-                      {comment.dateAdded && (
+                      {comment.createdAt && (
                         <p className="text-black text-sm">
-                          {moment(comment.dateAdded).format("DD.MMM.Y") +
+                          {moment(comment.createdAt).format("DD.MMM.Y") +
                             " at " +
-                            moment(comment.dateAdded).format("HH:mm")}
+                            moment(comment.createdAt).format("HH:mm")}
                         </p>
                       )}
                       <div
@@ -91,10 +79,10 @@ const Comments = ({
                         className="bg-slate-300 rounded-[4px] p-2"
                       ></div>
                     </div>
-                    {currentUser.username === comment.user && (
+                    {currentUser._id === comment.createdByUserId && (
                       <div className="flex flex-shrink-0 mt-8">
                         <button
-                          onClick={(e) => toggleOptions(e, comment.id)}
+                          onClick={(e) => toggleOptions(e, comment._id)}
                           className="cursor-pointer"
                         >
                           <img
@@ -105,7 +93,7 @@ const Comments = ({
                         </button>
                       </div>
                     )}
-                    {openOptions === comment.id && (
+                    {openOptions === comment._id && (
                       <div
                         ref={commentsOptionsRef}
                         className="absolute right-12 mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10"
@@ -114,9 +102,7 @@ const Comments = ({
                           <ListItem
                             text="Delete"
                             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() =>
-                              handleDeleteComment(thisCard.id, comment.id)
-                            }
+                            onClick={() => handleDeleteComment(comment._id)}
                           />
                         </ul>
                       </div>
@@ -144,4 +130,6 @@ Comments.propTypes = {
   openOptions: PropTypes.string,
   commentsOptionsRef: PropTypes.object,
   handleDeleteComment: PropTypes.func,
+  usersByIds: PropTypes.array,
+  setCurrCard: PropTypes.func,
 };

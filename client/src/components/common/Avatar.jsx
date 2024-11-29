@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 const Avatar = ({ avatarUrl, username, defaultAvatar, onClick, size }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
   const circleSize = `${size}rem`;
   const contentSize = `${size * 0.7}rem`;
 
@@ -8,7 +10,7 @@ const Avatar = ({ avatarUrl, username, defaultAvatar, onClick, size }) => {
     <img
       src={avatarUrl}
       alt={`${username}'s Avatar`}
-      className={`rounded-full  object-cover mr-2`}
+      className={`rounded-full  object-cover mr-6`}
       style={{ width: circleSize, height: circleSize }}
     />
   ) : (
@@ -22,12 +24,35 @@ const Avatar = ({ avatarUrl, username, defaultAvatar, onClick, size }) => {
     </div>
   );
 
-  return onClick ? (
-    <button onClick={onClick} className="focus:outline-none">
-      {avatarContent}
-    </button>
-  ) : (
-    <div>{avatarContent}</div>
+  return (
+    <div
+      className="relative inline-block"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      {onClick ? (
+        <button onClick={onClick} className="focus:outline-none">
+          {avatarContent}
+        </button>
+      ) : (
+        avatarContent
+      )}
+
+      {showTooltip && (
+        <div
+          className="absolute bg-black text-white text-xs rounded px-2 py-1"
+          style={{
+            bottom: `calc(${circleSize} + 0.5rem)`,
+            left: "50%",
+            transform: "translateX(-50%)",
+            whiteSpace: "nowrap",
+            zIndex: 10,
+          }}
+        >
+          {username}
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -43,13 +43,11 @@ const cardSchema = new mongoose.Schema(
     // updates: {
     //   type: Array,
     // },
-    comments: [
-      {
-        type: Array,
-        default: [],
-        ref: "Comment",
-      },
-    ],
+    comments: {
+      type: Array,
+      default: [],
+      ref: "Comment",
+    },
     commentsCount: {
       type: Number,
       default: 0,

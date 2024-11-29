@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createList,
   getAllLists,
+  getListById,
   getListsByProjectId,
   updateList,
   deleteList,
@@ -16,9 +17,10 @@ router.route("/")
 
 // prettier-ignore
 router.route("/:id")
-    // .get(getListById)
     .get(getListsByProjectId)
     .put(updateList)
     .delete(deleteList);
+
+router.route("/single/:listId").get(getListById);
 
 export default router;

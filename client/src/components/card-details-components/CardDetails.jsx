@@ -1,8 +1,11 @@
-import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "wouter";
+import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import useClickOutside from "../../hooks/useClickOutside";
+import { fetchCommentsByCardCommentsIds } from "../../reducers/commentSlice";
+import { fetchListById } from "../../reducers/listSlice";
+import LifelineLoader from "../common/loaders/lifeline/LifelineLoader";
 import AddNewComment from "./AddNewComment";
 import Assigned from "./Assigned";
 import Comments from "./Comments";
@@ -10,33 +13,57 @@ import Description from "./Description";
 import Tags from "./Tags";
 import Timestap from "./Timestap";
 
-const CardDetails = () => {
+const CardDetails = ({ setCurrCard, currCard }) => {
   const [openOptions, setOpenOptions] = useState(null);
 
   const commentsOptionsRef = useRef(null);
   const commentsIconRef = useRef(null);
 
-  const { projects } = useSelector((state) => state.projects);
-  const { users, currentUser } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const { usersByIds } = useSelector((state) => state.users);
+  const currentProject = useSelector((state) => state.projects.currentProject);
+  const currentCard = useSelector((state) => state.cards.currentCard);
+  const currentList = useSelector((state) => state.lists.currentList);
+  // const comments = useSelector((state) => state.comments);
+  const [loading, setLoading] = useState(true);
+  const [_, setError] = useState(null);
 
-  const { cardId } = useParams();
+  useEffect(() => {
+    const fetchList = async () => {
+      if (currentCard && currentCard.listId) {
+        try {
+          await dispatch(fetchListById(currentCard.listId));
+          setLoading(false);
+        } catch (err) {
+          console.error("Error fetching list:", err);
+          setError("Failed to load list data");
+        }
+      }
+    };
 
-  const allCards = projects.flatMap((project) => {
-    return project.lists.flatMap((list) => list.cards);
-  });
-  const thisCard = allCards.find((card) => card.id === cardId);
+    fetchList();
+  }, [currentCard, dispatch]);
 
-  const project = projects.find((project) =>
-    project.lists.some((list) => list.cards.includes(thisCard)),
-  );
-  const list = project.lists.find((list) => list.cards.includes(thisCard));
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (currentCard && currentCard.comments) {
+        const commentsArray = currentCard.comments.flat();
 
-  const thisCardsAssigned = thisCard.assigned
-    .map((person) => {
-      const user = users.find((user) => user.username === person);
-      return user;
-    })
-    .filter((user) => user !== undefined);
+        try {
+          await dispatch(fetchCommentsByCardCommentsIds(commentsArray));
+        } catch (err) {
+          console.error("Error fetching comments:", err);
+          setError("Failed to load comments data");
+        }
+      }
+    };
+
+    fetchComments();
+  }, [currentCard]);
+
+  const thisCardsAssigned = () =>
+    usersByIds.filter((user) => currentCard?.assigned?.includes(user._id));
 
   const toggleOptions = (e, commentId) => {
     e.preventDefault();
@@ -47,48 +74,59 @@ const CardDetails = () => {
     setOpenOptions(null),
   );
 
+  if (loading) {
+    return (
+      <div>
+        <LifelineLoader />
+      </div>
+    );
+  }
+
   return (
     <>
       <section className="relative h-[150px] text-4xl bg-gradient-to-r from-gray-300 via-gray-500 to-gray-700 flex items-center pl-3 ">
-        {thisCard.title}
+        {currentCard.title}
         <div className="absolute bottom-2">
           <h3 className="text-sm">
-            Project <span className="text-white">{project.name}</span> in list
-            <span className="text-white">{list.name}</span>
+            Project <span className="text-white">{currentProject.name}</span> in
+            list <span className="text-white">{currentList.name}</span>
           </h3>
         </div>
       </section>
       <section className="flex p-4 border-b-[1px] border-black">
-        <Description thisCard={thisCard} />
+        <Description thisCard={currentCard} />
       </section>
       <section className="flex p-4 border-b-[1px] border-black">
-        <Tags thisCard={thisCard} />
+        <Tags thisCard={currentCard} />
       </section>
       <section className="flex p-4 border-b-[1px] border-black">
-        <Assigned thisCardsAssigned={thisCardsAssigned} />
+        <Assigned thisCardsAssigned={thisCardsAssigned()} />
       </section>
       <section className="flex p-4 border-b-[1px] border-black">
-        <Timestap thisCard={thisCard} />
+        <Timestap thisCard={currentCard} />
       </section>
       <section className="flex p-4 border-b-[1px] border-black items-start">
         <Comments
-          users={users}
-          currentUser={currentUser}
+          // users={users}
+          currentUser={user}
           toggleOptions={toggleOptions}
           openOptions={openOptions}
           commentsOptionsRef={commentsOptionsRef}
           commentsIconRef={commentsIconRef}
-          thisCard={thisCard}
-          currentProject={project}
+          thisCard={currCard}
+          setCurrCard={setCurrCard}
+          currentProject={currentProject}
+          usersByIds={usersByIds}
         />
       </section>
       <section className="sticky bottom-0 bg-white">
         <AddNewComment
-          currentUser={currentUser}
-          projects={projects}
-          project={project}
-          list={list}
-          thisCard={thisCard}
+          currentUser={user}
+          // projects={projects}
+          project={currentProject}
+          list={currentList}
+          thisCard={currCard}
+          setCurrCard={setCurrCard}
         />
       </section>
     </>
@@ -96,3 +134,7 @@ const CardDetails = () => {
 };
 
 export default CardDetails;
+CardDetails.propTypes = {
+  setCurrCard: PropTypes.func,
+  currCard: PropTypes.object,
+};

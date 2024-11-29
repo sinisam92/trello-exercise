@@ -7,10 +7,10 @@ import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 
 import Post from "../../assets/icons/post.svg";
-import { updateProject } from "../../reducers/projectSlice";
+import { createNewComment } from "../../reducers/commentSlice";
 import Avatar from "../common/Avatar";
 
-const AddNewComment = ({ currentUser, projects, project, list, thisCard }) => {
+const AddNewComment = ({ currentUser, thisCard, setCurrCard }) => {
   const [commentText, setCommentText] = useState("");
 
   const quillRef = useRef(null);
@@ -20,48 +20,30 @@ const AddNewComment = ({ currentUser, projects, project, list, thisCard }) => {
     setCommentText(text);
   };
 
-  const handleAddComment = (projectId, listId, cardId, commentText) => {
-    const updatedProject = projects.find((project) => project.id === projectId);
+  const handleAddComment = (commentText) => {
+    console.log("commentText", commentText);
 
-    if (!updatedProject) return;
-
-    const updatedLists = updatedProject.lists.map((list) => {
-      if (list.id === listId) {
-        return {
-          ...list,
-          cards: list.cards.map((card) => {
-            if (card.id === cardId) {
-              const newComment = {
-                id: uuidv4(),
-                text: commentText,
-                user: currentUser.username,
-                dateAdded: moment().toISOString(),
-              };
-
-              return {
-                ...card,
-                comments: [...(card.comments || []), newComment],
-              };
-            }
-            return card;
-          }),
-        };
-      }
-      return list;
-    });
-
-    const updatedProjectData = {
-      ...updatedProject,
-      lists: updatedLists,
+    const newComment = {
+      _id: uuidv4(),
+      createdByUserId: currentUser._id,
+      cardId: thisCard._id,
+      text: commentText,
+      createdAt: moment().format(),
     };
+    console.log("newComment", newComment);
 
-    dispatch(updateProject(updatedProjectData));
+    const updatedCardData = {
+      ...thisCard,
+      comments: [...thisCard.comments, newComment],
+    };
+    setCurrCard(updatedCardData);
+    dispatch(createNewComment(newComment));
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (commentText.trim() === "") return;
-    handleAddComment(project.id, list.id, thisCard.id, commentText);
+    handleAddComment(commentText);
     setCommentText("");
     window.scrollTo(0, document.body.scrollHeight);
   };
@@ -102,4 +84,5 @@ AddNewComment.propTypes = {
   project: PropTypes.object,
   list: PropTypes.object,
   thisCard: PropTypes.object,
+  setCurrCard: PropTypes.func,
 };
