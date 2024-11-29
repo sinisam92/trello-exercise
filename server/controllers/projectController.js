@@ -5,7 +5,6 @@ import User from "../models/User.js";
 
 export const getAllProjects = async (req, res) => {
   try {
-    // const projects = await Project.find({ createdByUserId: req.user._id });
     const projects = await Project.find();
     res.status(200).json(projects);
   } catch (error) {
@@ -82,7 +81,6 @@ export const updateProject = async (req, res) => {
   }
   const { projectId } = req.params;
   const updatedData = req.body;
-  console.log("updatedData", updatedData);
 
   try {
     const updatedProject = await Project.findOneAndUpdate(
@@ -129,25 +127,3 @@ export const addListToProject = async (req, res) => {
     res.status(500).json({ error: "Error adding list to project!" });
   }
 };
-
-// export const getProjectWithListsAndCards = async (req, res) => {
-//   const { projectId } = req.params;
-
-//   try {
-//     const project = await Project.findById(projectId).populate({
-//       path: "lists",
-//       populate: {
-//         path: "cards",
-//       },
-//     });
-
-//     if (!project) {
-//       return res.status(404).json({ message: "Project not found" });
-//     }
-
-//     res.json(project);
-//   } catch (error) {
-//     console.error("Error fetching project with lists:", error);
-//     res.status(500).json({ error: "Error fetching project with lists!" });
-//   }
-// };

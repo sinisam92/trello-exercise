@@ -5,18 +5,18 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main", "cicd-test" ]
+    branches: ["main", "cicd-test"]
   pull_request:
-    branches: [ "main", "cicd-test" ]
-    
+    branches: ["main", "cicd-test"]
+
 defaults:
   run:
     working-directory: ./client
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-     # for coverage
+    runs-on:
+      ubuntu-latest
+      # for coverage
     permissions:
       # Required to checkout the code
       contents: read
@@ -29,29 +29,23 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        cache-dependency-path: client/package-lock.json
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          cache-dependency-path: client/package-lock.json
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
 
-    # Coverage
-    - name: 'Test coverage'
-      run: npx vitest --coverage 
-    - name: 'Report Coverage'
-    # Only works if you set `reportOnFailure: true` in your vite config as specified above
-      if: always() 
-      uses:  davelosert/vitest-coverage-report-action@v2
-      with:
-          # json-final-path: ./client/coverage/coverage-final.json
-          # vite-config-path: ./client/vite.config.js
+      # Coverage
+      - name: "Test coverage"
+        run: npx vitest --coverage
+      - name: "Report Coverage"
+        # Only works if you set `reportOnFailure: true` in your vite config as specified above
+        if: always()
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
           working-directory: ./client
-          # json-summary-compare-path: ./client/coverage/coverage-final.json
-          # json-summary-path: ./client/coverage/coverage-final.json
-
-

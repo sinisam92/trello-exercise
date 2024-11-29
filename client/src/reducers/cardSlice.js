@@ -27,7 +27,6 @@ export const fetchCardById = createAsyncThunk(
   async (cardId, { rejectWithValue }) => {
     try {
       const response = await getCardById(cardId);
-      console.log("response COMMENT in slice", response);
 
       return response;
     } catch (error) {
@@ -182,7 +181,5 @@ const cardSlice = createSlice({
       });
   },
 });
-
-// export const { setCurrentCard, clearCurrentCard } = cardSlice.actions;
 
 export default cardSlice.reducer;

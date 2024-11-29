@@ -57,7 +57,6 @@ let usersCreated = [],
     ]);
 
     progressBar.update(5, { stage: "Database cleared" });
-    // console.log(chalk.green("\nAll collections cleared.\n"));
   } catch (error) {
     console.error(chalk.red("Error clearing collections:"), error);
     process.exit(1);
@@ -87,10 +86,6 @@ let usersCreated = [],
         projectsMember: [],
       };
 
-      // console.log(
-      //   `User ${userName} / ${userData.email} / ${userData.password} created - ${userData.role}`
-      // );
-      // progressBar.increment(0.5);
       const user = new User(userData);
       return user.save();
     });
@@ -98,7 +93,6 @@ let usersCreated = [],
   try {
     usersCreated = await Promise.all(usersPromises);
     progressBar.update(totalUsers + 5, { stage: "Users created" });
-    // console.log(chalk.green("\nAll users created\n"));
   } catch (error) {
     console.log(error);
     process.exit(1);
@@ -122,7 +116,6 @@ let usersCreated = [],
         name: faker.lorem.words(),
         slug: faker.helpers.slugify(faker.lorem.words()),
         description: faker.lorem.sentence(),
-        // faker.image.urlLoremFlickr({ category: 'abstract' })
         coverImage: faker.image.urlLoremFlickr({ category: "abstract" }),
         // coverImage: faker.image.url(),
         technologies: [faker.lorem.words(), faker.lorem.words(), faker.lorem.words()],
@@ -130,7 +123,6 @@ let usersCreated = [],
         createdByUserId: createdByUserId,
         lists: [],
       };
-      // console.log(`Project ${projectData.name} created`);
       progressBar.increment(0.5);
       const project = await new Project(projectData).save();
 
@@ -169,7 +161,6 @@ let usersCreated = [],
   try {
     projectsCreated = await Promise.all(projectsPromises);
     progressBar.update(totalUsers + totalProjects + 5, { stage: "Projects created" });
-    // console.log(chalk.green("\nAll projects created\n"));
   } catch (error) {
     console.log(error);
     process.exit(1);
@@ -192,7 +183,6 @@ let usersCreated = [],
         slug: faker.helpers.slugify(listName),
         cards: [],
       };
-      // console.log(`List ${listData.name} created`);
       progressBar.increment(0.5);
       const list = await new List(listData).save();
 
@@ -209,7 +199,6 @@ let usersCreated = [],
 
   try {
     listsCreated = await Promise.all(listsPromises);
-    // console.log("\nAll lists created\n");
     progressBar.update(totalUsers + totalProjects + totalLists + 5, {
       stage: "Lists created",
     });
@@ -256,7 +245,6 @@ let usersCreated = [],
           "critical",
         ]),
       };
-      // console.log(`Card ${cardData.title} created`);
       progressBar.increment(0.5);
       const card = await new Card(cardData).save();
 
@@ -277,7 +265,6 @@ let usersCreated = [],
     progressBar.update(totalUsers + totalProjects + totalLists + totalCards + 5, {
       stage: "Cards created",
     });
-    // console.log("\nAll cards created\n");
   } catch (error) {
     console.log(error);
     process.exit(1);
@@ -296,7 +283,6 @@ let usersCreated = [],
         createdByUserId: faker.helpers.arrayElement(userIds),
         cardId: cardId,
       };
-      // console.log(`Comment ${commentData.text} created`);
       progressBar.increment(0.5);
       const comment = await new Comment(commentData).save();
 
@@ -316,7 +302,6 @@ let usersCreated = [],
 
   try {
     commentsCreated = await Promise.all(commentsPromises);
-    // console.log("\nAll comments created\n");
 
     // Updates the commentsCount for each card so we can get number of comments for each card
     const updateCardPromises = cardsCreated.map(async (card) => {
@@ -326,7 +311,6 @@ let usersCreated = [],
 
     await Promise.all(updateCardPromises);
     progressBar.update(totalTasks, { stage: "Comments created" });
-    // console.log(chalk.green("\nAll cards' commentsCount updated\n"));
   } catch (error) {
     console.log(error);
     process.exit(1);

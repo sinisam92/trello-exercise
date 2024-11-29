@@ -27,7 +27,6 @@ export const createCard = async (card) => {
     headers: {
       "Content-Type": "application/json",
     },
-    // credentials: "include",
   });
 };
 

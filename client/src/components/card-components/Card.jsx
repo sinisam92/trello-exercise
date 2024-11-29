@@ -19,7 +19,6 @@ const Card = ({
   card,
   userId,
   list,
-  // setProjects,
   project,
   setSmallTags,
   smallTags,
@@ -29,7 +28,6 @@ const Card = ({
   setSelectedCard,
   className,
   setProjectCards,
-  // projectId,
 }) => {
   const dispatch = useDispatch();
   const { usersByIds } = useSelector((state) => state.users);
@@ -52,16 +50,7 @@ const Card = ({
 
   useEffect(() => {
     getAssignedUsers();
-    // if (project && project.membersId) {
-    //   try {
-    //     dispatch(fetchUsersByIds(project.membersId)).unwrap();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
   }, [getAssignedUsers]);
-
-  // console.log("card", card);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({

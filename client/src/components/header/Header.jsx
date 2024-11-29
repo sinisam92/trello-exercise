@@ -24,7 +24,6 @@ const Header = ({ setIsChildMenuOpen }) => {
   const currentUser = useSelector((state) => state.auth.user);
 
   const { searchTerm, setSearchTerm } = useSearch();
-  // const { projects } = useSelector((state) => state.projects);
   const { currentProject } = useSelector((state) => state.projects);
   const { animationsEnabled } = useAnimation();
 

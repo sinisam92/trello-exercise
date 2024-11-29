@@ -50,9 +50,6 @@ const ProjectForm = ({
 
   const { users } = useSelector((state) => state.users);
   const { user } = useSelector((state) => state.auth);
-  // const currentProject = useSelector((state) =>
-  //   state.projects.projects.find((project) => project.id === editingProjectId),
-  // );
   const { currentProject } = useSelector((state) => state.projects);
 
   useEffect(() => {
@@ -140,22 +137,13 @@ const ProjectForm = ({
         updatedProject.members = members;
       }
 
-      // if (user._id == updatedProject.createdByUserId) {
       dispatch(updateProject(updatedProject));
 
-      // const updatedProjects = projects.map((project) =>
-      //   project._id === editingProjectId ? updatedProject : project,
-      // );
-      // setProjects(updatedProjects);
       setProjects((prevProjects) =>
         prevProjects.map((project) =>
           project._id === updatedProject._id ? updatedProject : project,
         ),
       );
-      // } else {
-      //   setError("You do not have permission to edit this project");
-      //   return;
-      // }
 
       setEditingProjectId(null);
     }
@@ -172,9 +160,6 @@ const ProjectForm = ({
     setMembers(updatedMembers);
   };
 
-  // if (!currentProject) {
-  //   return <div>Loading project...</div>;
-  // }
   return (
     <div className="flex flex-col gap-y-2 justify-center">
       <Formik

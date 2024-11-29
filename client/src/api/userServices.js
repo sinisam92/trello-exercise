@@ -3,7 +3,6 @@ import { apiClient } from "./apiClient";
 export const getAllUsers = async () => {
   return apiClient("users", {
     method: "GET",
-    // credentials: "include",
   });
 };
 

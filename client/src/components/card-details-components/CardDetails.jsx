@@ -25,7 +25,6 @@ const CardDetails = () => {
   const currentProject = useSelector((state) => state.projects.currentProject);
   const currentCard = useSelector((state) => state.cards.currentCard);
   const currentList = useSelector((state) => state.lists.currentList);
-  // const comments = useSelector((state) => state.comments);
   const [loading, setLoading] = useState(true);
   const [_, setError] = useState(null);
 
@@ -62,8 +61,6 @@ const CardDetails = () => {
 
     fetchComments();
   }, [currentCard]);
-
-  console.log("updatedCurrentCard", updatedCurrentCard);
 
   const thisCardsAssigned = () =>
     usersByIds.filter((user) => currentCard?.assigned?.includes(user._id));

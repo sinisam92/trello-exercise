@@ -21,8 +21,6 @@ const AddNewComment = ({ currentUser, thisCard, setUpdatedCurrentCard }) => {
   };
 
   const handleAddComment = (commentText) => {
-    console.log("commentText", commentText);
-
     const newComment = {
       _id: uuidv4(),
       createdByUserId: currentUser._id,
@@ -30,7 +28,6 @@ const AddNewComment = ({ currentUser, thisCard, setUpdatedCurrentCard }) => {
       text: commentText,
       createdAt: moment().format(),
     };
-    console.log("newComment", newComment);
 
     const updatedCardData = {
       ...thisCard,

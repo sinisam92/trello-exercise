@@ -74,7 +74,6 @@ export const createComment = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
   const paramsId = req.params.id;
-  console.log("paramsId", paramsId);
 
   try {
     const comment = await Comment.findOneAndDelete({ _id: paramsId });

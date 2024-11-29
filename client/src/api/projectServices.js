@@ -18,7 +18,6 @@ export const createProject = async (project) => {
     headers: {
       "Content-Type": "application/json",
     },
-    // credentials: "include",
   });
 };
 

@@ -29,7 +29,6 @@ export const createComment = async (comment) => {
     headers: {
       "Content-Type": "application/json",
     },
-    // credentials: "include",
   });
 };
 
