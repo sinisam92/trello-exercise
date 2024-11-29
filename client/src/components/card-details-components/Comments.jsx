@@ -16,17 +16,19 @@ const Comments = ({
   openOptions,
   commentsOptionsRef,
   usersByIds,
-  setCurrCard,
+  setUpdatedCurrentCard,
 }) => {
   const dispatch = useDispatch();
-  // console.log("usersByIds", usersByIds);
 
   const handleDeleteComment = (commentId) => {
-    const updatedComments = thisCard.comments.filter(
-      (comment) => comment._id !== commentId,
-    );
-    setCurrCard({ ...thisCard, comments: updatedComments });
-
+    setUpdatedCurrentCard((prevState) => {
+      return {
+        ...prevState,
+        comments: prevState.comments.filter(
+          (comment) => comment._id !== commentId,
+        ),
+      };
+    });
     dispatch(deleteComment(commentId));
   };
 
@@ -131,5 +133,6 @@ Comments.propTypes = {
   commentsOptionsRef: PropTypes.object,
   handleDeleteComment: PropTypes.func,
   usersByIds: PropTypes.array,
-  setCurrCard: PropTypes.func,
+  updatedCurrentCard: PropTypes.object,
+  setUpdatedCurrentCard: PropTypes.func,
 };

@@ -10,7 +10,7 @@ import Post from "../../assets/icons/post.svg";
 import { createNewComment } from "../../reducers/commentSlice";
 import Avatar from "../common/Avatar";
 
-const AddNewComment = ({ currentUser, thisCard, setCurrCard }) => {
+const AddNewComment = ({ currentUser, thisCard, setUpdatedCurrentCard }) => {
   const [commentText, setCommentText] = useState("");
 
   const quillRef = useRef(null);
@@ -36,7 +36,7 @@ const AddNewComment = ({ currentUser, thisCard, setCurrCard }) => {
       ...thisCard,
       comments: [...thisCard.comments, newComment],
     };
-    setCurrCard(updatedCardData);
+    setUpdatedCurrentCard(updatedCardData);
     dispatch(createNewComment(newComment));
   };
 
@@ -84,5 +84,5 @@ AddNewComment.propTypes = {
   project: PropTypes.object,
   list: PropTypes.object,
   thisCard: PropTypes.object,
-  setCurrCard: PropTypes.func,
+  setUpdatedCurrentCard: PropTypes.func,
 };

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,8 +12,9 @@ import Description from "./Description";
 import Tags from "./Tags";
 import Timestap from "./Timestap";
 
-const CardDetails = ({ setCurrCard, currCard }) => {
+const CardDetails = () => {
   const [openOptions, setOpenOptions] = useState(null);
+  const [updatedCurrentCard, setUpdatedCurrentCard] = useState(null);
 
   const commentsOptionsRef = useRef(null);
   const commentsIconRef = useRef(null);
@@ -30,6 +30,7 @@ const CardDetails = ({ setCurrCard, currCard }) => {
   const [_, setError] = useState(null);
 
   useEffect(() => {
+    setUpdatedCurrentCard(currentCard);
     const fetchList = async () => {
       if (currentCard && currentCard.listId) {
         try {
@@ -61,6 +62,8 @@ const CardDetails = ({ setCurrCard, currCard }) => {
 
     fetchComments();
   }, [currentCard]);
+
+  console.log("updatedCurrentCard", updatedCurrentCard);
 
   const thisCardsAssigned = () =>
     usersByIds.filter((user) => currentCard?.assigned?.includes(user._id));
@@ -107,14 +110,13 @@ const CardDetails = ({ setCurrCard, currCard }) => {
       </section>
       <section className="flex p-4 border-b-[1px] border-black items-start">
         <Comments
-          // users={users}
           currentUser={user}
           toggleOptions={toggleOptions}
           openOptions={openOptions}
           commentsOptionsRef={commentsOptionsRef}
           commentsIconRef={commentsIconRef}
-          thisCard={currCard}
-          setCurrCard={setCurrCard}
+          thisCard={updatedCurrentCard}
+          setUpdatedCurrentCard={setUpdatedCurrentCard}
           currentProject={currentProject}
           usersByIds={usersByIds}
         />
@@ -122,11 +124,10 @@ const CardDetails = ({ setCurrCard, currCard }) => {
       <section className="sticky bottom-0 bg-white">
         <AddNewComment
           currentUser={user}
-          // projects={projects}
           project={currentProject}
           list={currentList}
-          thisCard={currCard}
-          setCurrCard={setCurrCard}
+          thisCard={updatedCurrentCard}
+          setUpdatedCurrentCard={setUpdatedCurrentCard}
         />
       </section>
     </>
@@ -134,7 +135,3 @@ const CardDetails = ({ setCurrCard, currCard }) => {
 };
 
 export default CardDetails;
-CardDetails.propTypes = {
-  setCurrCard: PropTypes.func,
-  currCard: PropTypes.object,
-};

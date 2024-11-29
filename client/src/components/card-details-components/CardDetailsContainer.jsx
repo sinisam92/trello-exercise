@@ -19,8 +19,8 @@ const CardDetailsContainer = ({ cardId, projectId }) => {
         await dispatch(fetchProject(projectId));
       }
       if (cardId) {
-        const fetchedCard = await dispatch(fetchCardById(cardId));
-        setCurrCard(fetchedCard.payload);
+        await dispatch(fetchCardById(cardId));
+        // setCurrCard(fetchedCard.payload);
       }
     } catch (err) {
       console.error("Error fetching initial data:", err);
@@ -36,7 +36,7 @@ const CardDetailsContainer = ({ cardId, projectId }) => {
       dispatch(fetchUsersByIds(currentProject.membersId));
     }
   }, [dispatch, currentProject]);
-  console.log("asdasdasds", currCard);
+  console.log("asdasdasds in PARENT", currCard);
 
   return (
     <div className="md:w-1/2 md:mx-auto border border-primary bg-[#EDEADE] my-10 drop-shadow-lg shadow-lg">
