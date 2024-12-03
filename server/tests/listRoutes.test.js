@@ -69,32 +69,36 @@ beforeEach(async () => {
   commentFromDb = await Comment.create(commentToCreate);
 });
 
-describe("testing user routes", () => {
-  it("delete a user", async () => {
-    const response = await request(app).delete(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(204);
-  });
-  it("get a user", async () => {
-    const response = await request(app).get(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(200);
-  });
-
-  it("update a user", async () => {
-    const response = await request(app)
-      .put(`/users/${userFromDb._id}`)
-      .send({ firstName: "Updated" });
-
-    expect(response.statusCode).toBe(201);
-    expect(response.body.firstName).toBe("Updated");
-  });
-  it("get all users", async () => {
-    const response = await request(app).get("/users");
-    console.log(response);
-
-    expect(response.statusCode).toBe(200);
+describe("List Routes", () => {
+  it("should get all lists", async () => {
+    const response = await request(app).get("/lists");
+    expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
     expect(response.body).not.toHaveLength(0);
+  });
+
+  it("should get a list by ID", async () => {
+    const response = await request(app).get(`/lists/single/${listFromDb._id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("id", listFromDb._id);
+  });
+
+  it("should get lists by project ID", async () => {
+    const response = await request(app).get(`/lists/${listFromDb._id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
+  it("should update a list", async () => {
+    const response = await request(app)
+      .put(`/lists/${listFromDb._id}`)
+      .send({ name: "Updated List" });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("name", "Updated List");
+  });
+
+  it("should delete a list", async () => {
+    const response = await request(app).delete(`/lists/${listFromDb._id}`);
+    expect(response.status).toBe(204);
   });
 });

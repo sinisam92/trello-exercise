@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
 
-const commonValidation = [
+const emailValidation = [
   body("email")
     .isEmail()
     .withMessage("Must be a valid email")
@@ -12,7 +12,7 @@ const commonValidation = [
 ];
 
 const loginValidation = [
-  ...commonValidation,
+  ...emailValidation,
   body("password")
     .trim()
     .isString()
@@ -23,14 +23,7 @@ const loginValidation = [
 
 // prettier-ignore
 const registerValidation = [
-  ...commonValidation,
-  // param("_id")
-  //   .isUUID()
-  //   .withMessage("ID must be a valid and unique UUID"),
-  // body("id")
-  //   .isUUID()
-  //   .withMessage("ID must be a valid and unique UUID")
-  //   .optional(),
+  ...emailValidation,
   body("username")
     .isString()
     .withMessage("Username must be a string")
@@ -67,10 +60,5 @@ const registerValidation = [
     .trim()
     .escape(),
 ];
-
-// const updateUserValidation = [
-//   ...registerValidation,
-//   body("id").isUUID().withMessage("ID must be a valid and unique UUID").optional(),
-// ];
 
 export { loginValidation, registerValidation };

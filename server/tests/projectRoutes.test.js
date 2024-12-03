@@ -69,32 +69,38 @@ beforeEach(async () => {
   commentFromDb = await Comment.create(commentToCreate);
 });
 
-describe("testing user routes", () => {
-  it("delete a user", async () => {
-    const response = await request(app).delete(`/users/${userFromDb._id}`);
+describe("Project Routes", () => {
+  it("should create a new project", async () => {
+    const newProject = { ...projectFromDb, name: "" };
+    const response = await request(app).post("/projects").send(newProject);
 
-    expect(response.statusCode).toBe(204);
-  });
-  it("get a user", async () => {
-    const response = await request(app).get(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(200);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
   });
 
-  it("update a user", async () => {
+  it("should get a project by ID", async () => {
+    const projectId = projectFromDb._id;
+    const response = await request(app).get(`/projects/${projectId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("_id", projectId);
+  });
+
+  it("should update a project", async () => {
+    const projectId = projectFromDb._id;
+    const updatedProject = {
+      name: "Updated Project",
+    };
     const response = await request(app)
-      .put(`/users/${userFromDb._id}`)
-      .send({ firstName: "Updated" });
-
-    expect(response.statusCode).toBe(201);
-    expect(response.body.firstName).toBe("Updated");
+      .put(`/projects/${projectId}`)
+      .send(updatedProject)
+      .set("Accept", "application/json");
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("name", updatedProject.name);
   });
-  it("get all users", async () => {
-    const response = await request(app).get("/users");
-    console.log(response);
 
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toBeInstanceOf(Array);
-    expect(response.body).not.toHaveLength(0);
+  it("should delete a project", async () => {
+    const projectId = projectFromDb._id;
+    const response = await request(app).delete(`/projects/${projectId}`);
+    expect(response.status).toBe(204);
   });
 });

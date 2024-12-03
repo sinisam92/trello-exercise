@@ -32,7 +32,7 @@ export const getProjectById = async (req, res) => {
 export const createProject = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errror: errors.array() });
+    return res.status(400).json({ error: errors.array() });
   }
 
   const newProject = req.body;
@@ -49,7 +49,7 @@ export const createProject = async (req, res) => {
     }
 
     await projectToAdd.save();
-    res.status(201).json(newProject);
+    res.status(201).json(projectToAdd);
   } catch (error) {
     console.error("Error during project creation:", error);
     res.status(500).json({ error: "Error creating project!" });
@@ -77,7 +77,7 @@ export const deleteProject = async (req, res) => {
 export const updateProject = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errror: errors.array() });
+    return res.status(400).json({ error: errors.array() });
   }
   const { projectId } = req.params;
   const updatedData = req.body;

@@ -53,7 +53,7 @@ app.get("*", (_req, res) => {
 });
 
 const PORT = process.env.PORT || 3044;
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== "testing") {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${port}`);
   });

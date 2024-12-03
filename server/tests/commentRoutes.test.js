@@ -69,32 +69,32 @@ beforeEach(async () => {
   commentFromDb = await Comment.create(commentToCreate);
 });
 
-describe("testing user routes", () => {
-  it("delete a user", async () => {
-    const response = await request(app).delete(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(204);
-  });
-  it("get a user", async () => {
-    const response = await request(app).get(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(200);
+describe("Comment Routes", () => {
+  it("should get all comments", async () => {
+    const res = await request(app).get("/comments");
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toBeInstanceOf(Array);
+    expect(res.body).not.toHaveLength(0);
   });
 
-  it("update a user", async () => {
-    const response = await request(app)
-      .put(`/users/${userFromDb._id}`)
-      .send({ firstName: "Updated" });
-
-    expect(response.statusCode).toBe(201);
-    expect(response.body.firstName).toBe("Updated");
+  it("should get a comment by id", async () => {
+    const commentId = commentFromDb._id;
+    const res = await request(app).get(`/comments/${commentId}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("text");
   });
-  it("get all users", async () => {
-    const response = await request(app).get("/users");
-    console.log(response);
 
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toBeInstanceOf(Array);
-    expect(response.body).not.toHaveLength(0);
+  it("should update a comment by id", async () => {
+    const commentId = commentFromDb._id;
+    const updatedComment = { text: "Updated comment" };
+    const res = await request(app).put(`/comments/${commentId}`).send(updatedComment);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("text");
+  });
+
+  it("should delete a comment by id", async () => {
+    const commentId = commentFromDb._id;
+    const res = await request(app).delete(`/comments/${commentId}`);
+    expect(res.statusCode).toEqual(204);
   });
 });

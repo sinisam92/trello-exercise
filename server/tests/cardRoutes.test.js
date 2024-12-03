@@ -68,33 +68,31 @@ beforeEach(async () => {
 
   commentFromDb = await Comment.create(commentToCreate);
 });
-
-describe("testing user routes", () => {
-  it("delete a user", async () => {
-    const response = await request(app).delete(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(204);
-  });
-  it("get a user", async () => {
-    const response = await request(app).get(`/users/${userFromDb._id}`);
-
-    expect(response.statusCode).toBe(200);
-  });
-
-  it("update a user", async () => {
-    const response = await request(app)
-      .put(`/users/${userFromDb._id}`)
-      .send({ firstName: "Updated" });
-
-    expect(response.statusCode).toBe(201);
-    expect(response.body.firstName).toBe("Updated");
-  });
-  it("get all users", async () => {
-    const response = await request(app).get("/users");
-    console.log(response);
-
-    expect(response.statusCode).toBe(200);
+describe("Card Routes", () => {
+  it("should get all cards", async () => {
+    const response = await request(app).get("/cards");
+    expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
     expect(response.body).not.toHaveLength(0);
+  });
+
+  it("should get a card by id", async () => {
+    const response = await request(app).get(`/cards/${cardFromDb._id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("_id");
+  });
+
+  it("should update a card", async () => {
+    const response = await request(app).put(`/cards/${cardFromDb._id}`).send({
+      title: "Updated Test Card",
+    });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("title", "Updated Test Card");
+  });
+
+  it("should delete a card", async () => {
+    const response = await request(app).delete(`/cards/${cardFromDb._id}`);
+    expect(response.status).toBe(204);
   });
 });
