@@ -19,25 +19,18 @@ let listFromDb;
 let cardFromDb;
 let commentFromDb;
 
-// users
 beforeEach(async () => {
   const uniqueEmail = `example${Date.now()}${Math.floor(Math.random() * 10000)}@test.com`;
 
   userFromDb = await User.create({ ...testUserObject, email: uniqueEmail });
-});
 
-// projects
-beforeEach(async () => {
   let projectToCreate = {
     ...testProjectObject,
     createdByUserId: userFromDb._id,
   };
 
   projectFromDb = await Project.create(projectToCreate);
-});
 
-// lists
-beforeEach(async () => {
   let listToCreate = {
     ...testListObject,
     projectId: projectFromDb._id,
@@ -45,10 +38,7 @@ beforeEach(async () => {
   };
 
   listFromDb = await List.create(listToCreate);
-});
 
-// cards
-beforeEach(async () => {
   let cardToCreate = {
     ...testCardObject,
     listId: listFromDb._id,
@@ -56,10 +46,7 @@ beforeEach(async () => {
   };
 
   cardFromDb = await Card.create(cardToCreate);
-});
 
-// comments
-beforeEach(async () => {
   let commentToCreate = {
     ...testCommentObject,
     cardId: cardFromDb._id,
