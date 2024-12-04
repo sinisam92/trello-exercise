@@ -1,17 +1,17 @@
 import request from "supertest";
 import app from "../index.js";
+import Card from "../models/Card.js";
+import Comment from "../models/Comment.js";
+import List from "../models/List.js";
+import Project from "../models/Project.js";
+import User from "../models/User.js";
 import {
-  testListObject,
   testCardObject,
   testCommentObject,
+  testListObject,
   testProjectObject,
   testUserObject,
 } from "./jest.setup.js";
-import User from "../models/User.js";
-import Project from "../models/Project.js";
-import List from "../models/List.js";
-import Card from "../models/Card.js";
-import Comment from "../models/Comment.js";
 
 let userFromDb;
 let projectFromDb;
@@ -91,7 +91,7 @@ describe("testing user routes", () => {
   });
   it("get all users", async () => {
     const response = await request(app).get("/users");
-    console.log(response);
+    // console.log(response);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
