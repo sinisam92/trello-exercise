@@ -99,7 +99,7 @@ const Login = () => {
       </div>
       <div className="flex justify-center items-center sm:w-3/4 sm:mx-auto md:w-1/2">
         <div className="bg-white w-full rounded px-8 pt-6 pb-8 mb-4 md:shadow-md">
-          <h2 className="text-4xl font-bold mb-6 text-primary text-center">
+          <h2 className="text-4xl font-bold mb-6 text-secundary text-center">
             Login
           </h2>
           <Formik
@@ -146,7 +146,7 @@ const Login = () => {
                   />
                   <Link
                     href="register"
-                    className="inline-block align-baseline font-bold text-sm text-primary hover:text-primaryHover"
+                    className="inline-block align-baseline font-bold text-sm text-primaryTextColor hover:text-primaryHover"
                   >
                     <small>Do not have an account? - </small> Sign Up
                   </Link>

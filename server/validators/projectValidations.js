@@ -1,6 +1,6 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
-export const projectValidation = [
+export const projectPostValidation = [
   body("name")
     .isString()
     .withMessage("Name must be a string")
@@ -35,4 +35,9 @@ export const projectValidation = [
     .trim()
     .escape()
     .optional(),
+];
+
+export const projectPutValidation = [
+  ...projectPostValidation,
+  param("projectId").isUUID().withMessage("ID must be a valid and unique UUID"),
 ];

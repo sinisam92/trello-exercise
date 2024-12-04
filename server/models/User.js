@@ -1,7 +1,5 @@
-import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
-import config from "../config/config.js";
 import bcrypt from "bcrypt";
 
 const UserSchema = new mongoose.Schema(
@@ -88,15 +86,15 @@ UserSchema.virtual("fullName").get(function () {
 });
 
 //Find by the token
-UserSchema.statics.findByToken = function (token) {
-  const User = this;
-  try {
-    let decoded = jwt.verify(token, config.tokenSecret);
-    return User.findOne({ _id: decoded._id });
-  } catch (err) {
-    return;
-  }
-};
+// UserSchema.statics.findByToken = function (token) {
+//   const User = this;
+//   try {
+//     let decoded = jwt.verify(token, config.tokenSecret);
+//     return User.findOne({ _id: decoded._id });
+//   } catch (err) {
+//     return;
+//   }
+// };
 
 const User = mongoose.model("User", UserSchema);
 export default User;

@@ -70,7 +70,7 @@ const Register = () => {
   return (
     <div className="flex items-center justify-center h-screen sm:w-3/4 sm:mx-auto md:w-1/2">
       <div className="bg-white w-full rounded px-8 pt-6 pb-8 mb-4 md:shadow-md">
-        <h1 className="text-4xl text-primary text-center font-bold mb-4">
+        <h1 className="text-4xl text-secundary text-center font-bold mb-4">
           Sign Up
         </h1>
         <Formik
@@ -110,7 +110,7 @@ const Register = () => {
               .max(50, "Password must be at most 50 characters")
               .required("This field is required")
               .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
                 "Password must contain at least one uppercase letter, one lowercase letter, and one number",
               ),
             confirmPassword: Yup.string().when("password", {
@@ -181,7 +181,7 @@ const Register = () => {
                 />
                 <Link
                   href="login"
-                  className="inline-block align-baseline font-bold text-sm text-primary hover:text-primaryHover"
+                  className="inline-block align-baseline font-bold text-sm text-primaryTextColor hover:text-primaryHover"
                 >
                   <small>Already have an account? - </small> Sign In
                 </Link>

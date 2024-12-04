@@ -46,6 +46,10 @@ export const getListsByProjectId = async (req, res) => {
 };
 
 export const createList = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errror: errors.array() });
+  }
   try {
     const newList = req.body;
 
@@ -87,10 +91,10 @@ export const deleteList = async (req, res) => {
 };
 
 export const updateList = async (req, res) => {
-  //   const errors = validationResult(req);
-  //   if (!errors.isEmpty()) {
-  //     return res.status(400).json({ errror: errors.array() });
-  //   }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errror: errors.array() });
+  }
   const paramsId = req.params.id;
   const updatedData = req.body;
   try {

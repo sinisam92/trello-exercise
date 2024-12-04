@@ -8,7 +8,10 @@ import {
   updateProject,
 } from "../controllers/projectController.js";
 import authCookie from "../middleware/authCookie.js";
-import { projectValidation } from "../validators/projectValidations.js";
+import {
+  projectPostValidation,
+  projectPutValidation,
+} from "../validators/projectValidations.js";
 
 const router = Router();
 
@@ -16,13 +19,13 @@ const router = Router();
 router.route("/")
     // .get(authCookie, getAllProjects)
     .get(getAllProjects)
-    .post(projectValidation, createProject);
+    .post(projectPostValidation, createProject);
 
 // prettier-ignore
 router.route("/:projectId")
     .get(getProjectById)
     // .get(getProjectWithListsAndCards)
-    .put(projectValidation, updateProject)
+    .put(projectPutValidation, updateProject)
     .delete( deleteProject)
 
 // prettier-ignore

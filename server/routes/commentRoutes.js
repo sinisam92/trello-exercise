@@ -7,6 +7,7 @@ import {
   deleteComment,
   getCommentByCardCommentsIds,
 } from "../controllers/commentController.js";
+import { commentValidations } from "../validators/commentValidations.js";
 
 const router = Router();
 router.route("/by-comment-ids").get(getCommentByCardCommentsIds);
@@ -14,12 +15,12 @@ router.route("/by-comment-ids").get(getCommentByCardCommentsIds);
 // prettier-ignore
 router.route("/")
     .get(getAllComment)
-    .post(createComment);
+    .post(commentValidations, createComment);
 
 // prettier-ignore
 router.route("/:id")
     .get(getCommentById)
-    .put(updateComment)
+    // .put(updateComment)
     .delete(deleteComment);
 
 export default router;

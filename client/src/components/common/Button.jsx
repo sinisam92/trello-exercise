@@ -17,7 +17,7 @@ const Button = ({
    * swithces the color of the button and hover effect
    */
   const mode = {
-    primary: "text-white bg-primary cursor-pointer hover:bg-primaryHover",
+    primary: "text-white bg-secundary cursor-pointer hover:bg-primaryHover",
     disabled: "bg-disabled border-0 text-white cursor-not-allowed",
     white:
       "border border-black text-primary cursor-pointer hover:bg-primary hover:text-white",
