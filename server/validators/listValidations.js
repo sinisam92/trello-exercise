@@ -29,6 +29,6 @@ export const listPutValidations = [
     .withMessage("Name is required")
     .isString()
     .withMessage("Name must be a string"),
-  body("cards").optional(),
-  body("slug").optional(),
+  body("cards").optional().isArray().withMessage("Items must be an array"),
+  body("slug").optional().isString().withMessage("Slug must be a string"),
 ];
