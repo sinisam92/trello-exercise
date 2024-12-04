@@ -91,7 +91,6 @@ describe("testing user routes", () => {
   });
   it("get all users", async () => {
     const response = await request(app).get("/users");
-    // console.log(response);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toBeInstanceOf(Array);

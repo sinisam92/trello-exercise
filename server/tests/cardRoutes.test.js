@@ -68,6 +68,7 @@ beforeEach(async () => {
 
   commentFromDb = await Comment.create(commentToCreate);
 });
+
 describe("Card Routes", () => {
   it("should get all cards", async () => {
     const response = await request(app).get("/cards");

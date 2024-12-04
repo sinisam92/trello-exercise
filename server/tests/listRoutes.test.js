@@ -93,6 +93,7 @@ describe("List Routes", () => {
     const response = await request(app)
       .put(`/lists/${listFromDb._id}`)
       .send({ name: "Updated List" });
+
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("name", "Updated List");
   });

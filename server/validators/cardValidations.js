@@ -10,8 +10,8 @@ export const cardPostValidations = [
     .optional()
     .isLength({ max: 500 })
     .withMessage("Description cannot be longer than 500 characters"),
-  body("dueDate").optional().isISO8601().withMessage("Due date must be a valid date"),
-  body("status").isString().withMessage("Card has to have status"),
+  body("dueDate").optional(),
+  body("status").optional(),
   body("assigned").optional().isArray().withMessage("Assigned must be an array"),
   body("tags").optional().isArray().withMessage("Tags must be an array"),
   body("comments").optional().isArray().withMessage("Comments must be an array"),

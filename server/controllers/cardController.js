@@ -50,7 +50,7 @@ export const getCardByListsIds = async (req, res) => {
 export const createCard = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errror: errors.array() });
+    return res.status(400).json({ error: errors.array() });
   }
   try {
     const newCard = req.body;
@@ -94,7 +94,7 @@ export const deleteCard = async (req, res) => {
 export const updateCard = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errror: errors.array() });
+    return res.status(400).json({ error: errors.array() });
   }
   const paramsId = req.params.id;
   const updatedData = req.body;
