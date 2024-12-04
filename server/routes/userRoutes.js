@@ -8,12 +8,11 @@ import {
   getUsersByIds,
   updateUser,
 } from "../controllers/userController.js";
-import {
-  registerValidation,
-  // updateUserValidation,
-} from "../validators/authValidations.js";
+import { registerValidation } from "../validators/authValidations.js";
 
 const router = Router();
+
+router.route("/many").get(getUsersByIds);
 
 // prettier-ignore
 router.route("/")
@@ -25,7 +24,5 @@ router.route("/:id")
   .get( getUserById)
   .delete( deleteUser)
   .put( updateUser);
-
-router.route("/many").post(getUsersByIds);
 
 export default router;

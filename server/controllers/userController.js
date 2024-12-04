@@ -114,14 +114,15 @@ export const updateUser = async (req, res) => {
 };
 
 export const getUsersByIds = async (req, res) => {
-  try {
-    const { ids } = req.body;
+  const { userIds } = req.query;
 
-    if (!Array.isArray(ids)) {
+  try {
+    const userIdsDecoded = await JSON.parse(decodeURIComponent(userIds));
+    if (!Array.isArray(userIdsDecoded)) {
       return res.status(400).json({ error: "IDs must be provided as an array." });
     }
 
-    const users = await User.find({ _id: { $in: ids } });
+    const users = await User.find({ _id: { $in: userIdsDecoded } });
 
     res.json(users);
   } catch (error) {

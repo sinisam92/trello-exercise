@@ -46,13 +46,17 @@ const registerValidation = [
     .trim()
     .escape(),
   body("password")
-    .trim()
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|]).{8,}$/, "g")
+    .withMessage(
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    )
     .isString()
     .withMessage("Password must be a string")
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters"),
+    .withMessage("Password must be at least 6 characters")
+    .trim(),
   body("avatarUrl")
     .isString()
     .withMessage("Avatar URL must be a string")

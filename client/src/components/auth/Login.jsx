@@ -113,8 +113,11 @@ const Login = () => {
               password: Yup.string()
                 .max(50, "Must be 50 characters or less")
                 .min(6, "Must be 6 characters or more")
-                .required("Required")
-                .matches(/^[a-zA-Z0-9]+$/, "No special characters allowed"),
+                .required("Required"),
+              // .matches(
+              //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|]).*$/,
+              //   "No special characters allowed",
+              // ),
             })}
             onSubmit={handleLogin}
           >

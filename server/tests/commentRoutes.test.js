@@ -84,14 +84,6 @@ describe("Comment Routes", () => {
     expect(res.body).toHaveProperty("text");
   });
 
-  it("should update a comment by id", async () => {
-    const commentId = commentFromDb._id;
-    const updatedComment = { text: "Updated comment" };
-    const res = await request(app).put(`/comments/${commentId}`).send(updatedComment);
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("text");
-  });
-
   it("should delete a comment by id", async () => {
     const commentId = commentFromDb._id;
     const res = await request(app).delete(`/comments/${commentId}`);

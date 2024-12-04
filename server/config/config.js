@@ -33,6 +33,6 @@ const config = {
 };
 
 // console.log("ENV", config.env);
-// console.log(config);
+console.log(config);
 
 export default config;

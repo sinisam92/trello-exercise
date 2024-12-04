@@ -7,12 +7,11 @@ export const getAllUsers = async () => {
 };
 
 export const getUsersByIds = async (userIds) => {
-  return apiClient("users/many", {
-    method: "POST",
-    body: JSON.stringify({ ids: userIds }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const encodedUsersIds = encodeURIComponent(JSON.stringify(userIds));
+
+  return apiClient(`users/many?userIds=${encodedUsersIds}`, {
+    method: "GET",
+    credentials: "include",
   });
 };
 

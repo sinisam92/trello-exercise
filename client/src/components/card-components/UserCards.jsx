@@ -21,7 +21,7 @@ const UsersCards = () => {
 
   return (
     <>
-      {cards.length > 0 ? (
+      {filteredCards.length > 0 ? (
         <div className="grid place-content-center w-[85%] mx-auto md:grid-cols-2 lg:w-[90%] lg:grid-cols-3 lg:gap-4 xl:w-3/4 xl:max-w-3/4">
           {filteredCards.map((card) => (
             <Card key={card._id} card={card} users={users} />

@@ -5,7 +5,7 @@ import { Link } from "wouter";
 
 import DotsTiel from "../../assets/icons/menu-tile.svg";
 import useClickOutside from "../../hooks/useClickOutside";
-import { deleteProject, setCurrentProject } from "../../reducers/projectSlice";
+import { deleteProject, fetchProject } from "../../reducers/projectSlice";
 import ListItem from "../list-components/ListItem";
 
 const ProjectItem = ({
@@ -56,7 +56,7 @@ const ProjectItem = ({
     e.preventDefault();
     const projectToEdit = projects.find((project) => project._id === projectId);
 
-    dispatch(setCurrentProject(projectId));
+    dispatch(fetchProject(projectId));
     if (projectToEdit) {
       setIsEditing(true);
       setNewProjectName(project.name);
@@ -159,12 +159,12 @@ const ProjectItem = ({
                   <ListItem
                     text="Edit"
                     onClick={(e) => handleProjectEdit(e, project._id)}
-                    className="hover:bg-primary w-full px-8"
+                    className="hover:bg-secundary w-full px-8"
                   />
                   <ListItem
                     text="Delete"
                     onClick={(e) => handleProjectDelete(e, project._id)}
-                    className="hover:bg-primary w-full px-8"
+                    className="hover:bg-secundary w-full px-8"
                   />
                 </ul>
               </div>
