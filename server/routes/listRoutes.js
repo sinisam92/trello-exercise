@@ -1,5 +1,9 @@
 import { Router } from "express";
 import {
+  listPostValidations,
+  listPutValidations,
+} from "../validators/listValidations.js";
+import {
   createList,
   getAllLists,
   getListById,
@@ -7,10 +11,6 @@ import {
   updateList,
   deleteList,
 } from "../controllers/listController.js";
-import {
-  listPutValidations,
-  listPostValidations,
-} from "../validators/listvalidations.js";
 
 const router = Router();
 
