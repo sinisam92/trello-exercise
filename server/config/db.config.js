@@ -13,7 +13,7 @@ const connectDB = async () => {
     console.log("Error12345: ", error);
 
     console.error(`Error: ${error.message}`);
-    process.exit(1);
+    // process.exit(1);
   }
 };
 
