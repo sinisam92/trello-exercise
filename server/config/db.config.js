@@ -10,6 +10,8 @@ const connectDB = async () => {
     const conn = await mongoose.connect(config.mongoUri);
     console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
+    console.log("Error12345: ", error);
+
     console.error(`Error: ${error.message}`);
     process.exit(1);
   }
