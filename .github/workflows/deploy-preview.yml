@@ -35,12 +35,12 @@ jobs:
           cache: "npm"
       - name: "Install dependencies"
         run: npm ci
-      - name: List installed packages
-        run: npm list
+      # - name: List installed packages
+      #   run: npm list
       - name: "Build Client"
         run: npm run build --if-present
       - name: "Run tests"
-        run: npm test
+        run: npm run test
       # Coverage
       - name: "Test coverage"
         run: npx vitest --coverage
@@ -92,7 +92,7 @@ jobs:
         run: npm ci
 
       - name: "Run tests"
-        run: npm test
+        run: npm run test
 
       - name: "Deploy server preview to Vercel"
         uses: amondnet/vercel-action@v25
