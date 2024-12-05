@@ -6,6 +6,7 @@ import config from "./config.js";
 //   : process.env.ATLAS_URI;
 
 const connectDB = async () => {
+  console.log("config.mongoUri", config.mongoUri);
   try {
     const conn = await mongoose.connect(config.mongoUri);
     console.log(`MongoDB connected: ${conn.connection.host}`);
