@@ -5,11 +5,6 @@ import List from "../models/List.js";
 import Card from "../models/Card.js";
 import Comment from "../models/Comment.js";
 
-// let userFromDb;
-// let projectFromDb;
-// let listFromDb;
-// let cardFromDb;
-// let commentFromDb;
 export const testUserObject = {
   username: "Mallie_Han29939993",
   firstName: "Tania",
@@ -75,73 +70,11 @@ export const testCommentObject = {
 };
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI_TEST, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  console.log("Connecting to test database from tests...");
+
+  const testConn = await mongoose.connect(process.env.MONGO_URI_TEST);
+  console.log(`MongoDB connected from tests: ${testConn}`);
 });
-
-// clean up the database
-// beforeEach(async () => {
-//   await User.deleteMany({});
-//   await Project.deleteMany({});
-//   await List.deleteMany({});
-//   await Card.deleteMany({});
-//   await Comment.deleteMany({});
-// });
-
-// users
-// beforeEach(async () => {
-//   const uniqueEmail = `example${Date.now()}${Math.floor(Math.random() * 10000)}@test.com`;
-
-//   userFromDb = await User.create({ ...testUserObject, email: uniqueEmail });
-// });
-
-// // projects
-// beforeEach(async () => {
-//   let projectToCreate = {
-//     ...testProjectObject,
-//     createdByUserId: userFromDb._id,
-//   };
-
-//   projectFromDb = await Project.create(projectToCreate);
-// });
-
-// // lists
-// beforeEach(async () => {
-//   let listToCreate = {
-//     ...testListObject,
-//     projectId: projectFromDb._id,
-//     createdByUserId: userFromDb._id,
-//   };
-
-//   listFromDb = await List.create(listToCreate);
-// });
-
-// // cards
-// beforeEach(async () => {
-//   let cardToCreate = {
-//     ...testCardObject,
-//     listId: listFromDb._id,
-//     createdByUserId: userFromDb._id,
-//   };
-
-//   cardFromDb = await Card.create(cardToCreate);
-// });
-
-// // comments
-// beforeEach(async () => {
-//   let commentToCreate = {
-//     ...testCommentObject,
-//     cardId: cardFromDb._id,
-//     createdByUserId: userFromDb._id,
-//   };
-
-//   commentFromDb = await Comment.create(commentToCreate);
-// });
-
-// clean up the database
-// afterEach(async () => {});
 
 afterAll(async () => {
   await User.deleteMany({});
@@ -151,5 +84,3 @@ afterAll(async () => {
   await Comment.deleteMany({});
   await mongoose.connection.close();
 });
-
-// export { userFromDb, projectFromDb, listFromDb, cardFromDb, commentFromDb };
