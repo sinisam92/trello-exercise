@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { registerNewUser } from "../../reducers/userSlice";
 import Button from "../common/Button";
 
+//custom text input component
 const TextInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
